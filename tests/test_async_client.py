@@ -5,26 +5,27 @@ import asyncio
 import pytest
 
 # Gufo HTTP Modules
-from gufo.http.async_client import HttpClient, Response
+from gufo.http.async_client import HttpClient, AsyncResponse
+from gufo.http.httpd import Httpd
+from .util import URL_PREFIX
 
-TEST_URL = "https://docs.gufolabs.com/"
 
-
-def test_get() -> None:
-    async def inner() -> Response:
+def test_get(httpd) -> None:
+    async def inner() -> None:
         client = HttpClient()
-        resp = await client.get(TEST_URL)
+        resp = await client.get(f"{URL_PREFIX}/")
         assert resp.status == 200
         data = await resp.read()
         assert data
+        assert b"</html>" in data
 
     asyncio.run(inner())
 
 
-def test_double_read() -> None:
+def test_double_read(httpd) -> None:
     async def inner() -> None:
         client = HttpClient()
-        resp = await client.get(TEST_URL)
+        resp = await client.get(f"{URL_PREFIX}/")
         assert resp.status == 200
         data = await resp.read()
         assert data
