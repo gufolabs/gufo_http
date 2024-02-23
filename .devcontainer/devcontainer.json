@@ -1,0 +1,57 @@
+// VScode development container settings:
+// * For format details, see https://aka.ms/devcontainer.json.
+// * For config options, see the README at:
+// https://github.com/microsoft/vscode-dev-containers/tree/v0.202.3/containers/docker-existing-dockerfile
+// * For configuration guidelines see @todo
+{
+    "name": "Gufo HTTP",
+    "runArgs": [
+        "--init"
+    ],
+    "build": {
+        // Sets the run context to one level up instead of the .devcontainer folder.
+        "context": "..",
+        // Update the 'dockerFile' property if you aren't using the standard 'Dockerfile' filename.
+        "dockerfile": "../Dockerfile",
+        // Dockerfile target
+        "target": "dev"
+    },
+    "containerEnv": {
+        "PYTHONPATH": "src"
+    },
+    "customizations": {
+        "vscode": {
+            "settings": {
+                "python.defaultInterpreterPath": "/usr/local/bin/python",
+                "[python]": {
+                    "editor.defaultFormatter": "ms-python.black-formatter",
+                    "black-formatter.path": "/usr/local/bin/black",
+                    "editor.formatOnSave": true,
+                    "editor.codeActionsOnSave": {
+                        "source.fixAll": true
+                    },
+                    "ruff.path": "/usr/local/bin/ruff"
+                },
+                "[yaml]": {
+                    "editor.defaultFormatter": "redhat.vscode-yaml",
+                    "editor.formatOnSave": true,
+                    "editor.autoIndent": "advanced",
+                    "editor.tabSize": 2,
+                    "editor.detectIndentation": false
+                }
+            },
+            // Add the IDs of extensions you want installed when the container is created.
+            "extensions": [
+                "ms-python.python",
+                "ms-python.black-formatter",
+                "ms-vscode.cpptools",
+                "yzhang.markdown-all-in-one",
+                "ms-azuretools.vscode-docker",
+                "be5invis.toml",
+                "redhat.vscode-yaml",
+                "charliermarsh.ruff",
+                "rust-lang.rust-analyzer"
+            ]
+        }
+    }
+}

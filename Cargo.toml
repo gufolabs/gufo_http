@@ -1,0 +1,23 @@
+[package]
+edition = "2021"
+name = "gufo_http"
+version = "0.1.0"
+
+[lib]
+crate-type = ["cdylib"] # Comment for bench
+# crate-type = ["cdylib", "rlib"] # Uncomment for bench
+name = "gufo_http"
+
+[profile.release]
+strip = "debuginfo"
+
+[dependencies]
+bytes = "1.5"
+pyo3 = {version = "0.20", features = ["extension-module"]}
+pyo3-asyncio = {version = "0.20", features = ["attributes", "tokio-runtime"]}
+reqwest = {version = "0.11", features = ["rustls-tls", "cookies", "gzip", "brotli", "deflate", "trust-dns"], default_features = false}
+tokio = "1.36"
+
+[dev-dependencies]
+criterion = "0.4"
+iai = "0.1"

@@ -1,0 +1,5 @@
+# Test requrements
+pytest==7.4.3
+coverage[toml]==7.3.2
+PyYAML>=6.0
+
