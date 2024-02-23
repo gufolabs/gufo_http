@@ -2,7 +2,7 @@
 
 *The accelerated Python HTTP client library.*
 
-[![PyPi version](https://img.shields.io/pypi/v/gufo_snmp.svg)](https://pypi.python.org/pypi/gufo_http/)
+[![PyPi version](https://img.shields.io/pypi/v/gufo_http.svg)](https://pypi.python.org/pypi/gufo_http/)
 ![Python Versions](https://img.shields.io/pypi/pyversions/gufo_http)
 [![License](https://img.shields.io/badge/License-BSD_3--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)
 ![Build](https://img.shields.io/github/actions/workflow/status/gufolabs/gufo_http/tests.yml?branch=master)
@@ -11,9 +11,9 @@
 
 ---
 
-**Documentation**: [https://docs.gufolabs.com/gufo_snmp/](https://docs.gufolabs.com/gufo_http/)
+**Documentation**: [https://docs.gufolabs.com/gufo_http/](https://docs.gufolabs.com/gufo_http/)
 
-**Source Code**: [https://github.com/gufolabs/gufo_snmp/](https://github.com/gufolabs/gufo_http/)
+**Source Code**: [https://github.com/gufolabs/gufo_http/](https://github.com/gufolabs/gufo_http/)
 
 ---
 
@@ -22,6 +22,14 @@ WARNING: Initial release, work in progress. Coming soon...
 *Gufo HTTP* is a high-performance Python HTTP client library that handles both asynchronous and synchronous modes.
 It wraps famous [Reqwest][Reqwest] HTTP client, written in
 [Rust][Rust] language with [PyO3][PyO3] wrapper.
+
+``` python
+async with HttpClient() as client:
+    rest = client.get("https://docs.gufolabs.com")
+    assert resp.status == 20
+    data = await resp.read()
+```
+
 
 ## On Gufo Stack
 
