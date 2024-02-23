@@ -25,7 +25,13 @@ impl Headers {
             None => Err(PyKeyError::new_err(key.to_owned())),
         }
     }
-    fn get<'a>(&'a self, key: &str) -> PyResult<Option<&'a [u8]>> {
-        Ok(self.0.get(key).and_then(|x| Some(x.as_ref())))
+    fn get<'a>(&'a self, key: &str, default: Option<&'a [u8]>) -> PyResult<Option<&'a [u8]>> {
+        match self.0.get(key) {
+            Some(x) => Ok(Some(x.as_ref())),
+            None => match default {
+                Some(d) => Ok(Some(d)),
+                None => Ok(None),
+            },
+        }
     }
 }
