@@ -166,3 +166,46 @@ def test_headers_items(httpd) -> None:
         assert b"text/html" in data["content-type"]
 
     asyncio.run(inner())
+
+
+def test_redirect_to_root(httpd) -> None:
+    async def inner() -> None:
+        async with HttpClient() as client:
+            resp = await client.get(f"{URL_PREFIX}/redirect/root")
+            assert resp.status == 200
+            data = await resp.read()
+            assert data
+            assert b"</html>" in data
+
+    asyncio.run(inner())
+
+
+def test_no_redirect_to_root(httpd) -> None:
+    async def inner() -> None:
+        async with HttpClient(max_redirects=None) as client:
+            resp = await client.get(f"{URL_PREFIX}/redirect/root")
+            assert resp.status == 302
+
+    asyncio.run(inner())
+
+
+def test_redirect_to_loop(httpd) -> None:
+    async def inner() -> None:
+        async with HttpClient() as client:
+            with pytest.raises(RuntimeError):
+                resp = await client.get(f"{URL_PREFIX}/redirect/loop")
+
+    asyncio.run(inner())
+
+
+def test_get_header(httpd) -> None:
+    async def inner() -> None:
+        client = HttpClient()
+        resp = await client.get(f"{URL_PREFIX}/headers/get")
+        assert resp.status == 200
+        assert resp.headers["X-Gufo-HTTP"] == b"TEST"
+        data = await resp.read()
+        assert data
+        assert data == b'{"status":true}'
+
+    asyncio.run(inner())

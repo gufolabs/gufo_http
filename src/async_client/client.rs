@@ -10,7 +10,7 @@ use pyo3::{
     prelude::*,
 };
 use pyo3_asyncio::tokio::future_into_py;
-use reqwest::RequestBuilder;
+use reqwest::{redirect::Policy, RequestBuilder};
 
 #[pyclass(module = "gufo.http.async_client")]
 pub struct AsyncClient {
@@ -20,9 +20,13 @@ pub struct AsyncClient {
 #[pymethods]
 impl AsyncClient {
     #[new]
-    fn new() -> PyResult<Self> {
+    fn new(max_redirect: Option<usize>) -> PyResult<Self> {
         let builder = reqwest::Client::builder();
         let client = builder
+            .redirect(match max_redirect {
+                Some(x) => Policy::limited(x),
+                None => Policy::none(),
+            })
             .build()
             .map_err(|x| PyValueError::new_err(x.to_string()))?;
         Ok(AsyncClient { client })
