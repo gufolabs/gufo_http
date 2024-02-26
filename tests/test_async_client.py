@@ -1,6 +1,7 @@
 # Python modules
 import asyncio
 from typing import Optional
+from collections.abc import Iterable
 
 # Third-party modules
 import pytest
@@ -89,5 +90,79 @@ def test_headers_get_default(httpd) -> None:
         h = resp.headers.get("ctype", default)
         assert h == default
         # assert h is default
+
+    asyncio.run(inner())
+
+
+@pytest.mark.parametrize(
+    ("header", "expected"),
+    [
+        ("Content-Type", True),
+        ("content-type", True),
+        ("ctype", False),
+    ],
+)
+def test_headers_in(header: str, expected: bool, httpd) -> None:
+    async def inner() -> None:
+        client = HttpClient()
+        resp = await client.get(f"{URL_PREFIX}/")
+        r = header in resp.headers
+        assert r is expected
+
+    asyncio.run(inner())
+
+
+def test_headers_keys(httpd) -> None:
+    async def inner() -> None:
+        client = HttpClient()
+        resp = await client.get(f"{URL_PREFIX}/")
+        keys = resp.headers.keys()
+        assert isinstance(keys, Iterable)
+        k = list(keys)
+        assert len(k) > 0
+        assert "content-type" in k
+        assert "server" in k
+        assert isinstance(k[0], str)
+
+    asyncio.run(inner())
+
+
+def test_headers_values(httpd) -> None:
+    async def inner() -> None:
+        client = HttpClient()
+        resp = await client.get(f"{URL_PREFIX}/")
+        values = resp.headers.values()
+        assert isinstance(values, Iterable)
+        k = list(values)
+        assert len(k) > 0
+        assert isinstance(k[0], bytes)
+        has_nginx = False
+        has_html = False
+        for v in k:
+            if b"nginx" in v:
+                has_nginx = True
+            elif b"text/html" in v:
+                has_html = True
+        assert has_nginx
+        assert has_html
+
+    asyncio.run(inner())
+
+
+def test_headers_items(httpd) -> None:
+    async def inner() -> None:
+        client = HttpClient()
+        resp = await client.get(f"{URL_PREFIX}/")
+        items = resp.headers.items()
+        assert isinstance(items, Iterable)
+        k = list(items)
+        assert len(k) > 0
+        assert isinstance(k[0], tuple)
+        assert len(k[0]) == 2
+        assert isinstance(k[0][0], str)
+        assert isinstance(k[0][1], bytes)
+        data = dict(resp.headers.items())
+        assert "content-type" in data
+        assert b"text/html" in data["content-type"]
 
     asyncio.run(inner())
