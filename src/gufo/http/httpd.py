@@ -81,10 +81,7 @@ class Httpd(object):
     def get_config(self: "Httpd", root: Path) -> str:
         """Generate nginx.conf."""
         user = getuser()
-        if user == "root":
-            user_cfg = f"user {user};"
-        else:
-            user_cfg = ""
+        user_cfg = f"user {user};" if user == "root" else ""
         return f"""daemon off;
 {user_cfg}
 worker_processes auto;
