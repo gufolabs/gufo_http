@@ -31,6 +31,7 @@ class Httpd(object):
         port: Listen port.
         host: Server hostname.
         start_timeout: Maximum time to wait for nginx to start.
+        check_config: Check nginx config on startup.
     """
 
     def __init__(
@@ -40,12 +41,14 @@ class Httpd(object):
         port: int = 10080,
         host: str = "local.gufolabs.com",
         start_timeout: float = 5.0,
+        check_config: bool = True,
     ) -> None:
         self._path = path
         self._address = address
         self._port = port
         self._host = host
         self._start_timeout = start_timeout
+        self._check_config = True
 
     def __enter__(self: "Httpd") -> "Httpd":
         """Context manager entry."""
@@ -124,6 +127,18 @@ http {{
             return 200 '{{"status":true}}';
         }}
 
+        location /cookie/get {{
+            add_header Set-Cookie "gufo-http=test; Path=/";
+            return 200 '{{"status":true}}';
+        }}
+
+        location /cookie/check {{
+            if ($http_cookie !~* "gufo-http=test") {{
+                return 403 '{{"status":false}}';
+            }}
+            return 200 '{{"status":true}}';
+        }}
+
         location / {{
             root {root};
         }}
@@ -146,6 +161,11 @@ http {{
         # index.html
         with open(data_path / "index.html", "w") as fp:
             fp.write("<html>hello</html>")
+        # Check config
+        if self._check_config:
+            args = [self._path, "-T", "-c", str(cfg_path)]
+            r = subprocess.check_output(args, stderr=subprocess.STDOUT)
+            print(r)
         # Run process
         args = [self._path, "-c", str(cfg_path)]
         self._proc = subprocess.Popen(
