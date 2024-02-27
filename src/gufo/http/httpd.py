@@ -94,7 +94,7 @@ http {{
     default_type application/octet-stream;
 
     access_log /dev/stdout;
-    error_log /dev/stdout info;
+    error_log stderr info;
     gzip on;
     gzip_types text/plain text/css application/json
         application/javascript text/xml application/xml
