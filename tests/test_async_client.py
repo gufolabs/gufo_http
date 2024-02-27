@@ -1,18 +1,26 @@
+# ---------------------------------------------------------------------
+# Gufo HTTP: async HttpClient tests
+# ---------------------------------------------------------------------
+# Copyright (C) 2024, Gufo Labs
+# See LICENSE.md for details
+# ---------------------------------------------------------------------
+
 # Python modules
 import asyncio
-from typing import Optional
 from collections.abc import Iterable
+from typing import ClassVar, Dict, Optional
 
 # Third-party modules
 import pytest
 
 # Gufo HTTP Modules
-from gufo.http.async_client import HttpClient, AsyncResponse
+from gufo.http.async_client import HttpClient
 from gufo.http.httpd import Httpd
+
 from .util import URL_PREFIX
 
 
-def test_get(httpd) -> None:
+def test_get(httpd: Httpd) -> None:
     async def inner() -> None:
         client = HttpClient()
         resp = await client.get(f"{URL_PREFIX}/")
@@ -24,7 +32,7 @@ def test_get(httpd) -> None:
     asyncio.run(inner())
 
 
-def test_double_read(httpd) -> None:
+def test_double_read(httpd: Httpd) -> None:
     async def inner() -> None:
         client = HttpClient()
         resp = await client.get(f"{URL_PREFIX}/")
@@ -44,7 +52,7 @@ def test_double_read(httpd) -> None:
         ("content-type", b"text/html"),
     ],
 )
-def test_headers_getitem(header: str, expected: bytes, httpd) -> None:
+def test_headers_getitem(header: str, expected: bytes, httpd: Httpd) -> None:
     async def inner() -> None:
         client = HttpClient()
         resp = await client.get(f"{URL_PREFIX}/")
@@ -54,12 +62,12 @@ def test_headers_getitem(header: str, expected: bytes, httpd) -> None:
     asyncio.run(inner())
 
 
-def test_headers_getitem_key_error(httpd) -> None:
+def test_headers_getitem_key_error(httpd: Httpd) -> None:
     async def inner() -> None:
         client = HttpClient()
         resp = await client.get(f"{URL_PREFIX}/")
         with pytest.raises(KeyError):
-            h = resp.headers["ctype"]
+            resp.headers["ctype"]
 
     asyncio.run(inner())
 
@@ -72,7 +80,9 @@ def test_headers_getitem_key_error(httpd) -> None:
         ("ctype", None),
     ],
 )
-def test_headers_get(header: str, expected: Optional[bytes], httpd) -> None:
+def test_headers_get(
+    header: str, expected: Optional[bytes], httpd: Httpd
+) -> None:
     async def inner() -> None:
         client = HttpClient()
         resp = await client.get(f"{URL_PREFIX}/")
@@ -82,7 +92,7 @@ def test_headers_get(header: str, expected: Optional[bytes], httpd) -> None:
     asyncio.run(inner())
 
 
-def test_headers_get_default(httpd) -> None:
+def test_headers_get_default(httpd: Httpd) -> None:
     async def inner() -> None:
         client = HttpClient()
         resp = await client.get(f"{URL_PREFIX}/")
@@ -102,7 +112,7 @@ def test_headers_get_default(httpd) -> None:
         ("ctype", False),
     ],
 )
-def test_headers_in(header: str, expected: bool, httpd) -> None:
+def test_headers_in(header: str, expected: bool, httpd: Httpd) -> None:
     async def inner() -> None:
         client = HttpClient()
         resp = await client.get(f"{URL_PREFIX}/")
@@ -112,7 +122,7 @@ def test_headers_in(header: str, expected: bool, httpd) -> None:
     asyncio.run(inner())
 
 
-def test_headers_keys(httpd) -> None:
+def test_headers_keys(httpd: Httpd) -> None:
     async def inner() -> None:
         client = HttpClient()
         resp = await client.get(f"{URL_PREFIX}/")
@@ -127,7 +137,7 @@ def test_headers_keys(httpd) -> None:
     asyncio.run(inner())
 
 
-def test_headers_values(httpd) -> None:
+def test_headers_values(httpd: Httpd) -> None:
     async def inner() -> None:
         client = HttpClient()
         resp = await client.get(f"{URL_PREFIX}/")
@@ -149,7 +159,7 @@ def test_headers_values(httpd) -> None:
     asyncio.run(inner())
 
 
-def test_headers_items(httpd) -> None:
+def test_headers_items(httpd: Httpd) -> None:
     async def inner() -> None:
         client = HttpClient()
         resp = await client.get(f"{URL_PREFIX}/")
@@ -168,7 +178,7 @@ def test_headers_items(httpd) -> None:
     asyncio.run(inner())
 
 
-def test_redirect_to_root(httpd) -> None:
+def test_redirect_to_root(httpd: Httpd) -> None:
     async def inner() -> None:
         async with HttpClient() as client:
             resp = await client.get(f"{URL_PREFIX}/redirect/root")
@@ -180,7 +190,7 @@ def test_redirect_to_root(httpd) -> None:
     asyncio.run(inner())
 
 
-def test_no_redirect_to_root(httpd) -> None:
+def test_no_redirect_to_root(httpd: Httpd) -> None:
     async def inner() -> None:
         async with HttpClient(max_redirects=None) as client:
             resp = await client.get(f"{URL_PREFIX}/redirect/root")
@@ -189,16 +199,16 @@ def test_no_redirect_to_root(httpd) -> None:
     asyncio.run(inner())
 
 
-def test_redirect_to_loop(httpd) -> None:
+def test_redirect_to_loop(httpd: Httpd) -> None:
     async def inner() -> None:
         async with HttpClient() as client:
             with pytest.raises(RuntimeError):
-                resp = await client.get(f"{URL_PREFIX}/redirect/loop")
+                await client.get(f"{URL_PREFIX}/redirect/loop")
 
     asyncio.run(inner())
 
 
-def test_get_header(httpd) -> None:
+def test_get_header(httpd: Httpd) -> None:
     async def inner() -> None:
         client = HttpClient()
         resp = await client.get(f"{URL_PREFIX}/headers/get")
@@ -207,5 +217,59 @@ def test_get_header(httpd) -> None:
         data = await resp.read()
         assert data
         assert data == b'{"status":true}'
+
+    asyncio.run(inner())
+
+
+def test_get_without_header(httpd: Httpd) -> None:
+    async def inner() -> None:
+        client = HttpClient()
+        resp = await client.get(f"{URL_PREFIX}/headers/check")
+        assert resp.status == 403
+        data = await resp.read()
+        assert data
+        assert data == b'{"status":false}'
+
+    asyncio.run(inner())
+
+
+class MyHttpClient(HttpClient):
+    headers: ClassVar[Dict[str, bytes]] = {"X-Gufo-HTTP": b"TEST"}
+
+
+def test_get_with_header_class(httpd: Httpd) -> None:
+    async def inner() -> None:
+        async with MyHttpClient() as client:
+            resp = await client.get(f"{URL_PREFIX}/headers/check")
+            assert resp.status == 200
+            data = await resp.read()
+            assert data
+            assert data == b'{"status":true}'
+
+    asyncio.run(inner())
+
+
+def test_get_with_header_client(httpd: Httpd) -> None:
+    async def inner() -> None:
+        async with HttpClient(headers={"X-Gufo-HTTP": b"TEST"}) as client:
+            resp = await client.get(f"{URL_PREFIX}/headers/check")
+            assert resp.status == 200
+            data = await resp.read()
+            assert data
+            assert data == b'{"status":true}'
+
+    asyncio.run(inner())
+
+
+def test_get_with_header_request(httpd: Httpd) -> None:
+    async def inner() -> None:
+        async with HttpClient() as client:
+            resp = await client.get(
+                f"{URL_PREFIX}/headers/check", headers={"X-Gufo-HTTP": b"TEST"}
+            )
+            assert resp.status == 200
+            data = await resp.read()
+            assert data
+            assert data == b'{"status":true}'
 
     asyncio.run(inner())

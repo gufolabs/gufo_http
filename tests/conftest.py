@@ -14,7 +14,8 @@ import pytest
 
 # Gufo HTTP modules
 from gufo.http.httpd import Httpd
-from .util import HTTPD_PATH, HTTPD_HOST, HTTPD_ADDRESS, HTTPD_PORT
+
+from .util import HTTPD_ADDRESS, HTTPD_HOST, HTTPD_PATH, HTTPD_PORT
 
 
 @pytest.fixture(scope="session")

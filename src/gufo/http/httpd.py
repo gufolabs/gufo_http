@@ -4,19 +4,19 @@
 # Copyright (C) 2024, Gufo Labs
 # See LICENSE.md for details
 # ---------------------------------------------------------------------
+"""Httpd context manager for tests."""
 
 # Python modules
-from tempfile import TemporaryDirectory
-from types import TracebackType
-from typing import List, Optional, Type
-from logging import getLogger
-from getpass import getuser
-from pathlib import Path
-import subprocess
-import queue
-import threading
 import logging
 import os
+import queue
+import subprocess
+import threading
+from getpass import getuser
+from pathlib import Path
+from tempfile import TemporaryDirectory
+from types import TracebackType
+from typing import Optional, Type
 
 logger = logging.getLogger("gufo.httpd.httpd")
 
@@ -47,7 +47,7 @@ class Httpd(object):
         self._host = host
         self._start_timeout = start_timeout
 
-    def __enter__(self: "Httpd") -> "Snmpd":
+    def __enter__(self: "Httpd") -> "Httpd":
         """Context manager entry."""
         self._start()
         return self
@@ -76,7 +76,7 @@ class Httpd(object):
         self._stop()
 
     def get_config(self: "Httpd", root: Path) -> str:
-        """Generate nginx.conf"""
+        """Generate nginx.conf."""
         user = getuser()
         return f"""daemon off;
 user {user};
@@ -96,11 +96,33 @@ http {{
     access_log /dev/stdout;
     error_log /dev/stdout info;
     gzip on;
-    gzip_types text/plain text/css application/json application/javascript text/xml application/xml application/xml+rss text/javascript;
+    gzip_types text/plain text/css application/json
+        application/javascript text/xml application/xml
+        application/xml+rss text/javascript;
 
     server {{
         listen {self._port};
         server_name {self._host};
+
+        location /redirect/root {{
+            rewrite ^/redirect/root$ / redirect;
+        }}
+
+        location /redirect/loop {{
+            rewrite ^/redirect/loop$ /redirect/loop redirect;
+        }}
+
+        location /headers/get {{
+            add_header X-Gufo-HTTP "TEST";
+            return 200 '{{"status":true}}';
+        }}
+
+        location /headers/check {{
+            if ($http_x_gufo_http != "TEST") {{
+                return 403 '{{"status":false}}';
+            }}
+            return 200 '{{"status":true}}';
+        }}
 
         location / {{
             root {root};
@@ -118,8 +140,6 @@ http {{
         logger.debug("httpd config:\n%s", cfg)
         cfg_path = dn / "nginx.conf"
         with open(cfg_path, "w") as fp:
-            fp.write(cfg)
-        with open("/tmp/nginx.conf", "w") as fp:
             fp.write(cfg)
         # Write data
         os.mkdir(data_path)
