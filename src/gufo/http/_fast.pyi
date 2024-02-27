@@ -6,7 +6,7 @@
 # ---------------------------------------------------------------------
 
 # Python modules
-from typing import Iterable, Optional, Tuple
+from typing import Dict, Iterable, Optional, Tuple
 
 class HttpError(Exception): ...
 
@@ -29,6 +29,10 @@ class AsyncResponse(object):
 
 class AsyncClient(object):
     def __init__(
-        self: "AsyncClient", max_redirects: Optional[int]
+        self: "AsyncClient",
+        max_redirects: Optional[int],
+        headers: Optional[Dict[str, bytes]],
     ) -> None: ...
-    async def get(self: "AsyncClient", url: str) -> AsyncResponse: ...
+    async def get(
+        self: "AsyncClient", url: str, headers: Optional[Dict[str, bytes]]
+    ) -> AsyncResponse: ...
