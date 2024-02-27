@@ -20,7 +20,6 @@ nav:
       - Contributing Guide: dev/CONTRIBUTING.md
       - Code of Conduct: dev/CODE_OF_CONDUCT.md
       - Supported Standards: dev/standards.md
-      - Supported BER Types: dev/types.md
   - FAQ: faq.md
   - Changelog: CHANGELOG.md
   - License: LICENSE.md
