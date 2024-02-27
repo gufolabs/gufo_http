@@ -30,7 +30,9 @@ def merge_dict(
         return x
     if not x and y:
         return y
-    r = {}
+    if x is None or y is None:
+        return None  # Shut up mypy
+    r: Dict[str, bytes] = {}
     r.update(x)
     r.update(y)
     return r
