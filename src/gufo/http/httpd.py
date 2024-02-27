@@ -164,8 +164,17 @@ http {{
         # Check config
         if self._check_config:
             args = [self._path, "-T", "-c", str(cfg_path)]
-            r = subprocess.check_output(args, stderr=subprocess.STDOUT)
-            print(r)
+            proc = subprocess.Popen(
+                args,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                encoding="utf-8",
+                text=True,
+            )
+            o, e = proc.communicate()
+            if proc.returncode != 0:
+                print(o)
+                print(e)
         # Run process
         args = [self._path, "-c", str(cfg_path)]
         self._proc = subprocess.Popen(
