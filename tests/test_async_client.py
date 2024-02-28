@@ -32,6 +32,17 @@ def test_get(httpd: Httpd) -> None:
     asyncio.run(inner())
 
 
+def test_head(httpd: Httpd) -> None:
+    async def inner() -> None:
+        client = HttpClient()
+        resp = await client.head(f"{URL_PREFIX}/")
+        assert resp.status == 200
+        data = await resp.read()
+        assert data == b""
+
+    asyncio.run(inner())
+
+
 def test_double_read(httpd: Httpd) -> None:
     async def inner() -> None:
         client = HttpClient()

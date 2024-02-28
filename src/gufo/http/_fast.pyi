@@ -10,6 +10,10 @@ from typing import Dict, Iterable, Optional, Tuple
 
 class HttpError(Exception): ...
 
+# Constants for request methods
+GET: int
+HEAD: int
+
 class Headers(object):
     def __contains__(self: "Headers", k: str) -> bool: ...
     def __getitem__(self: "Headers", k: str) -> bytes: ...
@@ -33,6 +37,9 @@ class AsyncClient(object):
         max_redirects: Optional[int],
         headers: Optional[Dict[str, bytes]],
     ) -> None: ...
-    async def get(
-        self: "AsyncClient", url: str, headers: Optional[Dict[str, bytes]]
+    async def request(
+        self: "AsyncClient",
+        method: int,
+        url: str,
+        headers: Optional[Dict[str, bytes]],
     ) -> AsyncResponse: ...

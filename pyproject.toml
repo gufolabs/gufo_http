@@ -161,6 +161,10 @@ max-complexity = 15
   "PLR2004", # Magic value used in comparison, consider replacing {value} with a constant variable
   "S311", # Standard pseudo-random generators are not suitable for cryptographic purposes
 ]
+
+[[tool.setuptools-rust.ext-modules]]
+target = "gufo.http._fast"
+
 [tool.mypy]
 explicit_package_bases = true
 mypy_path = ["src"]

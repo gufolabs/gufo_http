@@ -12,7 +12,7 @@ from types import TracebackType
 from typing import Dict, Optional, Type
 
 # Gufo HTTP modules
-from ._fast import AsyncClient, AsyncResponse
+from ._fast import AsyncClient, AsyncResponse, GET, HEAD
 from .util import merge_dict
 
 MAX_REDIRECTS = 10
@@ -69,7 +69,24 @@ class HttpClient(object):
         Returns:
             AsyncResponse instance.
         """
-        return await self._client.get(url, headers)
+        return await self._client.request(GET, url, headers)
+
+    async def head(
+        self: "HttpClient",
+        url: str,
+        headers: Optional[Dict[str, bytes]] = None,
+    ) -> AsyncResponse:
+        """
+        Send HTTP HEAD request and receive a response.
+
+        Args:
+            url: Request url
+            headers: Optional request headers
+
+        Returns:
+            AsyncResponse instance.
+        """
+        return await self._client.request(HEAD, url, headers)
 
 
 __all__ = ["HttpClient", "AsyncResponse"]

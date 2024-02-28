@@ -5,6 +5,7 @@
 // See LICENSE.md for details
 // ------------------------------------------------------------------------
 use super::response::AsyncResponse;
+use crate::method::{GET, HEAD};
 use pyo3::{
     exceptions::{PyRuntimeError, PyValueError},
     prelude::*,
@@ -13,7 +14,7 @@ use pyo3_asyncio::tokio::future_into_py;
 use reqwest::{
     header::{HeaderMap, HeaderName, HeaderValue},
     redirect::Policy,
-    RequestBuilder,
+    Method, RequestBuilder,
 };
 use std::collections::HashMap;
 
@@ -49,28 +50,32 @@ impl AsyncClient {
             .map_err(|x| PyValueError::new_err(x.to_string()))?;
         Ok(AsyncClient { client })
     }
-    fn get<'a>(
+    fn request<'a>(
         &self,
         py: Python<'a>,
+        method: usize,
         url: String,
         headers: Option<HashMap<&str, &[u8]>>,
     ) -> PyResult<&'a PyAny> {
-        let mut builder = self.client.get(url);
+        // Get method
+        let m = match method {
+            GET => Method::GET,
+            HEAD => Method::HEAD,
+            _ => return Err(PyValueError::new_err("invalid method")),
+        };
+        // Build request for method
+        let mut req = self.client.request(m, url);
+        // Add headers
         if let Some(h) = headers {
             for (k, v) in h {
-                builder = builder.header(
+                req = req.header(
                     HeaderName::from_bytes(k.as_ref())
                         .map_err(|e| PyValueError::new_err(e.to_string()))?,
                     HeaderValue::from_bytes(v).map_err(|e| PyValueError::new_err(e.to_string()))?,
                 )
             }
         }
-        self.process_request(py, builder)
-    }
-}
-
-impl AsyncClient {
-    fn process_request<'a>(&self, py: Python<'a>, req: RequestBuilder) -> PyResult<&'a PyAny> {
+        // Create future
         future_into_py(py, async move {
             // Send request and wait for response
             let response = req
