@@ -13,3 +13,4 @@ HTTPD_HOST = "local.gufolabs.com"
 HTTPD_ADDRESS = "127.0.0.1"
 HTTPD_PORT = random.randint(52000, 53999)
 URL_PREFIX = f"http://{HTTPD_HOST}:{HTTPD_PORT}"
+UNROUTABLE_URL = "http://192.0.2.1/"

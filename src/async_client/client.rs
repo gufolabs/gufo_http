@@ -17,6 +17,7 @@ use reqwest::{
     Method,
 };
 use std::collections::HashMap;
+use std::time::Duration;
 
 #[pyclass(module = "gufo.http.async_client")]
 pub struct AsyncClient {
@@ -28,6 +29,8 @@ impl AsyncClient {
     #[new]
     fn new(
         validate_cert: bool,
+        connect_timeout: u64,
+        timeout: u64,
         max_redirect: Option<usize>,
         headers: Option<HashMap<&str, &[u8]>>,
         compression: Option<u8>,
@@ -61,10 +64,14 @@ impl AsyncClient {
                 builder = builder.brotli(true);
             }
         }
-        // Disable certificate validation
+        // Disable certificate validation when necessary
         if !validate_cert {
             builder = builder.danger_accept_invalid_certs(true);
         }
+        // Set timeouts
+        builder = builder
+            .connect_timeout(Duration::from_nanos(connect_timeout))
+            .timeout(Duration::from_nanos(timeout));
         //
         let client = builder
             .build()

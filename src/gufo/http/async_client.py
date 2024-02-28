@@ -16,6 +16,9 @@ from ._fast import AsyncClient, AsyncResponse, GET, HEAD, DEFLATE, GZIP, BROTLI
 from .util import merge_dict
 
 MAX_REDIRECTS = 10
+DEFAULT_CONNECT_TIMEOUT = 30.0
+DEFAULT_TIMEOUT = 3600.0
+NS = 1_000_000_000.0
 
 
 class HttpClient(object):
@@ -34,19 +37,26 @@ class HttpClient(object):
             Set to `None` to disable compression support.
         validate_cert: Set to `False` to disable TLS certificate
             validation.
+        connect_timeout: Timeout to establish connection, in seconds.
+        timeout: Request timeout, in seconds.
     """
 
     headers: Optional[Dict[str, bytes]] = None
 
     def __init__(
         self: "HttpClient",
+        /,
         max_redirects: Optional[int] = MAX_REDIRECTS,
         headers: Optional[Dict[str, bytes]] = None,
         compression: Optional[int] = DEFLATE | GZIP | BROTLI,
         validate_cert: bool = True,
+        connect_timeout: float = DEFAULT_CONNECT_TIMEOUT,
+        timeout: float = DEFAULT_TIMEOUT,
     ) -> None:
         self._client = AsyncClient(
             validate_cert,
+            int(connect_timeout * NS),
+            int(timeout * NS),
             max_redirects,
             merge_dict(self.headers, headers),
             compression,

@@ -40,6 +40,8 @@ class AsyncClient(object):
     def __init__(
         self: "AsyncClient",
         validate_cert: bool,
+        connect_timeout_ns: int,
+        timeout_ns: int,
         max_redirects: Optional[int],
         headers: Optional[Dict[str, bytes]],
         compression: Optional[int],

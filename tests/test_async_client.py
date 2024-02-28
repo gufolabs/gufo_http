@@ -18,7 +18,7 @@ from gufo.http.async_client import HttpClient
 from gufo.http.httpd import Httpd
 from gufo.http import GZIP
 
-from .util import URL_PREFIX
+from .util import URL_PREFIX, UNROUTABLE_URL
 
 
 def test_get(httpd: Httpd) -> None:
@@ -296,5 +296,14 @@ def test_compression(compression: Optional[int]) -> None:
             data = await resp.read()
             assert data
             assert b"</html>" in data
+
+    asyncio.run(inner())
+
+
+def test_connect_timeout() -> None:
+    async def inner() -> None:
+        async with HttpClient(connect_timeout=1.0) as client:
+            resp = await client.get(UNROUTABLE_URL)
+            assert resp.status == 200
 
     asyncio.run(inner())
