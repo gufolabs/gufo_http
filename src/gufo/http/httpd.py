@@ -105,7 +105,7 @@ http {{
     error_log stderr info;
     gzip on;
     gzip_min_length 5;
-    gzip_types text/plain text/css text/html application/json
+    gzip_types text/plain text/css application/json
         application/javascript text/xml application/xml
         application/xml+rss text/javascript;
 
