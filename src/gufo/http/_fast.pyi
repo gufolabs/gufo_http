@@ -13,6 +13,7 @@ class HttpError(Exception): ...
 # Constants for request methods
 GET: int
 HEAD: int
+OPTIONS: int
 
 # Constants for compression methods
 DEFLATE: int

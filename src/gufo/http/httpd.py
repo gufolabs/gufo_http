@@ -145,6 +145,13 @@ http {{
             return 200 '{{"status":true}}';
         }}
 
+        location /options {{
+            if ($request_method = OPTIONS ) {{
+                add_header Allow "OPTIONS, GET, HEAD";
+                return 204 "No content";
+            }}
+        }}
+
         location / {{
             root {root};
         }}

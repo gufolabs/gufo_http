@@ -12,7 +12,16 @@ from types import TracebackType
 from typing import Dict, Optional, Type
 
 # Gufo HTTP modules
-from ._fast import AsyncClient, AsyncResponse, GET, HEAD, DEFLATE, GZIP, BROTLI
+from ._fast import (
+    AsyncClient,
+    AsyncResponse,
+    GET,
+    HEAD,
+    OPTIONS,
+    DEFLATE,
+    GZIP,
+    BROTLI,
+)
 from .util import merge_dict
 
 MAX_REDIRECTS = 10
@@ -107,6 +116,24 @@ class HttpClient(object):
             AsyncResponse instance.
         """
         return await self._client.request(HEAD, url, headers)
+
+    async def options(
+        self: "HttpClient",
+        url: str,
+        headers: Optional[Dict[str, bytes]] = None,
+    ) -> AsyncResponse:
+        """
+        Send HTTP OPTIONS request and receive a response.
+        Usually returns `204 No content` response.
+
+        Args:
+            url: Request url, use `*` to get options for server.
+            headers: Optional request headers.
+
+        Returns:
+            AsyncResponse instance.
+        """
+        return await self._client.request(OPTIONS, url, headers)
 
 
 __all__ = ["HttpClient", "AsyncResponse"]

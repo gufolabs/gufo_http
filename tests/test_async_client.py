@@ -44,6 +44,25 @@ def test_head(httpd: Httpd) -> None:
     asyncio.run(inner())
 
 
+@pytest.mark.parametrize(
+    "url",
+    [
+        # "*", # Not allowed by reqwest
+        f"{URL_PREFIX}/options"
+    ],
+)
+def test_options(httpd: Httpd, url: str) -> None:
+    async def inner() -> None:
+        async with HttpClient() as client:
+            resp = await client.options(url)
+            assert resp.status == 204
+            allow = resp.headers["Allow"]
+            for m in (b"OPTIONS", b"GET", b"HEAD"):
+                assert m in allow
+
+    asyncio.run(inner())
+
+
 def test_double_read(httpd: Httpd) -> None:
     async def inner() -> None:
         client = HttpClient()
@@ -303,7 +322,7 @@ def test_compression(compression: Optional[int]) -> None:
 def test_connect_timeout() -> None:
     async def inner() -> None:
         async with HttpClient(connect_timeout=1.0) as client:
-            resp = await client.get(UNROUTABLE_URL)
-            assert resp.status == 200
+            with pytest.raises(RuntimeError):
+                resp = await client.get(UNROUTABLE_URL)
 
     asyncio.run(inner())

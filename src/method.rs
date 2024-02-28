@@ -8,6 +8,7 @@
 // Request methods
 pub const GET: usize = 0;
 pub const HEAD: usize = 1;
+pub const OPTIONS: usize = 2;
 
 // Compression methods
 pub const DEFLATE: u8 = 1;
