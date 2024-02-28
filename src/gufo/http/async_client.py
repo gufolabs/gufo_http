@@ -32,6 +32,8 @@ class HttpClient(object):
         compression: Acceptable compression methods,
             must be a combination of `DEFLATE`, `GZIP`, `BROTLI`.
             Set to `None` to disable compression support.
+        validate_cert: Set to `False` to disable TLS certificate
+            validation.
     """
 
     headers: Optional[Dict[str, bytes]] = None
@@ -41,9 +43,13 @@ class HttpClient(object):
         max_redirects: Optional[int] = MAX_REDIRECTS,
         headers: Optional[Dict[str, bytes]] = None,
         compression: Optional[int] = DEFLATE | GZIP | BROTLI,
+        validate_cert: bool = True,
     ) -> None:
         self._client = AsyncClient(
-            max_redirects, merge_dict(self.headers, headers), compression
+            validate_cert,
+            max_redirects,
+            merge_dict(self.headers, headers),
+            compression,
         )
 
     async def __aenter__(self: "HttpClient") -> "HttpClient":

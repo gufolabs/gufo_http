@@ -27,6 +27,7 @@ pub struct AsyncClient {
 impl AsyncClient {
     #[new]
     fn new(
+        validate_cert: bool,
         max_redirect: Option<usize>,
         headers: Option<HashMap<&str, &[u8]>>,
         compression: Option<u8>,
@@ -59,6 +60,10 @@ impl AsyncClient {
             if c | BROTLI == BROTLI {
                 builder = builder.brotli(true);
             }
+        }
+        // Disable certificate validation
+        if !validate_cert {
+            builder = builder.danger_accept_invalid_certs(true);
         }
         //
         let client = builder

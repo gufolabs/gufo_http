@@ -39,6 +39,7 @@ class AsyncResponse(object):
 class AsyncClient(object):
     def __init__(
         self: "AsyncClient",
+        validate_cert: bool,
         max_redirects: Optional[int],
         headers: Optional[Dict[str, bytes]],
         compression: Optional[int],
