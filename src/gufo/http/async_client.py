@@ -13,14 +13,14 @@ from typing import Dict, Optional, Type
 
 # Gufo HTTP modules
 from ._fast import (
-    AsyncClient,
-    AsyncResponse,
+    BROTLI,
+    DEFLATE,
     GET,
+    GZIP,
     HEAD,
     OPTIONS,
-    DEFLATE,
-    GZIP,
-    BROTLI,
+    AsyncClient,
+    AsyncResponse,
 )
 from .util import merge_dict
 
@@ -124,6 +124,7 @@ class HttpClient(object):
     ) -> AsyncResponse:
         """
         Send HTTP OPTIONS request and receive a response.
+
         Usually returns `204 No content` response.
 
         Args:

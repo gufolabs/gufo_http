@@ -12,13 +12,13 @@ from typing import ClassVar, Dict, Optional
 
 # Third-party modules
 import pytest
+from gufo.http import GZIP
 
 # Gufo HTTP Modules
 from gufo.http.async_client import HttpClient
 from gufo.http.httpd import Httpd
-from gufo.http import GZIP
 
-from .util import URL_PREFIX, UNROUTABLE_URL
+from .util import UNROUTABLE_URL, URL_PREFIX
 
 
 def test_get(httpd: Httpd) -> None:
@@ -323,6 +323,6 @@ def test_connect_timeout() -> None:
     async def inner() -> None:
         async with HttpClient(connect_timeout=1.0) as client:
             with pytest.raises(RuntimeError):
-                resp = await client.get(UNROUTABLE_URL)
+                await client.get(UNROUTABLE_URL)
 
     asyncio.run(inner())

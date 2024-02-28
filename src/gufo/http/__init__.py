@@ -12,7 +12,7 @@ Attributes:
 """
 
 # Gufo Labs modules
-from ._fast import Headers, HttpError, DEFLATE, GZIP, BROTLI
+from ._fast import BROTLI, DEFLATE, GZIP, Headers, HttpError
 
 __version__: str = "0.1.0"
 __all__ = [
