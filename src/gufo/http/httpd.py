@@ -181,7 +181,7 @@ http {{
                 print(o)
                 print(e)
         # Run process
-        args = [self._path, "-c", str(cfg_path)]
+        args = [self._path, "-q", "-c", str(cfg_path)]
         self._proc = subprocess.Popen(
             args, stdout=subprocess.PIPE, encoding="utf-8", text=True
         )
