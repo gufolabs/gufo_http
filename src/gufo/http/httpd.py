@@ -96,7 +96,9 @@ http {{
     sendfile on;
     tcp_nopush on;
 
-    include /etc/nginx/mime.types;
+    types {{
+        text/html                             html htm shtml;
+    }}
     default_type application/octet-stream;
 
     access_log /dev/stdout;
