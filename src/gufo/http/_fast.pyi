@@ -14,6 +14,11 @@ class HttpError(Exception): ...
 GET: int
 HEAD: int
 
+# Constants for compression methods
+DEFLATE: int
+GZIP: int
+BROTLI: int
+
 class Headers(object):
     def __contains__(self: "Headers", k: str) -> bool: ...
     def __getitem__(self: "Headers", k: str) -> bytes: ...
@@ -36,6 +41,7 @@ class AsyncClient(object):
         self: "AsyncClient",
         max_redirects: Optional[int],
         headers: Optional[Dict[str, bytes]],
+        compression: Optional[int],
     ) -> None: ...
     async def request(
         self: "AsyncClient",

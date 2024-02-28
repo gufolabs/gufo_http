@@ -5,7 +5,7 @@
 // See LICENSE.md for details
 // ------------------------------------------------------------------------
 use super::response::AsyncResponse;
-use crate::method::{GET, HEAD};
+use crate::method::{BROTLI, DEFLATE, GET, GZIP, HEAD};
 use pyo3::{
     exceptions::{PyRuntimeError, PyValueError},
     prelude::*,
@@ -14,7 +14,7 @@ use pyo3_asyncio::tokio::future_into_py;
 use reqwest::{
     header::{HeaderMap, HeaderName, HeaderValue},
     redirect::Policy,
-    Method, RequestBuilder,
+    Method,
 };
 use std::collections::HashMap;
 
@@ -26,7 +26,11 @@ pub struct AsyncClient {
 #[pymethods]
 impl AsyncClient {
     #[new]
-    fn new(max_redirect: Option<usize>, headers: Option<HashMap<&str, &[u8]>>) -> PyResult<Self> {
+    fn new(
+        max_redirect: Option<usize>,
+        headers: Option<HashMap<&str, &[u8]>>,
+        compression: Option<u8>,
+    ) -> PyResult<Self> {
         let builder = reqwest::Client::builder();
         let mut builder = builder.redirect(match max_redirect {
             Some(x) => Policy::limited(x),
@@ -43,6 +47,18 @@ impl AsyncClient {
                 );
             }
             builder = builder.default_headers(map);
+        }
+        // Set compression
+        if let Some(c) = compression {
+            if c | DEFLATE == DEFLATE {
+                builder = builder.deflate(true);
+            }
+            if c | GZIP == GZIP {
+                builder = builder.gzip(true);
+            }
+            if c | BROTLI == BROTLI {
+                builder = builder.brotli(true);
+            }
         }
         //
         let client = builder

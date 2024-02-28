@@ -16,6 +16,7 @@ import pytest
 # Gufo HTTP Modules
 from gufo.http.async_client import HttpClient
 from gufo.http.httpd import Httpd
+from gufo.http import GZIP
 
 from .util import URL_PREFIX
 
@@ -282,5 +283,18 @@ def test_get_with_header_request(httpd: Httpd) -> None:
             data = await resp.read()
             assert data
             assert data == b'{"status":true}'
+
+    asyncio.run(inner())
+
+
+@pytest.mark.parametrize("compression", [None, GZIP])
+def test_compression(compression: Optional[int]) -> None:
+    async def inner() -> None:
+        async with HttpClient(compression=compression) as client:
+            resp = await client.get(f"{URL_PREFIX}/")
+            assert resp.status == 200
+            data = await resp.read()
+            assert data
+            assert b"</html>" in data
 
     asyncio.run(inner())

@@ -82,9 +82,11 @@ class Httpd(object):
         """Generate nginx.conf."""
         user = getuser()
         user_cfg = f"user {user};" if user == "root" else ""
+        pid = root / ".nginx.pid"
         return f"""daemon off;
 {user_cfg}
 worker_processes auto;
+pid {pid};
 
 events {{
     worker_connections 768;
@@ -100,7 +102,8 @@ http {{
     access_log /dev/stdout;
     error_log stderr info;
     gzip on;
-    gzip_types text/plain text/css application/json
+    gzip_min_length 5;
+    gzip_types text/plain text/css text/html application/json
         application/javascript text/xml application/xml
         application/xml+rss text/javascript;
 
@@ -161,7 +164,8 @@ http {{
         os.mkdir(data_path)
         # index.html
         with open(data_path / "index.html", "w") as fp:
-            fp.write("<html>hello</html>")
+            lorem = "lorem ipsum " * 1000
+            fp.write(f"<html>{lorem}</html>")
         # Check config
         if self._check_config:
             args = [self._path, "-T", "-c", str(cfg_path)]

@@ -16,8 +16,13 @@ mod method;
 #[pyo3(name = "_fast")]
 fn gufo_http(py: Python, m: &PyModule) -> PyResult<()> {
     m.add("HttpError", py.get_type::<error::PyHttpError>())?;
+    // Request methods
     m.add("GET", method::GET)?;
     m.add("HEAD", method::HEAD)?;
+    // Compression methods
+    m.add("DEFLATE", method::DEFLATE)?;
+    m.add("GZIP", method::GZIP)?;
+    m.add("BROTLI", method::BROTLI)?;
     m.add_class::<headers::Headers>()?;
     m.add_class::<async_client::AsyncResponse>()?;
     m.add_class::<async_client::AsyncClient>()?;

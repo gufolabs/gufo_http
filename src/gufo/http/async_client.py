@@ -12,7 +12,7 @@ from types import TracebackType
 from typing import Dict, Optional, Type
 
 # Gufo HTTP modules
-from ._fast import AsyncClient, AsyncResponse, GET, HEAD
+from ._fast import AsyncClient, AsyncResponse, GET, HEAD, DEFLATE, GZIP, BROTLI
 from .util import merge_dict
 
 MAX_REDIRECTS = 10
@@ -29,6 +29,9 @@ class HttpClient(object):
     Args:
         max_redirects: Maximal amount of redirects. Use `None`
             to disable redirect processing.
+        compression: Acceptable compression methods,
+            must be a combination of `DEFLATE`, `GZIP`, `BROTLI`.
+            Set to `None` to disable compression support.
     """
 
     headers: Optional[Dict[str, bytes]] = None
@@ -37,9 +40,10 @@ class HttpClient(object):
         self: "HttpClient",
         max_redirects: Optional[int] = MAX_REDIRECTS,
         headers: Optional[Dict[str, bytes]] = None,
+        compression: Optional[int] = DEFLATE | GZIP | BROTLI,
     ) -> None:
         self._client = AsyncClient(
-            max_redirects, merge_dict(self.headers, headers)
+            max_redirects, merge_dict(self.headers, headers), compression
         )
 
     async def __aenter__(self: "HttpClient") -> "HttpClient":
