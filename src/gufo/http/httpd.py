@@ -152,6 +152,13 @@ http {{
             }}
         }}
 
+        location /delete {{
+            limit_except DELETE {{
+                deny all;
+            }}
+            return 200 "OK";
+        }}
+
         location / {{
             root {root};
         }}

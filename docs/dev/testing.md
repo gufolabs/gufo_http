@@ -20,7 +20,7 @@ Compiled packages will be available in the `dist/` directory.
 To rebuild Rust modules for debug and testing:
 
 ``` shell
-python setup.py build_rust
+python -m pip install --editable .
 ```
 
 ## Running tests
@@ -28,7 +28,7 @@ python setup.py build_rust
 Rebuild rust modules, if changed:
 
 ``` shell
-python setup.py develop
+python -m pip install --editable .
 ```
 
 To run the test suit:

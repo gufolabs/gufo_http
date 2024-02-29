@@ -5,7 +5,7 @@
 // See LICENSE.md for details
 // ------------------------------------------------------------------------
 use super::response::AsyncResponse;
-use crate::method::{BROTLI, DEFLATE, GET, GZIP, HEAD, OPTIONS};
+use crate::method::{BROTLI, DEFLATE, DELETE, GET, GZIP, HEAD, OPTIONS};
 use pyo3::{
     exceptions::{PyRuntimeError, PyValueError},
     prelude::*,
@@ -90,6 +90,7 @@ impl AsyncClient {
             GET => Method::GET,
             HEAD => Method::HEAD,
             OPTIONS => Method::OPTIONS,
+            DELETE => Method::DELETE,
             _ => return Err(PyValueError::new_err("invalid method")),
         };
         // Build request for method

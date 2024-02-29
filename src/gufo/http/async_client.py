@@ -15,6 +15,7 @@ from typing import Dict, Optional, Type
 from ._fast import (
     BROTLI,
     DEFLATE,
+    DELETE,
     GET,
     GZIP,
     HEAD,
@@ -135,6 +136,23 @@ class HttpClient(object):
             AsyncResponse instance.
         """
         return await self._client.request(OPTIONS, url, headers)
+
+    async def delete(
+        self: "HttpClient",
+        url: str,
+        headers: Optional[Dict[str, bytes]] = None,
+    ) -> AsyncResponse:
+        """
+        Send HTTP DELETE request and receive a response.
+
+        Args:
+            url: Request url, use `*` to get options for server.
+            headers: Optional request headers.
+
+        Returns:
+            AsyncResponse instance.
+        """
+        return await self._client.request(DELETE, url, headers)
 
 
 __all__ = ["HttpClient", "AsyncResponse"]

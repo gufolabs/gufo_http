@@ -14,6 +14,7 @@ class HttpError(Exception): ...
 GET: int
 HEAD: int
 OPTIONS: int
+DELETE: int
 
 # Constants for compression methods
 DEFLATE: int

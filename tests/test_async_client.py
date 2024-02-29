@@ -63,6 +63,17 @@ def test_options(httpd: Httpd, url: str) -> None:
     asyncio.run(inner())
 
 
+def test_delete(httpd: Httpd) -> None:
+    async def inner() -> None:
+        async with HttpClient() as client:
+            resp = await client.delete(f"{URL_PREFIX}/delete")
+            assert resp.status == 200
+            data = await resp.read()
+            assert data == b"OK"
+
+    asyncio.run(inner())
+
+
 def test_double_read(httpd: Httpd) -> None:
     async def inner() -> None:
         client = HttpClient()
