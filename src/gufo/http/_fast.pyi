@@ -15,6 +15,9 @@ GET: int
 HEAD: int
 OPTIONS: int
 DELETE: int
+POST: int
+PUT: int
+PATCH: int
 
 # Constants for compression methods
 DEFLATE: int
@@ -53,4 +56,5 @@ class AsyncClient(object):
         method: int,
         url: str,
         headers: Optional[Dict[str, bytes]],
+        body: Optional[bytes],
     ) -> AsyncResponse: ...

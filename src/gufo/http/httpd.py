@@ -159,6 +159,27 @@ http {{
             return 200 "OK";
         }}
 
+        location /post {{
+            limit_except POST {{
+                deny all;
+            }}
+            return 200 "OK";
+        }}
+
+        location /put {{
+            limit_except PUT {{
+                deny all;
+            }}
+            return 200 "OK";
+        }}
+
+        location /patch {{
+            limit_except PATCH {{
+                deny all;
+            }}
+            return 200 "OK";
+        }}
+
         location / {{
             root {root};
         }}

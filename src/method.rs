@@ -10,6 +10,9 @@ pub const GET: usize = 0;
 pub const HEAD: usize = 1;
 pub const OPTIONS: usize = 2;
 pub const DELETE: usize = 3;
+pub const POST: usize = 4;
+pub const PUT: usize = 5;
+pub const PATCH: usize = 6;
 
 // Compression methods
 pub const DEFLATE: u8 = 1;

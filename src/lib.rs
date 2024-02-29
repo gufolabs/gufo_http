@@ -21,6 +21,9 @@ fn gufo_http(py: Python, m: &PyModule) -> PyResult<()> {
     m.add("HEAD", method::HEAD)?;
     m.add("OPTIONS", method::OPTIONS)?;
     m.add("DELETE", method::DELETE)?;
+    m.add("POST", method::POST)?;
+    m.add("PUT", method::PUT)?;
+    m.add("PATCH", method::PATCH)?;
     // Compression methods
     m.add("DEFLATE", method::DEFLATE)?;
     m.add("GZIP", method::GZIP)?;

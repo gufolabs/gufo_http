@@ -5,7 +5,7 @@
 // See LICENSE.md for details
 // ------------------------------------------------------------------------
 use super::response::AsyncResponse;
-use crate::method::{BROTLI, DEFLATE, DELETE, GET, GZIP, HEAD, OPTIONS};
+use crate::method::{BROTLI, DEFLATE, DELETE, GET, GZIP, HEAD, OPTIONS, PATCH, POST, PUT};
 use pyo3::{
     exceptions::{PyRuntimeError, PyValueError},
     prelude::*,
@@ -84,6 +84,7 @@ impl AsyncClient {
         method: usize,
         url: String,
         headers: Option<HashMap<&str, &[u8]>>,
+        body: Option<Vec<u8>>,
     ) -> PyResult<&'a PyAny> {
         // Get method
         let m = match method {
@@ -91,6 +92,9 @@ impl AsyncClient {
             HEAD => Method::HEAD,
             OPTIONS => Method::OPTIONS,
             DELETE => Method::DELETE,
+            POST => Method::POST,
+            PUT => Method::PUT,
+            PATCH => Method::PATCH,
             _ => return Err(PyValueError::new_err("invalid method")),
         };
         // Build request for method
@@ -104,6 +108,10 @@ impl AsyncClient {
                     HeaderValue::from_bytes(v).map_err(|e| PyValueError::new_err(e.to_string()))?,
                 )
             }
+        }
+        // Add body
+        if let Some(b) = body {
+            req = req.body(b);
         }
         // Create future
         future_into_py(py, async move {

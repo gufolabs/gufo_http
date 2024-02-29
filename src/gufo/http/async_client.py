@@ -16,6 +16,9 @@ from ._fast import (
     BROTLI,
     DEFLATE,
     DELETE,
+    POST,
+    PUT,
+    PATCH,
     GET,
     GZIP,
     HEAD,
@@ -87,6 +90,7 @@ class HttpClient(object):
     async def get(
         self: "HttpClient",
         url: str,
+        /,
         headers: Optional[Dict[str, bytes]] = None,
     ) -> AsyncResponse:
         """
@@ -99,11 +103,12 @@ class HttpClient(object):
         Returns:
             AsyncResponse instance.
         """
-        return await self._client.request(GET, url, headers)
+        return await self._client.request(GET, url, headers, None)
 
     async def head(
         self: "HttpClient",
         url: str,
+        /,
         headers: Optional[Dict[str, bytes]] = None,
     ) -> AsyncResponse:
         """
@@ -116,11 +121,12 @@ class HttpClient(object):
         Returns:
             AsyncResponse instance.
         """
-        return await self._client.request(HEAD, url, headers)
+        return await self._client.request(HEAD, url, headers, None)
 
     async def options(
         self: "HttpClient",
         url: str,
+        /,
         headers: Optional[Dict[str, bytes]] = None,
     ) -> AsyncResponse:
         """
@@ -135,11 +141,12 @@ class HttpClient(object):
         Returns:
             AsyncResponse instance.
         """
-        return await self._client.request(OPTIONS, url, headers)
+        return await self._client.request(OPTIONS, url, headers, None)
 
     async def delete(
         self: "HttpClient",
         url: str,
+        /,
         headers: Optional[Dict[str, bytes]] = None,
     ) -> AsyncResponse:
         """
@@ -152,7 +159,67 @@ class HttpClient(object):
         Returns:
             AsyncResponse instance.
         """
-        return await self._client.request(DELETE, url, headers)
+        return await self._client.request(DELETE, url, headers, None)
+
+    async def post(
+        self: "HttpClient",
+        url: str,
+        body: bytes,
+        /,
+        headers: Optional[Dict[str, bytes]] = None,
+    ) -> AsyncResponse:
+        """
+        Send HTTP POST request and receive a response.
+
+        Args:
+            url: Request url, use `*` to get options for server.
+            body: Request body.
+            headers: Optional request headers.
+
+        Returns:
+            AsyncResponse instance.
+        """
+        return await self._client.request(POST, url, headers, body)
+
+    async def put(
+        self: "HttpClient",
+        url: str,
+        body: bytes,
+        /,
+        headers: Optional[Dict[str, bytes]] = None,
+    ) -> AsyncResponse:
+        """
+        Send HTTP PUT request and receive a response.
+
+        Args:
+            url: Request url, use `*` to get options for server.
+            body: Request body.
+            headers: Optional request headers.
+
+        Returns:
+            AsyncResponse instance.
+        """
+        return await self._client.request(PUT, url, headers, body)
+
+    async def patch(
+        self: "HttpClient",
+        url: str,
+        body: bytes,
+        /,
+        headers: Optional[Dict[str, bytes]] = None,
+    ) -> AsyncResponse:
+        """
+        Send HTTP PATCH request and receive a response.
+
+        Args:
+            url: Request url, use `*` to get options for server.
+            body: Request body.
+            headers: Optional request headers.
+
+        Returns:
+            AsyncResponse instance.
+        """
+        return await self._client.request(PATCH, url, headers, body)
 
 
 __all__ = ["HttpClient", "AsyncResponse"]

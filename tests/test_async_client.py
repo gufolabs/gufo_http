@@ -74,6 +74,48 @@ def test_delete(httpd: Httpd) -> None:
     asyncio.run(inner())
 
 
+def test_post(httpd: Httpd) -> None:
+    async def inner() -> None:
+        async with HttpClient() as client:
+            resp = await client.post(f"{URL_PREFIX}/post", b"TEST")
+            assert resp.status == 200
+            data = await resp.read()
+            assert data == b"OK"
+
+    asyncio.run(inner())
+
+
+def test_put(httpd: Httpd) -> None:
+    async def inner() -> None:
+        async with HttpClient() as client:
+            resp = await client.put(f"{URL_PREFIX}/put", b"TEST")
+            assert resp.status == 200
+            data = await resp.read()
+            assert data == b"OK"
+
+    asyncio.run(inner())
+
+
+def test_patch(httpd: Httpd) -> None:
+    async def inner() -> None:
+        async with HttpClient() as client:
+            resp = await client.patch(f"{URL_PREFIX}/patch", b"TEST")
+            assert resp.status == 200
+            data = await resp.read()
+            assert data == b"OK"
+
+    asyncio.run(inner())
+
+
+def test_not_found(httpd: Httpd) -> None:
+    async def inner() -> None:
+        async with HttpClient() as client:
+            resp = await client.get(f"{URL_PREFIX}/not_found")
+            assert resp.status == 404
+
+    asyncio.run(inner())
+
+
 def test_double_read(httpd: Httpd) -> None:
     async def inner() -> None:
         client = HttpClient()
