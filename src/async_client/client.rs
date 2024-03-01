@@ -36,6 +36,7 @@ impl AsyncClient {
         compression: Option<u8>,
     ) -> PyResult<Self> {
         let builder = reqwest::Client::builder();
+        // Set up redirect policy
         let mut builder = builder.redirect(match max_redirect {
             Some(x) => Policy::limited(x),
             None => Policy::none(),
@@ -64,7 +65,7 @@ impl AsyncClient {
                 builder = builder.brotli(true);
             }
         }
-        // Disable certificate validation when necessary
+        // Set up certificate validation
         if !validate_cert {
             builder = builder.danger_accept_invalid_certs(true);
         }
@@ -72,7 +73,9 @@ impl AsyncClient {
         builder = builder
             .connect_timeout(Duration::from_nanos(connect_timeout))
             .timeout(Duration::from_nanos(timeout));
-        //
+        // Disable proxies
+        //builder = builder.no_proxy();
+        // Build client
         let client = builder
             .build()
             .map_err(|x| PyValueError::new_err(x.to_string()))?;
