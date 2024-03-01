@@ -54,6 +54,7 @@ class AsyncClient(object):
         max_redirects: Optional[int],
         headers: Optional[Dict[str, bytes]],
         compression: Optional[int],
+        user_agent: Optional[str],
     ) -> None: ...
     async def request(
         self: "AsyncClient",

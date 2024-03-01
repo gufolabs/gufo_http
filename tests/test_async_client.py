@@ -393,7 +393,7 @@ def test_get_with_header_request(httpd: Httpd) -> None:
 
 
 @pytest.mark.parametrize("compression", [None, GZIP])
-def test_compression(compression: Optional[int]) -> None:
+def test_compression(httpd: Httpd, compression: Optional[int]) -> None:
     async def inner() -> None:
         async with HttpClient(compression=compression) as client:
             resp = await client.get(f"{URL_PREFIX}/")
@@ -406,10 +406,28 @@ def test_compression(compression: Optional[int]) -> None:
 
 
 @pytest.mark.parametrize("x", [HttpError, ConnectError])
-def test_connect_timeout(x: Type[BaseException]) -> None:
+def test_connect_timeout(httpd: Httpd, x: Type[BaseException]) -> None:
     async def inner() -> None:
         async with HttpClient(connect_timeout=1.0) as client:
             with pytest.raises(x):
                 await client.get(UNROUTABLE_URL)
+
+    asyncio.run(inner())
+
+
+def test_default_user_agent(httpd: Httpd) -> None:
+    async def inner() -> None:
+        async with HttpClient() as client:
+            resp = await client.get(f"{URL_PREFIX}/ua/default")
+            assert resp.status == 200
+
+    asyncio.run(inner())
+
+
+def test_set_user_agent(httpd: Httpd) -> None:
+    async def inner() -> None:
+        async with HttpClient(user_agent="Mozilla like gecko") as client:
+            resp = await client.get(f"{URL_PREFIX}/ua/custom")
+            assert resp.status == 200
 
     asyncio.run(inner())

@@ -27,6 +27,7 @@ from ._fast import (
     AsyncResponse,
 )
 from .util import merge_dict
+from . import __version__
 
 MAX_REDIRECTS = 10
 DEFAULT_CONNECT_TIMEOUT = 30.0
@@ -41,6 +42,7 @@ class HttpClient(object):
     Attributes:
         headers: Headers to be added to every request.
             Used in subclasses.
+        user_agent: Default user agent.
 
     Args:
         max_redirects: Maximal amount of redirects. Use `None`
@@ -54,6 +56,7 @@ class HttpClient(object):
         timeout: Request timeout, in seconds.
     """
 
+    user_agent = f"Gufo HTTP/{__version__}"
     headers: Optional[Dict[str, bytes]] = None
 
     def __init__(
@@ -65,6 +68,7 @@ class HttpClient(object):
         validate_cert: bool = True,
         connect_timeout: float = DEFAULT_CONNECT_TIMEOUT,
         timeout: float = DEFAULT_TIMEOUT,
+        user_agent: Optional[str] = None,
     ) -> None:
         self._client = AsyncClient(
             validate_cert,
@@ -73,6 +77,7 @@ class HttpClient(object):
             max_redirects,
             merge_dict(self.headers, headers),
             compression,
+            user_agent or self.user_agent,
         )
 
     async def __aenter__(self: "HttpClient") -> "HttpClient":

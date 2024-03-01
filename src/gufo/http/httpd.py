@@ -180,6 +180,20 @@ http {{
             return 200 "OK";
         }}
 
+        location /ua/default {{
+            if ($http_user_agent ~* "^Gufo HTTP/") {{
+                return 200 "OK";
+            }}
+            return 400 "Bad Request";
+        }}
+
+        location /ua/custom {{
+            if ($http_user_agent ~* "Mozilla") {{
+                return 200 "OK";
+            }}
+            return 400 "Bad Request";
+        }}
+
         location / {{
             root {root};
         }}

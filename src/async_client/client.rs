@@ -32,6 +32,7 @@ impl AsyncClient {
         max_redirect: Option<usize>,
         headers: Option<HashMap<&str, &[u8]>>,
         compression: Option<u8>,
+        user_agent: Option<&str>,
     ) -> PyResult<Self> {
         let builder = reqwest::Client::builder();
         // Set up redirect policy
@@ -73,6 +74,10 @@ impl AsyncClient {
             .timeout(Duration::from_nanos(timeout));
         // Disable proxies
         builder = builder.no_proxy();
+        // Set user agent
+        if let Some(ua) = user_agent {
+            builder = builder.user_agent(ua);
+        }
         // Build client
         let client = builder
             .build()
