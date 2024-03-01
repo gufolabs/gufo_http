@@ -8,17 +8,18 @@
 # Python modules
 import asyncio
 from collections.abc import Iterable
-from typing import ClassVar, Dict, Optional
+from typing import ClassVar, Dict, Optional, Type
 
 # Third-party modules
 import pytest
 from gufo.http import GZIP
 
 # Gufo HTTP Modules
+from gufo.http import RedirectError, ConnectError, HttpError, AlreadyReadError
 from gufo.http.async_client import HttpClient
 from gufo.http.httpd import Httpd
 
-from .util import UNROUTABLE_URL, URL_PREFIX
+from .util import UNROUTABLE_URL, URL_PREFIX, with_env, UNROUTABLE_PROXY
 
 
 def test_get(httpd: Httpd) -> None:
@@ -123,8 +124,21 @@ def test_double_read(httpd: Httpd) -> None:
         assert resp.status == 200
         data = await resp.read()
         assert data
-        with pytest.raises(RuntimeError):
+        with pytest.raises(AlreadyReadError):
             await resp.read()
+
+    asyncio.run(inner())
+
+
+def test_no_proxy(httpd: Httpd) -> None:
+    async def inner() -> None:
+        with with_env({"HTTP_PROXY": UNROUTABLE_PROXY}):
+            async with HttpClient() as client:
+                resp = await client.get(f"{URL_PREFIX}/")
+                assert resp.status == 200
+                data = await resp.read()
+                assert data
+                assert b"</html>" in data
 
     asyncio.run(inner())
 
@@ -283,10 +297,11 @@ def test_no_redirect_to_root(httpd: Httpd) -> None:
     asyncio.run(inner())
 
 
-def test_redirect_to_loop(httpd: Httpd) -> None:
+@pytest.mark.parametrize("x", [HttpError, RedirectError])
+def test_redirect_to_loop(httpd: Httpd, x: Type[BaseException]) -> None:
     async def inner() -> None:
         async with HttpClient() as client:
-            with pytest.raises(RuntimeError):
+            with pytest.raises(x):
                 await client.get(f"{URL_PREFIX}/redirect/loop")
 
     asyncio.run(inner())
@@ -372,10 +387,11 @@ def test_compression(compression: Optional[int]) -> None:
     asyncio.run(inner())
 
 
-def test_connect_timeout() -> None:
+@pytest.mark.parametrize("x", [HttpError, ConnectError])
+def test_connect_timeout(x: Type[BaseException]) -> None:
     async def inner() -> None:
         async with HttpClient(connect_timeout=1.0) as client:
-            with pytest.raises(RuntimeError):
+            with pytest.raises(x):
                 await client.get(UNROUTABLE_URL)
 
     asyncio.run(inner())

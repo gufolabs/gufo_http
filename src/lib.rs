@@ -16,6 +16,13 @@ mod method;
 #[pyo3(name = "_fast")]
 fn gufo_http(py: Python, m: &PyModule) -> PyResult<()> {
     m.add("HttpError", py.get_type::<error::PyHttpError>())?;
+    m.add("RequestError", py.get_type::<error::PyRequestError>())?;
+    m.add("ConnectError", py.get_type::<error::PyConnectError>())?;
+    m.add("RedirectError", py.get_type::<error::PyRedirectError>())?;
+    m.add(
+        "AlreadyReadError",
+        py.get_type::<error::PyAlreadyReadError>(),
+    )?;
     // Request methods
     m.add("GET", method::GET)?;
     m.add("HEAD", method::HEAD)?;

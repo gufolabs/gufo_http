@@ -4,8 +4,9 @@
 // Copyright (C) 2024, Gufo Labs
 // See LICENSE.md for details
 // ------------------------------------------------------------------------
+use crate::error::HttpError;
 use crate::headers::Headers;
-use pyo3::{exceptions::PyRuntimeError, prelude::*, types::PyBytes, ToPyObject};
+use pyo3::{prelude::*, types::PyBytes, ToPyObject};
 use pyo3_asyncio::tokio::future_into_py;
 use std::cell::RefCell;
 
@@ -38,17 +39,14 @@ impl AsyncResponse {
         match self
             .response
             .try_borrow_mut()
-            .map_err(|e| PyRuntimeError::new_err(e.to_string()))?
+            .map_err(|_| HttpError::RequestError("cannot borrow".into()))?
             .take()
         {
             Some(response) => future_into_py(py, async move {
-                let buf = response
-                    .bytes()
-                    .await
-                    .map_err(|e| PyRuntimeError::new_err(e.to_string()))?;
+                let buf = response.bytes().await.map_err(|e| HttpError::from(e))?;
                 Python::with_gil(|py| Ok(PyBytes::new(py, buf.as_ref()).to_object(py)))
             }),
-            None => Err(PyRuntimeError::new_err("Already read")),
+            None => Err(HttpError::AlreadyReadError.into()),
         }
     }
 }

@@ -12,12 +12,26 @@ Attributes:
 """
 
 # Gufo Labs modules
-from ._fast import BROTLI, DEFLATE, GZIP, Headers, HttpError
+from ._fast import (
+    BROTLI,
+    DEFLATE,
+    GZIP,
+    Headers,
+    HttpError,
+    RedirectError,
+    RequestError,
+    ConnectError,
+    AlreadyReadError,
+)
 
 __version__: str = "0.1.0"
 __all__ = [
     "__version__",
     "HttpError",
+    "RedirectError",
+    "RequestError",
+    "ConnectError",
+    "AlreadyReadError",
     "Headers",
     "DEFLATE",
     "GZIP",

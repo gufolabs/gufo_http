@@ -5,11 +5,9 @@
 // See LICENSE.md for details
 // ------------------------------------------------------------------------
 use super::response::AsyncResponse;
+use crate::error::HttpError;
 use crate::method::{BROTLI, DEFLATE, DELETE, GET, GZIP, HEAD, OPTIONS, PATCH, POST, PUT};
-use pyo3::{
-    exceptions::{PyRuntimeError, PyValueError},
-    prelude::*,
-};
+use pyo3::{exceptions::PyValueError, prelude::*};
 use pyo3_asyncio::tokio::future_into_py;
 use reqwest::{
     header::{HeaderMap, HeaderName, HeaderValue},
@@ -74,7 +72,7 @@ impl AsyncClient {
             .connect_timeout(Duration::from_nanos(connect_timeout))
             .timeout(Duration::from_nanos(timeout));
         // Disable proxies
-        //builder = builder.no_proxy();
+        builder = builder.no_proxy();
         // Build client
         let client = builder
             .build()
@@ -119,10 +117,7 @@ impl AsyncClient {
         // Create future
         future_into_py(py, async move {
             // Send request and wait for response
-            let response = req
-                .send()
-                .await
-                .map_err(|x| PyRuntimeError::new_err(x.to_string()))?;
+            let response = req.send().await.map_err(|x| HttpError::from(x))?;
             Python::with_gil(|py| Py::new(py, AsyncResponse::new(response)))
         })
     }
