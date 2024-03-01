@@ -15,7 +15,13 @@ import pytest
 from gufo.http import GZIP
 
 # Gufo HTTP Modules
-from gufo.http import RedirectError, ConnectError, HttpError, AlreadyReadError
+from gufo.http import (
+    RedirectError,
+    ConnectError,
+    HttpError,
+    AlreadyReadError,
+    RequestError,
+)
 from gufo.http.async_client import HttpClient
 from gufo.http.httpd import Httpd
 
@@ -126,6 +132,18 @@ def test_double_read(httpd: Httpd) -> None:
         assert data
         with pytest.raises(AlreadyReadError):
             await resp.read()
+
+    asyncio.run(inner())
+
+
+@pytest.mark.parametrize(
+    "url", ["ldap://127.0.0.1/", "http://700.700:202020/"]
+)
+def test_invalid_url(httpd: Httpd, url: str) -> None:
+    async def inner() -> None:
+        async with HttpClient() as client:
+            with pytest.raises(RequestError):
+                resp = await client.get(url)
 
     asyncio.run(inner())
 
