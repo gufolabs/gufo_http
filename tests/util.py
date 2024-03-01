@@ -6,9 +6,9 @@
 # ---------------------------------------------------------------------
 
 # Python modules
-import random
 import contextlib
 import os
+import random
 from typing import Dict
 
 HTTPD_PATH = "/usr/sbin/nginx"

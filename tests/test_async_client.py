@@ -12,20 +12,20 @@ from typing import ClassVar, Dict, Optional, Type
 
 # Third-party modules
 import pytest
-from gufo.http import GZIP
 
 # Gufo HTTP Modules
 from gufo.http import (
-    RedirectError,
+    GZIP,
+    AlreadyReadError,
     ConnectError,
     HttpError,
-    AlreadyReadError,
+    RedirectError,
     RequestError,
 )
 from gufo.http.async_client import HttpClient
 from gufo.http.httpd import Httpd
 
-from .util import UNROUTABLE_URL, URL_PREFIX, with_env, UNROUTABLE_PROXY
+from .util import UNROUTABLE_PROXY, UNROUTABLE_URL, URL_PREFIX, with_env
 
 
 def test_get(httpd: Httpd) -> None:
@@ -143,7 +143,7 @@ def test_invalid_url(httpd: Httpd, url: str) -> None:
     async def inner() -> None:
         async with HttpClient() as client:
             with pytest.raises(RequestError):
-                resp = await client.get(url)
+                await client.get(url)
 
     asyncio.run(inner())
 
