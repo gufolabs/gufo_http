@@ -117,7 +117,7 @@ impl AsyncClient {
         // Create future
         future_into_py(py, async move {
             // Send request and wait for response
-            let response = req.send().await.map_err(|x| HttpError::from(x))?;
+            let response = req.send().await.map_err(HttpError::from)?;
             Python::with_gil(|py| Py::new(py, AsyncResponse::new(response)))
         })
     }

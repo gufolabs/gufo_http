@@ -39,14 +39,14 @@ impl AsyncResponse {
         match self
             .response
             .try_borrow_mut()
-            .map_err(|_| HttpError::RequestError("cannot borrow".into()))?
+            .map_err(|_| HttpError::Request("cannot borrow".into()))?
             .take()
         {
             Some(response) => future_into_py(py, async move {
-                let buf = response.bytes().await.map_err(|e| HttpError::from(e))?;
+                let buf = response.bytes().await.map_err(HttpError::from)?;
                 Python::with_gil(|py| Ok(PyBytes::new(py, buf.as_ref()).to_object(py)))
             }),
-            None => Err(HttpError::AlreadyReadError.into()),
+            None => Err(HttpError::AlreadyRead.into()),
         }
     }
 }
