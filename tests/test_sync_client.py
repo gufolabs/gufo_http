@@ -115,19 +115,17 @@ def test_double_read(httpd: Httpd) -> None:
     "url", ["ldap://127.0.0.1/", "http://700.700:202020/"]
 )
 def test_invalid_url(httpd: Httpd, url: str) -> None:
-    with HttpClient() as client:
-        with pytest.raises(RequestError):
-            client.get(url)
+    with HttpClient() as client, pytest.raises(RequestError):
+        client.get(url)
 
 
 def test_no_proxy(httpd: Httpd) -> None:
-    with with_env({"HTTP_PROXY": UNROUTABLE_PROXY}):
-        with HttpClient() as client:
-            resp = client.get(f"{URL_PREFIX}/")
-            assert resp.status == 200
-            data = resp.read()
-            assert data
-            assert b"</html>" in data
+    with with_env({"HTTP_PROXY": UNROUTABLE_PROXY}), HttpClient() as client:
+        resp = client.get(f"{URL_PREFIX}/")
+        assert resp.status == 200
+        data = resp.read()
+        assert data
+        assert b"</html>" in data
 
 
 @pytest.mark.parametrize(
@@ -256,9 +254,8 @@ def test_no_redirect_to_root(httpd: Httpd) -> None:
 
 @pytest.mark.parametrize("x", [HttpError, RedirectError])
 def test_redirect_to_loop(httpd: Httpd, x: Type[BaseException]) -> None:
-    with HttpClient() as client:
-        with pytest.raises(x):
-            client.get(f"{URL_PREFIX}/redirect/loop")
+    with HttpClient() as client, pytest.raises(x):
+        client.get(f"{URL_PREFIX}/redirect/loop")
 
 
 def test_get_header(httpd: Httpd) -> None:
@@ -325,9 +322,8 @@ def test_compression(httpd: Httpd, compression: Optional[int]) -> None:
 
 @pytest.mark.parametrize("x", [HttpError, ConnectError])
 def test_connect_timeout(httpd: Httpd, x: Type[BaseException]) -> None:
-    with HttpClient(connect_timeout=1.0) as client:
-        with pytest.raises(x):
-            client.get(UNROUTABLE_URL)
+    with HttpClient(connect_timeout=1.0) as client, pytest.raises(x):
+        client.get(UNROUTABLE_URL)
 
 
 def test_default_user_agent(httpd: Httpd) -> None:
@@ -343,9 +339,8 @@ def test_set_user_agent(httpd: Httpd) -> None:
 
 
 def test_auth_invalid_class(httpd: Httpd) -> None:
-    with pytest.raises(TypeError):
-        with HttpClient(auth={}):
-            pass
+    with pytest.raises(TypeError), HttpClient(auth={}):
+        pass
 
 
 @pytest.mark.parametrize(
