@@ -23,11 +23,30 @@ WARNING: Initial release, work in progress. Coming soon...
 It wraps famous [Reqwest][Reqwest] HTTP client, written in
 [Rust][Rust] language with [PyO3][PyO3] wrapper.
 
+The getting of single URL is a simple task:
+
 ``` python
 async with HttpClient() as client:
-    rest = client.get("https://docs.gufolabs.com")
-    assert resp.status == 20
+    resp = client.get("https://docs.gufolabs.com")
+    assert resp.status == 200
     data = await resp.read()
+```
+
+The `HttpClient` is highly customizable, for example,
+to set request headers:
+
+``` python
+async with HttpClient(headers={"X-My-Header": b"test"}) as client:
+    resp = client.get("https://docs.gufolabs.com")
+    ...
+```
+
+Gufo HTTP supports common authentication methods out-of-box:
+
+``` python
+async with HttpClient(auth=BasicAuth("scott", "tiger")) as client:
+    resp = client.get("https://docs.gufolabs.com")
+    ...
 ```
 
 

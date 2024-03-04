@@ -7,6 +7,7 @@
 
 use pyo3::prelude::*;
 mod async_client;
+mod auth;
 mod error;
 mod headers;
 mod method;
@@ -35,6 +36,11 @@ fn gufo_http(py: Python, m: &PyModule) -> PyResult<()> {
     m.add("DEFLATE", method::DEFLATE)?;
     m.add("GZIP", method::GZIP)?;
     m.add("BROTLI", method::BROTLI)?;
+    // Auth
+    m.add_class::<auth::AuthBase>()?;
+    m.add_class::<auth::BasicAuth>()?;
+    m.add_class::<auth::BearerAuth>()?;
+    // Other
     m.add_class::<headers::Headers>()?;
     m.add_class::<async_client::AsyncResponse>()?;
     m.add_class::<async_client::AsyncClient>()?;

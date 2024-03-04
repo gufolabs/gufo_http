@@ -78,8 +78,10 @@ class Httpd(object):
         """Asynchronous context manager exit."""
         self._stop()
 
-    def get_config(self: "Httpd", root: Path) -> str:
+    def get_config(self: "Httpd", prefix: Path) -> str:
         """Generate nginx.conf."""
+        root = prefix / "data"
+        htpasswd = prefix / ".htpasswd"
         user = getuser()
         user_cfg = f"user {user};" if user == "root" else ""
         pid = root / ".nginx.pid"
@@ -194,6 +196,28 @@ http {{
             return 400 "Bad Request";
         }}
 
+        location /auth/basic {{
+            if ($http_authorization ~* "^Basic (.+)$") {{
+                set $basic_token $1;
+            }}
+            # scott/tiger
+            if ($basic_token = "c2NvdHQ6dGlnZXI=") {{
+                return 200;
+            }}
+            return 401;
+        }}
+
+        location /auth/bearer {{
+            if ($http_authorization ~* "^Bearer (.+)$") {{
+                set $bearer_token $1;
+            }}
+
+            if ($bearer_token = "123456") {{
+                return 200;
+            }}
+            return 401;
+        }}
+
         location / {{
             root {root};
         }}
@@ -206,7 +230,7 @@ http {{
         self._dir = TemporaryDirectory(prefix="httpd-")
         dn = Path(self._dir.name)
         data_path = dn / "data"
-        cfg = self.get_config(data_path)
+        cfg = self.get_config(dn)
         logger.debug("httpd config:\n%s", cfg)
         cfg_path = dn / "nginx.conf"
         with open(cfg_path, "w") as fp:

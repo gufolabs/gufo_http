@@ -8,11 +8,23 @@
 # Python modules
 from typing import Dict, Iterable, Optional, Tuple
 
+# Exceptions
 class HttpError(Exception): ...
 class RequestError(HttpError): ...
 class ConnectError(HttpError): ...
 class RedirectError(HttpError): ...
 class AlreadyReadError(HttpError): ...
+
+# Auth
+class AuthBase(object): ...
+
+class BasicAuth(AuthBase):
+    def __init__(
+        self: "BasicAuth", user: str, password: Optional[str]
+    ) -> None: ...
+
+class BearerAuth(AuthBase):
+    def __init__(self: "BearerAuth", token: str) -> None: ...
 
 # Constants for request methods
 GET: int
@@ -55,6 +67,7 @@ class AsyncClient(object):
         headers: Optional[Dict[str, bytes]],
         compression: Optional[int],
         user_agent: Optional[str],
+        auth: Optional[AuthBase],
     ) -> None: ...
     async def request(
         self: "AsyncClient",

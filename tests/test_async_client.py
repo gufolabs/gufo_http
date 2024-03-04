@@ -17,6 +17,9 @@ import pytest
 from gufo.http import (
     GZIP,
     AlreadyReadError,
+    AuthBase,
+    BasicAuth,
+    BearerAuth,
     ConnectError,
     HttpError,
     RedirectError,
@@ -429,5 +432,44 @@ def test_set_user_agent(httpd: Httpd) -> None:
         async with HttpClient(user_agent="Mozilla like gecko") as client:
             resp = await client.get(f"{URL_PREFIX}/ua/custom")
             assert resp.status == 200
+
+    asyncio.run(inner())
+
+
+def test_auth_invalid_class(httpd: Httpd) -> None:
+    async def inner() -> None:
+        with pytest.raises(TypeError):
+            async with HttpClient(auth={}):
+                pass
+
+    asyncio.run(inner())
+
+
+@pytest.mark.parametrize(
+    "url", [f"{URL_PREFIX}/auth/basic", f"{URL_PREFIX}/auth/bearer"]
+)
+def test_auth_basic_fail(httpd: Httpd, url: str) -> None:
+    async def inner() -> None:
+        async with HttpClient() as client:
+            resp = await client.get(url)
+            assert resp.status == 401
+
+    asyncio.run(inner())
+
+
+@pytest.mark.parametrize(
+    ("url", "auth", "expected"),
+    [
+        (f"{URL_PREFIX}/auth/basic", BasicAuth("scott", "tiger"), 200),
+        (f"{URL_PREFIX}/auth/basic", BasicAuth("scott", "tiger1"), 401),
+        (f"{URL_PREFIX}/auth/bearer", BearerAuth("123456"), 200),
+        (f"{URL_PREFIX}/auth/bearer", BearerAuth("1234567"), 401),
+    ],
+)
+def test_auth(httpd: Httpd, url: str, auth: AuthBase, expected: int) -> None:
+    async def inner() -> None:
+        async with HttpClient(auth=auth) as client:
+            resp = await client.get(url)
+            assert resp.status == expected
 
     asyncio.run(inner())

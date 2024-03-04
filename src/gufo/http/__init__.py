@@ -16,12 +16,15 @@ from ._fast import (
     BROTLI,
     DEFLATE,
     GZIP,
+    AlreadyReadError,
+    AuthBase,
+    BasicAuth,
+    BearerAuth,
+    ConnectError,
     Headers,
     HttpError,
     RedirectError,
     RequestError,
-    ConnectError,
-    AlreadyReadError,
 )
 
 __version__: str = "0.1.0"
@@ -36,4 +39,7 @@ __all__ = [
     "DEFLATE",
     "GZIP",
     "BROTLI",
+    "AuthBase",
+    "BasicAuth",
+    "BearerAuth",
 ]

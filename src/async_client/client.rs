@@ -5,8 +5,10 @@
 // See LICENSE.md for details
 // ------------------------------------------------------------------------
 use super::response::AsyncResponse;
+use crate::auth::{AuthMethod, BasicAuth, BearerAuth, GetAuthMethod};
 use crate::error::HttpError;
 use crate::method::{BROTLI, DEFLATE, DELETE, GET, GZIP, HEAD, OPTIONS, PATCH, POST, PUT};
+use pyo3::exceptions::PyTypeError;
 use pyo3::{exceptions::PyValueError, prelude::*};
 use pyo3_asyncio::tokio::future_into_py;
 use reqwest::{
@@ -20,6 +22,7 @@ use std::time::Duration;
 #[pyclass(module = "gufo.http.async_client")]
 pub struct AsyncClient {
     client: reqwest::Client,
+    auth: AuthMethod,
 }
 
 #[pymethods]
@@ -33,6 +36,7 @@ impl AsyncClient {
         headers: Option<HashMap<&str, &[u8]>>,
         compression: Option<u8>,
         user_agent: Option<&str>,
+        auth: Option<&PyAny>,
     ) -> PyResult<Self> {
         let builder = reqwest::Client::builder();
         // Set up redirect policy
@@ -78,11 +82,26 @@ impl AsyncClient {
         if let Some(ua) = user_agent {
             builder = builder.user_agent(ua);
         }
+        // Auth
+        let auth = match auth {
+            Some(auth) => {
+                if let Ok(basic_auth) = auth.extract::<BasicAuth>() {
+                    basic_auth.get_method()
+                } else if let Ok(bearer_auth) = auth.extract::<BearerAuth>() {
+                    bearer_auth.get_method()
+                } else {
+                    return Err(PyTypeError::new_err(
+                        "auth must be an instance of subclass of AuthBase",
+                    ));
+                }
+            }
+            None => AuthMethod::None,
+        };
         // Build client
         let client = builder
             .build()
             .map_err(|x| PyValueError::new_err(x.to_string()))?;
-        Ok(AsyncClient { client })
+        Ok(AsyncClient { client, auth })
     }
     fn request<'a>(
         &self,
@@ -114,6 +133,14 @@ impl AsyncClient {
                     HeaderValue::from_bytes(v).map_err(|e| PyValueError::new_err(e.to_string()))?,
                 )
             }
+        }
+        // Add auth
+        match &self.auth {
+            AuthMethod::None => {}
+            AuthMethod::Basic { user, password } => {
+                req = req.basic_auth(user, password.as_ref().map(|x| x))
+            }
+            AuthMethod::Bearer { token } => req = req.bearer_auth(token),
         }
         // Add body
         if let Some(b) = body {

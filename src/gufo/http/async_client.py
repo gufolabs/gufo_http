@@ -11,23 +11,25 @@
 from types import TracebackType
 from typing import Dict, Optional, Type
 
+from . import __version__
+
 # Gufo HTTP modules
 from ._fast import (
     BROTLI,
     DEFLATE,
     DELETE,
-    POST,
-    PUT,
-    PATCH,
     GET,
     GZIP,
     HEAD,
     OPTIONS,
+    PATCH,
+    POST,
+    PUT,
     AsyncClient,
     AsyncResponse,
+    AuthBase,
 )
 from .util import merge_dict
-from . import __version__
 
 MAX_REDIRECTS = 10
 DEFAULT_CONNECT_TIMEOUT = 30.0
@@ -54,6 +56,7 @@ class HttpClient(object):
             validation.
         connect_timeout: Timeout to establish connection, in seconds.
         timeout: Request timeout, in seconds.
+        auth: Authentication settings.
     """
 
     user_agent = f"Gufo HTTP/{__version__}"
@@ -69,6 +72,7 @@ class HttpClient(object):
         connect_timeout: float = DEFAULT_CONNECT_TIMEOUT,
         timeout: float = DEFAULT_TIMEOUT,
         user_agent: Optional[str] = None,
+        auth: Optional[AuthBase] = None,
     ) -> None:
         self._client = AsyncClient(
             validate_cert,
@@ -78,6 +82,7 @@ class HttpClient(object):
             merge_dict(self.headers, headers),
             compression,
             user_agent or self.user_agent,
+            auth,
         )
 
     async def __aenter__(self: "HttpClient") -> "HttpClient":
