@@ -9,6 +9,14 @@ repo_name: gufolabs/gufo_http
 nav:
   - Home: index.md
   - Installation: installation.md
+  - Examples:
+      - Overview: examples/index.md
+      - Sync Mode:
+          - Overview: examples/sync/index.md
+          - Get: examples/sync/get.md
+      - Async Mode:
+          - Overview: examples/async/index.md
+          - Get: examples/async/get.md
   - Reference: reference/
   - Developers' Guide:
       - Overview: dev/index.md
@@ -54,7 +62,7 @@ theme:
 watch:
   - docs/
   - src/gufo/
-  # - examples/
+  - examples/
 plugins:
   - search
   - gen-files:

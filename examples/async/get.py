@@ -11,7 +11,7 @@ async def main(url: str) -> None:
             print(f"Invalid response code: {r.status}")
             return
         data = await r.read()
-        print(data)
+        print(data.decode())
 
 
 asyncio.run(main(sys.argv[1]))
