@@ -11,6 +11,7 @@ mod auth;
 mod error;
 mod headers;
 mod method;
+mod sync_client;
 
 /// Module index
 #[pymodule]
@@ -42,7 +43,11 @@ fn gufo_http(py: Python, m: &PyModule) -> PyResult<()> {
     m.add_class::<auth::BearerAuth>()?;
     // Other
     m.add_class::<headers::Headers>()?;
+    // Async
     m.add_class::<async_client::AsyncResponse>()?;
     m.add_class::<async_client::AsyncClient>()?;
+    // Sync
+    m.add_class::<sync_client::SyncResponse>()?;
+    m.add_class::<sync_client::SyncClient>()?;
     Ok(())
 }

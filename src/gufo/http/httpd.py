@@ -81,7 +81,6 @@ class Httpd(object):
     def get_config(self: "Httpd", prefix: Path) -> str:
         """Generate nginx.conf."""
         root = prefix / "data"
-        htpasswd = prefix / ".htpasswd"
         user = getuser()
         user_cfg = f"user {user};" if user == "root" else ""
         pid = root / ".nginx.pid"

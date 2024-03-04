@@ -1,10 +1,10 @@
 // ------------------------------------------------------------------------
-// Gufo HTTP: AsyncClient implementation
+// Gufo HTTP: SynncClient implementation
 // ------------------------------------------------------------------------
 // Copyright (C) 2024, Gufo Labs
 // See LICENSE.md for details
 // ------------------------------------------------------------------------
-use super::response::AsyncResponse;
+use super::response::SyncResponse;
 use crate::auth::{AuthMethod, BasicAuth, BearerAuth, GetAuthMethod};
 use crate::error::HttpError;
 use crate::method::{BROTLI, DEFLATE, DELETE, GET, GZIP, HEAD, OPTIONS, PATCH, POST, PUT};
@@ -12,7 +12,6 @@ use pyo3::{
     exceptions::{PyTypeError, PyValueError},
     prelude::*,
 };
-use pyo3_asyncio::tokio::future_into_py;
 use reqwest::{
     header::{HeaderMap, HeaderName, HeaderValue},
     redirect::Policy,
@@ -21,14 +20,14 @@ use reqwest::{
 use std::collections::HashMap;
 use std::time::Duration;
 
-#[pyclass(module = "gufo.http.async_client")]
-pub struct AsyncClient {
-    client: reqwest::Client,
+#[pyclass(module = "gufo.http.sync_client")]
+pub struct SyncClient {
+    client: reqwest::blocking::Client,
     auth: AuthMethod,
 }
 
 #[pymethods]
-impl AsyncClient {
+impl SyncClient {
     #[allow(clippy::too_many_arguments)]
     #[new]
     fn new(
@@ -41,7 +40,7 @@ impl AsyncClient {
         user_agent: Option<&str>,
         auth: Option<&PyAny>,
     ) -> PyResult<Self> {
-        let builder = reqwest::Client::builder();
+        let builder = reqwest::blocking::Client::builder();
         // Set up redirect policy
         let mut builder = builder.redirect(match max_redirect {
             Some(x) => Policy::limited(x),
@@ -104,16 +103,15 @@ impl AsyncClient {
         let client = builder
             .build()
             .map_err(|x| PyValueError::new_err(x.to_string()))?;
-        Ok(AsyncClient { client, auth })
+        Ok(SyncClient { client, auth })
     }
-    fn request<'a>(
+    fn request(
         &self,
-        py: Python<'a>,
         method: usize,
         url: String,
         headers: Option<HashMap<&str, &[u8]>>,
         body: Option<Vec<u8>>,
-    ) -> PyResult<&'a PyAny> {
+    ) -> PyResult<Py<SyncResponse>> {
         // Get method
         let m = match method {
             GET => Method::GET,
@@ -147,11 +145,7 @@ impl AsyncClient {
         if let Some(b) = body {
             req = req.body(b);
         }
-        // Create future
-        future_into_py(py, async move {
-            // Send request and wait for response
-            let response = req.send().await.map_err(HttpError::from)?;
-            Python::with_gil(|py| Py::new(py, AsyncResponse::new(response)))
-        })
+        let response = req.send().map_err(HttpError::from)?;
+        Python::with_gil(|py| Py::new(py, SyncResponse::new(response)))
     }
 }

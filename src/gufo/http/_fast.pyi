@@ -76,3 +76,30 @@ class AsyncClient(object):
         headers: Optional[Dict[str, bytes]],
         body: Optional[bytes],
     ) -> AsyncResponse: ...
+
+class SyncResponse(object):
+    @property
+    def status(self: "SyncResponse") -> int: ...
+    @property
+    def headers(self: "SyncResponse") -> Headers: ...
+    def read(self: "SyncResponse") -> bytes: ...
+
+class SyncClient(object):
+    def __init__(
+        self: "SyncClient",
+        validate_cert: bool,
+        connect_timeout_ns: int,
+        timeout_ns: int,
+        max_redirects: Optional[int],
+        headers: Optional[Dict[str, bytes]],
+        compression: Optional[int],
+        user_agent: Optional[str],
+        auth: Optional[AuthBase],
+    ) -> None: ...
+    def request(
+        self: "SyncClient",
+        method: int,
+        url: str,
+        headers: Optional[Dict[str, bytes]],
+        body: Optional[bytes],
+    ) -> SyncResponse: ...
