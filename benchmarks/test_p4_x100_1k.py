@@ -14,6 +14,7 @@ from typing import Iterable
 
 # Third-party modules
 import aiohttp
+import aiosonic
 import httpx
 import pytest
 import requests
@@ -131,6 +132,19 @@ def test_aiohttp_async(httpd: Httpd, benchmark) -> None:
         async with aiohttp.ClientSession() as client:
             resp = await client.get(url)
             await resp.read()
+
+    @benchmark
+    def bench():
+        asyncio.run(run_async(do_request))
+
+
+def test_aiosonic_async(httpd: Httpd, benchmark) -> None:
+    url = f"{httpd.prefix}/bench-1k.txt"
+
+    async def do_request():
+        client = aiosonic.HTTPClient()
+        resp = await client.get(url)
+        await resp.content()
 
     @benchmark
     def bench():

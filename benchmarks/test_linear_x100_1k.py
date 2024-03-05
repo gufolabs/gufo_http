@@ -13,6 +13,7 @@ from typing import Iterable
 
 # Third-party modules
 import aiohttp
+import aiosonic
 import httpx
 import pytest
 import requests
@@ -110,6 +111,20 @@ def test_aiohttp_async(httpd: Httpd, benchmark) -> None:
                 for _ in range(REPEATS):
                     resp = await client.get(url)
                     await resp.read()
+
+        asyncio.run(inner())
+
+
+def test_aiosonic_async(httpd: Httpd, benchmark) -> None:
+    url = f"{httpd.prefix}/bench-1k.txt"
+
+    @benchmark
+    def bench():
+        async def inner():
+            client = aiosonic.HTTPClient()
+            for _ in range(REPEATS):
+                resp = await client.get(url)
+                await resp.content()
 
         asyncio.run(inner())
 
