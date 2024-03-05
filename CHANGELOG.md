@@ -15,6 +15,10 @@ To see unreleased changes, please see the [CHANGELOG on the main branch guide](h
 ### Added
 
 * Benchmarks
+  
+### Changed
+
+* Improved syncronous client's concurrency.
 
 ## 0.1.0 - 2024-03-04
 

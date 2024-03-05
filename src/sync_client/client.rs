@@ -7,7 +7,7 @@
 use super::response::SyncResponse;
 use crate::auth::{AuthMethod, BasicAuth, BearerAuth, GetAuthMethod};
 use crate::error::HttpError;
-use crate::method::{BROTLI, DEFLATE, DELETE, GET, GZIP, HEAD, OPTIONS, PATCH, POST, PUT};
+use crate::method::{get_method, BROTLI, DEFLATE, GZIP};
 use pyo3::{
     exceptions::{PyTypeError, PyValueError},
     prelude::*,
@@ -15,7 +15,6 @@ use pyo3::{
 use reqwest::{
     header::{HeaderMap, HeaderName, HeaderValue},
     redirect::Policy,
-    Method,
 };
 use std::collections::HashMap;
 use std::time::Duration;
@@ -111,20 +110,10 @@ impl SyncClient {
         url: String,
         headers: Option<HashMap<&str, &[u8]>>,
         body: Option<Vec<u8>>,
-    ) -> PyResult<Py<SyncResponse>> {
-        // Get method
-        let m = match method {
-            GET => Method::GET,
-            HEAD => Method::HEAD,
-            OPTIONS => Method::OPTIONS,
-            DELETE => Method::DELETE,
-            POST => Method::POST,
-            PUT => Method::PUT,
-            PATCH => Method::PATCH,
-            _ => return Err(PyValueError::new_err("invalid method")),
-        };
+        py: Python,
+    ) -> PyResult<SyncResponse> {
         // Build request for method
-        let mut req = self.client.request(m, url);
+        let mut req = self.client.request(get_method(method)?, url);
         // Add headers
         if let Some(h) = headers {
             for (k, v) in h {
@@ -145,7 +134,7 @@ impl SyncClient {
         if let Some(b) = body {
             req = req.body(b);
         }
-        let response = req.send().map_err(HttpError::from)?;
-        Python::with_gil(|py| Py::new(py, SyncResponse::new(response)))
+        let response = py.allow_threads(|| req.send()).map_err(HttpError::from)?;
+        Ok(SyncResponse::new(response))
     }
 }

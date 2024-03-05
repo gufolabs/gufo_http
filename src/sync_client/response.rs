@@ -42,7 +42,9 @@ impl SyncResponse {
             .take()
         {
             Some(response) => {
-                let buf = response.bytes().map_err(HttpError::from)?;
+                let buf = py
+                    .allow_threads(|| response.bytes())
+                    .map_err(HttpError::from)?;
                 Ok(PyBytes::new(py, buf.as_ref()).into())
             }
             None => Err(HttpError::AlreadyRead.into()),
