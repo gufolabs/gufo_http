@@ -29,7 +29,8 @@ HTTPD_HOST = "local.gufolabs.com"
 HTTPD_ADDRESS = "127.0.0.1"
 HTTPD_PORT = random.randint(52000, 53999)
 REPEATS = 100
-CONCURRENCY = 4
+CONCURRENCY = 4  # Must divide repeats
+PER_TASK = REPEATS // CONCURRENCY
 
 
 @pytest.fixture(scope="session")
@@ -47,17 +48,12 @@ def run_on_threadpool(fn):
     with concurrent.futures.ThreadPoolExecutor(
         max_workers=CONCURRENCY
     ) as executor:
-        futures = [executor.submit(fn) for _ in range(REPEATS)]
+        futures = [executor.submit(fn) for _ in range(CONCURRENCY)]
         concurrent.futures.wait(futures)
 
 
 async def run_async(fn):
-    async def run():
-        async with semaphore:
-            await fn()
-
-    semaphore = asyncio.Semaphore(CONCURRENCY)
-    tasks = [run() for _ in range(REPEATS)]
+    tasks = [asyncio.create_task(fn()) for _ in range(CONCURRENCY)]
     await asyncio.gather(*tasks)
 
 
@@ -66,8 +62,9 @@ def test_gufo_http_sync(httpd: Httpd, benchmark) -> None:
 
     def do_request():
         with SyncHttpClient() as client:
-            resp = client.get(url)
-            resp.read()
+            for _ in range(PER_TASK):
+                resp = client.get(url)
+                resp.read()
 
     @benchmark
     def bench():
@@ -79,8 +76,9 @@ def test_gufo_http_async(httpd: Httpd, benchmark) -> None:
 
     async def do_request():
         async with AsyncHttpClient() as client:
-            resp = await client.get(url)
-            await resp.read()
+            for _ in range(PER_TASK):
+                resp = await client.get(url)
+                await resp.read()
 
     @benchmark
     def bench():
@@ -91,8 +89,9 @@ def test_requests_sync(httpd: Httpd, benchmark) -> None:
     url = f"{httpd.prefix}/bench-1k.txt"
 
     def do_request():
-        resp = requests.get(url)
-        _ = resp.content
+        for _ in range(PER_TASK):
+            resp = requests.get(url)
+            _ = resp.content
 
     @benchmark
     def bench():
@@ -104,8 +103,9 @@ def test_httpx_sync(httpd: Httpd, benchmark) -> None:
 
     def do_request():
         with httpx.Client() as client:
-            resp = client.get(url)
-            _ = resp.text
+            for _ in range(PER_TASK):
+                resp = client.get(url)
+                _ = resp.text
 
     @benchmark
     def bench():
@@ -117,8 +117,9 @@ def test_httpx_async(httpd: Httpd, benchmark) -> None:
 
     async def do_request():
         async with httpx.AsyncClient() as client:
-            resp = await client.get(url)
-            _ = resp.text
+            for _ in range(PER_TASK):
+                resp = await client.get(url)
+                _ = resp.text
 
     @benchmark
     def bench():
@@ -130,8 +131,9 @@ def test_aiohttp_async(httpd: Httpd, benchmark) -> None:
 
     async def do_request():
         async with aiohttp.ClientSession() as client:
-            resp = await client.get(url)
-            await resp.read()
+            for _ in range(PER_TASK):
+                resp = await client.get(url)
+                await resp.read()
 
     @benchmark
     def bench():
@@ -143,8 +145,9 @@ def test_aiosonic_async(httpd: Httpd, benchmark) -> None:
 
     async def do_request():
         client = aiosonic.HTTPClient()
-        resp = await client.get(url)
-        await resp.content()
+        for _ in range(PER_TASK):
+            resp = await client.get(url)
+            await resp.content()
 
     @benchmark
     def bench():
@@ -155,8 +158,9 @@ def test_urllib_sync(httpd: Httpd, benchmark) -> None:
     url = f"{httpd.prefix}/bench-1k.txt"
 
     def do_request():
-        with urllib.request.urlopen(url) as resp:
-            resp.read()
+        for _ in range(PER_TASK):
+            with urllib.request.urlopen(url) as resp:
+                resp.read()
 
     @benchmark
     def bench():
