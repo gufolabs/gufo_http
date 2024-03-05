@@ -30,4 +30,5 @@ RUN \
     -r /tmp/docs.txt\
     -r /tmp/ipython.txt\
     -r /tmp/lint.txt\
-    -r /tmp/test.txt
+    -r /tmp/test.txt\
+    -r /tmp/bench.txt

@@ -12,6 +12,7 @@ import os
 import queue
 import subprocess
 import threading
+import time
 from getpass import getuser
 from pathlib import Path
 from tempfile import TemporaryDirectory
@@ -24,6 +25,9 @@ logger = logging.getLogger("gufo.httpd.httpd")
 class Httpd(object):
     """
     Httpd test context manager.
+
+    Attributes:
+        prefix: URL prefix.
 
     Args:
         path: nginx binary path.
@@ -49,6 +53,7 @@ class Httpd(object):
         self._host = host
         self._start_timeout = start_timeout
         self._check_config = True
+        self.prefix = f"http://{host}:{port}"
 
     def __enter__(self: "Httpd") -> "Httpd":
         """Context manager entry."""
@@ -240,6 +245,9 @@ http {{
         with open(data_path / "index.html", "w") as fp:
             lorem = "lorem ipsum " * 1000
             fp.write(f"<html>{lorem}</html>")
+        # bechmarks
+        with open(data_path / "bench-1k.txt", "w") as fp:
+            fp.write("A" * 1024)
         # Check config
         if self._check_config:
             args = [self._path, "-T", "-c", str(cfg_path)]
@@ -304,6 +312,7 @@ http {{
         """
         if self._proc and self._proc.stdout:
             logger.info("Waiting for nginx")
+            time.sleep(1)
             q.put(None)
             return
             for line in self._proc.stdout:

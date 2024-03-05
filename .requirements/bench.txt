@@ -1,0 +1,4 @@
+# Benchmark requirements
+requests==2.31.0
+httpx==0.27
+aiohttp==3.9.3

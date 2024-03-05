@@ -45,10 +45,10 @@ jobs:
         run: pip install -IU -r ./.requirements/lint.txt
 
       - name: Check Formatting
-        run: black --check examples/ src/ tests/
+        run: black --check examples/ src/ tests/ benchmarks/
 
       - name: Check ruff
-        run: ruff -q examples/ src/ tests/
+        run: ruff -q examples/ src/ tests/ benchmarks/
 
       - name: Check Mypy
         run: mypy src/
@@ -123,7 +123,7 @@ jobs:
         run: python -m pip install --upgrade pip
 
       - name: Install Dependencies
-        run: pip install -IU -r ./.requirements/build.txt -r ./.requirements/test.txt
+        run: pip install -IU -r ./.requirements/build.txt -r ./.requirements/test.txt -r ./.requirements/bench.txt
 
       - name: Install Rust
         run: ./tools/build/setup-rust.sh

@@ -18,6 +18,7 @@ nav:
           - Overview: examples/async/index.md
           - Get: examples/async/get.md
   - Reference: reference/
+  - Benchmarks: benchmarks.md
   - Developers' Guide:
       - Overview: dev/index.md
       - Developer's Environment: dev/environment.md
