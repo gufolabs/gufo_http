@@ -2,10 +2,10 @@
 # ------------------------------------------------------------------------
 # Gufo Labs: Build wheel in the quay.io/pypa/manylinux2014_x86_64:latest
 # Usage:
-# ./tools/build/build-manylinux 3.8 3.9 3.10 3.11
+# ./tools/build/build-manylinux 3.8 3.9 3.10 3.11 3.12
 # expects RUST_VERSION and RUST_ARCH
 # ------------------------------------------------------------------------
-# Copyright (C) 2022-23, Gufo Labs
+# Copyright (C) 2022-24, Gufo Labs
 # ------------------------------------------------------------------------
 
 # set -x
@@ -67,7 +67,7 @@ do
     echo "Installing wheel"
     pip install wheelhouse/*-$ABI-*.whl
     echo "Testing"
-    pytest -vv
+    pytest -vv tests/
     echo "... done"
     shift
 done
