@@ -15,6 +15,7 @@ from typing import Iterable
 import aiohttp
 import aiosonic
 import httpx
+import niquests
 import pytest
 import requests
 
@@ -73,6 +74,17 @@ def test_requests_sync(httpd: Httpd, benchmark) -> None:
     def bench():
         for _ in range(REPEATS):
             resp = requests.get(url)
+            _ = resp.content
+
+
+def test_niquests_sync(httpd: Httpd, benchmark) -> None:
+    url = f"{httpd.prefix}/bench-1k.txt"
+
+    @benchmark
+    def bench():
+        session = niquests.Session(multiplexed=True)
+        for _ in range(REPEATS):
+            resp = session.get(url)
             _ = resp.content
 
 

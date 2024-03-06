@@ -3,3 +3,4 @@ requests==2.31.0
 httpx==0.27
 aiohttp==3.9.3
 aiosonic==0.18.0
+niquests==3.5.2
