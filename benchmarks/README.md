@@ -22,6 +22,8 @@ We're comparing:
 - [aiosonic][aiosonic]
 - [httpx][httpx]
 - [requests][requests]
+- [niquests][niquests]
+- [pycurl][pycurl]
 - [urllib][urllib] from Python standard library
 
 Both synchronous and asynchronous tests are conducted if supported by the library.
@@ -145,5 +147,7 @@ feel free to [discuss it on GitHub][discussion].
 [aiosonic]: https://aiosonic.readthedocs.io/en/latest/
 [httpx]: https://www.python-httpx.org
 [requests]: https://requests.readthedocs.io/en/latest/
+[niquests]: https://niquests.readthedocs.io/en/stable/
+[pycurl]: http://pycurl.io/
 [urllib]: https://docs.python.org/3/library/urllib.request.html#module-urllib.request
 [discussion]: https://github.com/gufolabs/gufo_http/discussions/2

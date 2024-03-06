@@ -8,6 +8,7 @@
 # Python modules
 import asyncio
 import concurrent.futures
+import io
 import random
 import urllib.request
 from typing import Iterable
@@ -17,6 +18,7 @@ import aiohttp
 import aiosonic
 import httpx
 import niquests
+import pycurl
 import pytest
 import requests
 
@@ -176,6 +178,24 @@ def test_urllib_sync(httpd: Httpd, benchmark) -> None:
         for _ in range(PER_TASK):
             with urllib.request.urlopen(url) as resp:
                 resp.read()
+
+    @benchmark
+    def bench():
+        run_on_threadpool(do_request)
+
+
+def test_pycurl_sync(httpd: Httpd, benchmark) -> None:
+    url = f"{httpd.prefix}/bench-1k.txt"
+
+    def do_request():
+        curl = pycurl.Curl()
+        for _ in range(PER_TASK):
+            buffer = io.BytesIO()
+            curl.setopt(curl.URL, url)
+            curl.setopt(curl.WRITEDATA, buffer)
+            curl.perform()
+            _body = buffer.getvalue()
+        curl.close()
 
     @benchmark
     def bench():

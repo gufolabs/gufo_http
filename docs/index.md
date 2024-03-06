@@ -10,10 +10,6 @@ hero:
     source_button: Source Code
 ---
 
-!!! warning
-
-    This project is work-in-progress. Coming soon.
-
 *Gufo HTTP* is a high-performance Python HTTP client library that handles both asynchronous and synchronous modes.
 It wraps famous [Reqwest][Reqwest] HTTP client, written in
 [Rust][Rust] language with [PyO3][PyO3] wrapper.
@@ -22,7 +18,7 @@ The getting of single URL is a simple task:
 
 ``` python
 async with HttpClient() as client:
-    resp = client.get("https://docs.gufolabs.com")
+    resp = client.get("https://docs.gufolabs.com/")
     assert resp.status == 200
     data = await resp.read()
 ```
@@ -32,7 +28,7 @@ to set request headers:
 
 ``` python
 async with HttpClient(headers={"X-My-Header": b"test"}) as client:
-    resp = client.get("https://docs.gufolabs.com")
+    resp = client.get("https://docs.gufolabs.com/")
     ...
 ```
 
@@ -40,7 +36,7 @@ Gufo HTTP supports common authentication methods out-of-box:
 
 ``` python
 async with HttpClient(auth=BasicAuth("scott", "tiger")) as client:
-    resp = client.get("https://docs.gufolabs.com")
+    resp = client.get("https://protected.example.com/")
     ...
 ```
 
