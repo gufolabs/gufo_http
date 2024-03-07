@@ -30,7 +30,6 @@ HTTPD_PATH = "/usr/sbin/nginx"
 HTTPD_HOST = "local.gufolabs.com"
 HTTPD_ADDRESS = "127.0.0.1"
 HTTPD_PORT = random.randint(52000, 53999)
-REPEATS = 100
 
 
 @pytest.fixture(scope="session")
@@ -49,10 +48,9 @@ def test_gufo_http_sync(httpd: Httpd, benchmark) -> None:
 
     @benchmark
     def bench():
-        for _ in range(REPEATS):
-            with SyncHttpClient() as client:
-                resp = client.get(url)
-                resp.read()
+        with SyncHttpClient() as client:
+            resp = client.get(url)
+            resp.read()
 
 
 def test_gufo_http_async(httpd: Httpd, benchmark) -> None:
@@ -61,10 +59,9 @@ def test_gufo_http_async(httpd: Httpd, benchmark) -> None:
     @benchmark
     def bench():
         async def inner():
-            for _ in range(REPEATS):
-                async with AsyncHttpClient() as client:
-                    resp = await client.get(url)
-                    await resp.read()
+            async with AsyncHttpClient() as client:
+                resp = await client.get(url)
+                await resp.read()
 
         asyncio.run(inner())
 
@@ -74,9 +71,8 @@ def test_requests_sync(httpd: Httpd, benchmark) -> None:
 
     @benchmark
     def bench():
-        for _ in range(REPEATS):
-            resp = requests.get(url)
-            _ = resp.content
+        resp = requests.get(url)
+        _ = resp.content
 
 
 def test_niquests_sync(httpd: Httpd, benchmark) -> None:
@@ -84,10 +80,9 @@ def test_niquests_sync(httpd: Httpd, benchmark) -> None:
 
     @benchmark
     def bench():
-        for _ in range(REPEATS):
-            session = niquests.Session(multiplexed=True)
-            resp = session.get(url)
-            _ = resp.content
+        session = niquests.Session(multiplexed=True)
+        resp = session.get(url)
+        _ = resp.content
 
 
 def test_httpx_sync(httpd: Httpd, benchmark) -> None:
@@ -95,10 +90,9 @@ def test_httpx_sync(httpd: Httpd, benchmark) -> None:
 
     @benchmark
     def bench():
-        for _ in range(REPEATS):
-            with httpx.Client() as client:
-                resp = client.get(url)
-                _ = resp.text
+        with httpx.Client() as client:
+            resp = client.get(url)
+            _ = resp.text
 
 
 def test_httpx_async(httpd: Httpd, benchmark) -> None:
@@ -107,10 +101,9 @@ def test_httpx_async(httpd: Httpd, benchmark) -> None:
     @benchmark
     def bench():
         async def inner():
-            for _ in range(REPEATS):
-                async with httpx.AsyncClient() as client:
-                    resp = await client.get(url)
-                    _ = resp.text
+            async with httpx.AsyncClient() as client:
+                resp = await client.get(url)
+                _ = resp.text
 
         asyncio.run(inner())
 
@@ -121,10 +114,9 @@ def test_aiohttp_async(httpd: Httpd, benchmark) -> None:
     @benchmark
     def bench():
         async def inner():
-            for _ in range(REPEATS):
-                async with aiohttp.ClientSession() as client:
-                    resp = await client.get(url)
-                    await resp.read()
+            async with aiohttp.ClientSession() as client:
+                resp = await client.get(url)
+                await resp.read()
 
         asyncio.run(inner())
 
@@ -135,10 +127,9 @@ def test_aiosonic_async(httpd: Httpd, benchmark) -> None:
     @benchmark
     def bench():
         async def inner():
-            for _ in range(REPEATS):
-                client = aiosonic.HTTPClient()
-                resp = await client.get(url)
-                await resp.content()
+            client = aiosonic.HTTPClient()
+            resp = await client.get(url)
+            await resp.content()
 
         asyncio.run(inner())
 
@@ -148,9 +139,8 @@ def test_urllib_sync(httpd: Httpd, benchmark) -> None:
 
     @benchmark
     def bench():
-        for _ in range(REPEATS):
-            with urllib.request.urlopen(url) as resp:
-                resp.read()
+        with urllib.request.urlopen(url) as resp:
+            resp.read()
 
 
 def test_pycurl_sync(httpd: Httpd, benchmark) -> None:
@@ -158,11 +148,10 @@ def test_pycurl_sync(httpd: Httpd, benchmark) -> None:
 
     @benchmark
     def bench():
-        for _ in range(REPEATS):
-            curl = pycurl.Curl()
-            buffer = io.BytesIO()
-            curl.setopt(curl.URL, url)
-            curl.setopt(curl.WRITEDATA, buffer)
-            curl.perform()
-            _body = buffer.getvalue()
-            curl.close()
+        curl = pycurl.Curl()
+        buffer = io.BytesIO()
+        curl.setopt(curl.URL, url)
+        curl.setopt(curl.WRITEDATA, buffer)
+        curl.perform()
+        _body = buffer.getvalue()
+        curl.close()
