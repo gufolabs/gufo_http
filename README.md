@@ -20,6 +20,7 @@
 *Gufo HTTP* is a high-performance Python HTTP client library that handles both asynchronous and synchronous modes.
 It wraps famous [Reqwest][Reqwest] HTTP client, written in
 [Rust][Rust] language with [PyO3][PyO3] wrapper.
+Our task is to reach maximal performance while maintaining clean and easy-to use API.
 
 The getting of single URL is a simple task:
 
@@ -49,7 +50,22 @@ async with HttpClient(auth=BasicAuth("scott", "tiger")) as client:
 
 ## Performance
 
+Gufo HTTP is proved to be one of the fastest Python HTTP client available
+in the various scenarios. For example:
 
+### Single HTTP/1.1 requests scenario
+
+![Single requests](docs/single_x100_1k.png)
+
+### 100 Linear HTTP/1.1 requests scenario
+
+![Linear requests](docs/linear_x100_1k.png)
+
+### 100 Parallel HTTP/1.1 requests scenario
+
+![Parallel requests](docs/p4_x100_1k.png)
+
+Refer to [benchmarks](benchmarks/README.md) for details.
 
 ## On Gufo Stack
 

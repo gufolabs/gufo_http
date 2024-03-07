@@ -73,7 +73,7 @@ Run tests:
 pytest benchmarks/test_single_x100_1k.py
 ```
 
-Results:
+### Results (lower is better)
 ```
 ================================================================= test session starts =================================================================
 platform linux -- Python 3.11.2, pytest-7.4.3, pluggy-1.4.0
@@ -106,6 +106,8 @@ Legend:
 ================================================================= 10 passed in 9.12s ==================================================================
 ```
 
+![Median chart](single_x100_1k.png)
+
 ## 100 Linear HTTP/1.1 Requests
 
 Perform set of 100 linear http requests to read 1kb text file using single client session
@@ -120,7 +122,7 @@ Run tests:
 pytest benchmarks/test_linear_x100_1k.py
 ```
 
-Results:
+### Results (lower is better)
 ```
 ================================================================= test session starts =================================================================
 platform linux -- Python 3.11.2, pytest-7.4.3, pluggy-1.4.0
@@ -153,6 +155,8 @@ Legend:
 ================================================================= 10 passed in 14.29s =================================================================
 ```
 
+![Median chart](linear_x100_1k.png)
+
 ## 100 Parallel HTTP/1.1 Requests
 
 Perform 100 HTTP/1.1 requests to read 1kb text file with concurrency of 4 maintaininng
@@ -169,7 +173,7 @@ Run tests:
 pytest benchmarks/test_p4_x100_1k.py
 ```
 
-Results:
+### Results (lower is better)
 ```
 ================================================================= test session starts =================================================================
 platform linux -- Python 3.11.2, pytest-7.4.3, pluggy-1.4.0
@@ -201,6 +205,7 @@ Legend:
   OPS: Operations Per Second, computed as 1 / Mean
 ================================================================= 10 passed in 14.76s =================================================================
 ```
+![Median chart](p4_x100_1k.png)
 
 ## Feedback
 
