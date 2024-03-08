@@ -21,6 +21,7 @@ import niquests
 import pycurl
 import pytest
 import requests
+import urllib3
 
 # Gufo HTTP modules
 from gufo.http.async_client import HttpClient as AsyncHttpClient
@@ -178,6 +179,19 @@ def test_urllib_sync(httpd: Httpd, benchmark) -> None:
         for _ in range(PER_TASK):
             with urllib.request.urlopen(url) as resp:
                 resp.read()
+
+    @benchmark
+    def bench():
+        run_on_threadpool(do_request)
+
+
+def test_urllib3_sync(httpd: Httpd, benchmark) -> None:
+    url = f"{httpd.prefix}/bench-1k.txt"
+
+    def do_request():
+        for _ in range(PER_TASK):
+            resp = urllib3.request("GET", url)
+            _ = resp.data
 
     @benchmark
     def bench():

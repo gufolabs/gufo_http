@@ -25,6 +25,7 @@ We're comparing:
 - [niquests][niquests]
 - [PycURL][pycurl]
 - [urllib][urllib] from Python standard library
+- [urllibb3][urllib3]
 
 Both synchronous and asynchronous tests are conducted if supported by the library.
 Libraries are tested against a local nginx installation provided by the `gufo.http.httpd` wrapper.
@@ -222,4 +223,5 @@ feel free to [discuss it on GitHub][discussion].
 [niquests]: https://niquests.readthedocs.io/en/stable/
 [pycurl]: http://pycurl.io/
 [urllib]: https://docs.python.org/3/library/urllib.request.html#module-urllib.request
+[urllib3]: https://urllib3.readthedocs.io/en/stable/
 [discussion]: https://github.com/gufolabs/gufo_http/discussions/2
