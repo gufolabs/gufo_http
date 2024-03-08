@@ -62,12 +62,8 @@ do
     echo "Setup build dependencies"
     pip install -r ./.requirements/build.txt -r ./.requirements/test.txt
     # Collect PGO
-    echo "Building profiling version"
-    PGO_DATA_DIR="/tmp/pgo-data/$ABI"
-    RUSTFLAGS="-Cprofile-generate=$PGO_DATA_DIR" python3 -m pip install --editable .
-    echo "Collecting PGO data"
-    PYTHONPATH=src/:$PYTHONPATH python3 ./tools/build/collect-pgo.py
-    $(./tools/build/get-rustup-bin.sh)/llvm-profdata merge -o $PGO_DATA_DIR/merged.profdata $PGO_DATA_DIR
+    PGO_DATA_DIR=`mktemp -d`
+    ./tools/build/build-pgo.sh
     # Build wheel
     echo "Building wheel"
     RUSTFLAGS="-Cprofile-use=$PGO_DATA_DIR/merged.profdata" python3 -m build --wheel

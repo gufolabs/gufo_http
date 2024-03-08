@@ -78,7 +78,7 @@ def build_barchart(
     bench: Benchmark, data: List[Tuple[str, float]], scale: str
 ) -> None:
     """
-    Build bar chart into SVG file.
+    Build bar chart into PNG file.
 
     Args:
         bench: Benchmark description.
