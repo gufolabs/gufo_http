@@ -56,14 +56,17 @@ in the various scenarios. For example:
 ### Single HTTP/1.1 requests scenario
 
 ![Single requests](docs/single_x100_1k.png)
+*Lower is better*
 
 ### 100 Linear HTTP/1.1 requests scenario
 
 ![Linear requests](docs/linear_x100_1k.png)
+*Lower is better*
 
 ### 100 Parallel HTTP/1.1 requests scenario
 
 ![Parallel requests](docs/p4_x100_1k.png)
+*Lower is better*
 
 Refer to [benchmarks](benchmarks/README.md) for details.
 
