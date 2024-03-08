@@ -22,6 +22,7 @@ echo "##"
 echo "## Installing rust"
 echo "##"
 ./tools/build/setup-rust.sh
+rustup component add llvm-tools-preview
 
 echo "##"
 echo "## Installing nginx"
@@ -60,8 +61,22 @@ do
     pip install --upgrade pip
     echo "Setup build dependencies"
     pip install -r ./.requirements/build.txt -r ./.requirements/test.txt
+    # Collect PGO
+    echo "Building profiling version"
+    PGO_DATA_DIR="/tmp/pgo-data/$ABI"
+    RUSTFLAGS="-Cprofile-generate=$PGO_DATA_DIR" python3 -m pip install --editable .
+    echo "Collecting PGO data"
+    OLD_PYTHONPATH=$PYTHONPATH
+    PYTHONPATH=src/:$PYTHONPATH
+    python3 ./tools/build/collect-pgo.py
+    PYTHONPATH=$OLD_PYTHONPATH
+    $(./tools/build/get-rustup-bin.sh)/llvm-profdata merge -o $PGO_DATA_DIR/merged.profdata $PGO_DATA_DIR
+    # Build wheel
     echo "Building wheel"
-    python3 -m build --wheel
+    RUSTFLAGS="-Cprofile-use=$PGO_DATA_DIR/merged.profdata" python3 -m build --wheel
+    # Clean PGO
+    rm -rf $PGO_DATA_DIR
+    #
     echo "Auditing wheel"
     auditwheel repair dist/*-$ABI-*.whl
     echo "Installing wheel"

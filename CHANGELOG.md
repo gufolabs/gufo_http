@@ -15,6 +15,7 @@ To see unreleased changes, please see the [CHANGELOG on the main branch guide](h
 ### Added
 
 * Benchmark results and charts.
+* Enable profile-guided optimization (PGO) during packaging stage.
 
 ## 0.1.1 - 2024-03-05
 
