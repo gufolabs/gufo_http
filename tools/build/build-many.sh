@@ -66,10 +66,7 @@ do
     PGO_DATA_DIR="/tmp/pgo-data/$ABI"
     RUSTFLAGS="-Cprofile-generate=$PGO_DATA_DIR" python3 -m pip install --editable .
     echo "Collecting PGO data"
-    OLD_PYTHONPATH=$PYTHONPATH
-    PYTHONPATH=src/:$PYTHONPATH
-    python3 ./tools/build/collect-pgo.py
-    PYTHONPATH=$OLD_PYTHONPATH
+    PYTHONPATH=src/:$PYTHONPATH python3 ./tools/build/collect-pgo.py
     $(./tools/build/get-rustup-bin.sh)/llvm-profdata merge -o $PGO_DATA_DIR/merged.profdata $PGO_DATA_DIR
     # Build wheel
     echo "Building wheel"
