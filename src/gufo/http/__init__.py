@@ -27,7 +27,7 @@ from ._fast import (
     RequestError,
 )
 
-__version__: str = "0.1.1"
+__version__: str = "0.1.2"
 __all__ = [
     "__version__",
     "HttpError",
