@@ -63,7 +63,7 @@ do
     pip install -r ./.requirements/build.txt -r ./.requirements/test.txt
     # Collect PGO
     PGO_DATA_DIR=`mktemp -d`
-    ./tools/build/build-pgo.sh
+    ./tools/build/build-pgo.sh $PGO_DATA_DIR
     # Build wheel
     echo "Building wheel"
     RUSTFLAGS="-Cprofile-use=$PGO_DATA_DIR/merged.profdata" python3 -m build --wheel
