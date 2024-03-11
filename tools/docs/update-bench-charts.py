@@ -178,7 +178,7 @@ def iter_results(path: str) -> Iterable[Tuple[str, List[Tuple[str, float]]]]:
 def main() -> None:
     """Main function."""
     for bench, (scale, data) in zip(
-        BENCHMARKS, iter_results("benchmarks/README.md")
+        BENCHMARKS, iter_results("docs/benchmarks.md")
     ):
         build_barchart(bench, data, scale)
 
