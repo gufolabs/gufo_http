@@ -68,6 +68,21 @@ in the various scenarios. For example:
 ![Parallel requests](https://docs.gufolabs.com/gufo_http/p4_x100_1k.png)
 *Lower is better*
 
+### Single HTTPS requests scenario
+
+![Single requests](https://docs.gufolabs.com/gufo_http/https_single_x100_1k.png)
+*Lower is better*
+
+### 100 Linear HTTPS requests scenario
+
+![Linear requests](https://docs.gufolabs.com/gufo_http/https_linear_x100_1k.png)
+*Lower is better*
+
+### 100 Parallel HTTPS requests scenario
+
+![Parallel requests](https://docs.gufolabs.com/gufo_http/https_p4_x100_1k.png)
+*Lower is better*
+
 Refer to [benchmarks](https://docs.gufolabs.com/gufo_http/benchmarks/) for details.
 
 ## On Gufo Stack

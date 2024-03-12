@@ -18,14 +18,14 @@ hide:
 We're comparing:
 
 - [Gufo HTTP][Gufo HTTP] (current version)
-- [aiohttp][aiohttp]
-- [aiosonic][aiosonic]
-- [httpx][httpx]
-- [requests][requests]
-- [niquests][niquests]
-- [PycURL][pycurl]
+- [aiohttp][aiohttp] (3.9.3)
+- [aiosonic][aiosonic] (0.18.0)
+- [httpx][httpx] (0.27)
+- [requests][requests] (2.31.0)
+- [niquests][niquests] (3.5.2)
+- [PycURL][pycurl] (7.45.3)
 - [urllib][urllib] from Python standard library
-- [urllibb3][urllib3]
+- [urllibb3][urllib3] (2.2.1)
 
 Both synchronous and asynchronous tests are conducted if supported by the library.
 Libraries are tested against a local nginx installation provided by the `gufo.http.httpd` wrapper.
@@ -61,7 +61,9 @@ Install dependencies:
 pip3 install -r .requirements/test.txt -r .requirements/bench.txt gufo-http
 ```
 
-## Single HTTP/1.1 Requests
+## HTTP/1.1 Requests
+
+### Single Requests
 
 Perform http requests to read 1kb text file. This test evaluates:
 
@@ -109,8 +111,9 @@ Legend:
 ```
 
 ![Median chart](single_x100_1k.png)
+*Lower is better*
 
-## 100 Linear HTTP/1.1 Requests
+### 100 Linear Requests
 
 Perform set of 100 linear http requests to read 1kb text file using single client session
 whenever possible. This test evaluates:
@@ -159,8 +162,9 @@ Legend:
 ```
 
 ![Median chart](linear_x100_1k.png)
+*Lower is better*
 
-## 100 Parallel HTTP/1.1 Requests
+### 100 Parallel Requests
 
 Perform 100 HTTP/1.1 requests to read 1kb text file with concurrency of 4 maintaininng
 single client session per thread/coroutine.
@@ -209,7 +213,166 @@ Legend:
   OPS: Operations Per Second, computed as 1 / Mean
 ================================================================= 11 passed in 15.52s =================================================================
 ```
+
 ![Median chart](p4_x100_1k.png)
+*Lower is better*
+
+## HTTPS Requests
+
+### Single Requests
+
+Perform HTTP/2 requests to read 1kb text file. This test evaluates:
+
+* The cost of client's initialization.
+* The efficiency of the network code.
+* The efficiency HTTP/1.1 or HTTP/2 parser. 
+* The efficency of the crypto.
+
+Run tests:
+```
+pytest benchmarks/test_https_single_x100_1k.py
+```
+
+**Results (lower is better)**
+```
+================================================================= test session starts =================================================================
+platform linux -- Python 3.11.2, pytest-7.4.3, pluggy-1.4.0
+benchmark: 4.0.0 (defaults: timer=time.perf_counter disable_gc=False min_rounds=5 min_time=0.000005 max_time=1.0 calibration_precision=10 warmup=False warmup_iterations=100000)
+rootdir: /home/admin/bench/gufo_http
+plugins: anyio-4.3.0, benchmark-4.0.0
+collected 11 items                                                                                                                                    
+
+benchmarks/test_https_single_x100_1k.py ...........
+
+
+--------------------------------------------------------------------------------- benchmark: 11 tests ----------------------------------------------------------------------------------
+Name (time in ms)            Min                Max               Mean            StdDev             Median               IQR            Outliers      OPS            Rounds  Iterations
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+test_pycurl_sync         10.1101 (1.0)      10.5270 (1.0)      10.2586 (1.0)      0.0936 (1.0)      10.2440 (1.0)      0.1147 (1.0)          12;1  97.4796 (1.0)          35           1
+test_gufo_http_sync      10.1201 (1.00)     13.3844 (1.27)     10.9279 (1.07)     1.2221 (13.06)    10.3468 (1.01)     0.2738 (2.39)          3;3  91.5086 (0.94)         15           1
+test_gufo_http_async     10.5507 (1.04)     12.8932 (1.22)     10.8390 (1.06)     0.2696 (2.88)     10.8037 (1.05)     0.1846 (1.61)          6;3  92.2592 (0.95)         80           1
+test_urllib_sync         11.2086 (1.11)     20.0086 (1.90)     11.7377 (1.14)     1.0123 (10.82)    11.5494 (1.13)     0.4450 (3.88)          4;4  85.1954 (0.87)         83           1
+test_httpx_sync          11.6343 (1.15)     13.5775 (1.29)     11.9254 (1.16)     0.2859 (3.05)     11.8440 (1.16)     0.1684 (1.47)          9;8  83.8543 (0.86)         78           1
+test_aiohttp_async       13.0218 (1.29)     15.0993 (1.43)     13.5596 (1.32)     0.4582 (4.90)     13.4380 (1.31)     0.3692 (3.22)          3;1  73.7485 (0.76)         18           1
+test_httpx_async         14.0437 (1.39)     17.7872 (1.69)     14.6871 (1.43)     0.7068 (7.55)     14.4611 (1.41)     0.6279 (5.48)          4;3  68.0869 (0.70)         40           1
+test_aiosonic_async      52.5720 (5.20)     59.0495 (5.61)     53.9475 (5.26)     1.4194 (15.17)    53.6496 (5.24)     0.6740 (5.88)          2;2  18.5365 (0.19)         19           1
+test_urllib3_sync        52.7468 (5.22)     60.9415 (5.79)     55.0618 (5.37)     1.9572 (20.91)    54.9122 (5.36)     2.6238 (22.88)         6;1  18.1614 (0.19)         20           1
+test_niquests_sync       54.0449 (5.35)     57.9727 (5.51)     55.5715 (5.42)     1.0943 (11.69)    55.3307 (5.40)     1.3082 (11.41)         4;0  17.9948 (0.18)         18           1
+test_requests_sync       54.1392 (5.35)     57.9534 (5.51)     55.7626 (5.44)     1.2469 (13.32)    55.3186 (5.40)     2.3477 (20.47)         5;0  17.9332 (0.18)         14           1
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Legend:
+  Outliers: 1 Standard Deviation from Mean; 1.5 IQR (InterQuartile Range) from 1st Quartile and 3rd Quartile.
+  OPS: Operations Per Second, computed as 1 / Mean
+========================================================== 11 passed, 44 warnings in 14.36s ===========================================================
+```
+
+![Median chart](https_single_x100_1k.png)
+*Lower is better*
+
+### 100 Linear Requests
+Perform set of 100 linear HTTPS requests to read 1kb text file using single client session
+whenever possible. This test evaluates:
+
+* The efficiency of the network code.
+* The efficency of the HTTP/1.1 parser.
+* An ability to maintain connection pools.
+* The efficency of the crypto.
+
+Run tests:
+```
+pytest benchmarks/test_https_linear_x100_1k.py
+```
+
+**Results (lower is better)**
+
+```
+================================================================= test session starts =================================================================
+platform linux -- Python 3.11.2, pytest-7.4.3, pluggy-1.4.0
+benchmark: 4.0.0 (defaults: timer=time.perf_counter disable_gc=False min_rounds=5 min_time=0.000005 max_time=1.0 calibration_precision=10 warmup=False warmup_iterations=100000)
+rootdir: /home/admin/bench/gufo_http
+plugins: anyio-4.3.0, benchmark-4.0.0
+collected 11 items                                                                                                                                    
+
+benchmarks/test_https_linear_x100_1k.py ...........                                                                                             [100%]
+
+
+----------------------------------------------------------------------------------------- benchmark: 11 tests -----------------------------------------------------------------------------------------
+Name (time in ms)               Min                   Max                  Mean             StdDev                Median                 IQR            Outliers      OPS            Rounds  Iterations
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+test_pycurl_sync            27.5530 (1.0)         30.2960 (1.0)         28.6996 (1.0)       0.6420 (1.0)         28.5782 (1.0)        0.9508 (1.23)          9;0  34.8437 (1.0)          34           1
+test_gufo_http_sync         31.3744 (1.14)        36.4130 (1.20)        32.9570 (1.15)      1.3197 (2.06)        32.5026 (1.14)       1.2681 (1.64)          6;3  30.3426 (0.87)         28           1
+test_aiohttp_async          63.8585 (2.32)        66.9743 (2.21)        65.5050 (2.28)      0.9388 (1.46)        65.4824 (2.29)       0.9370 (1.21)          3;0  15.2660 (0.44)         10           1
+test_gufo_http_async        64.1737 (2.33)        67.4971 (2.23)        65.7372 (2.29)      1.0170 (1.58)        65.6995 (2.30)       1.2399 (1.61)          5;0  15.2121 (0.44)         15           1
+test_httpx_sync             91.8231 (3.33)        94.9401 (3.13)        93.3547 (3.25)      0.9826 (1.53)        93.3101 (3.27)       1.6283 (2.11)          4;0  10.7118 (0.31)         11           1
+test_aiosonic_async        106.2416 (3.86)       116.4554 (3.84)       108.6888 (3.79)      3.3076 (5.15)       107.4159 (3.76)       2.4509 (3.17)          2;1   9.2006 (0.26)         10           1
+test_urllib3_sync          118.7272 (4.31)       123.1409 (4.06)       120.3286 (4.19)      1.5320 (2.39)       120.2105 (4.21)       2.1491 (2.78)          3;0   8.3106 (0.24)          9           1
+test_httpx_async           143.8137 (5.22)       151.3308 (5.00)       146.5398 (5.11)      2.6129 (4.07)       146.2607 (5.12)       3.4013 (4.40)          2;0   6.8241 (0.20)          7           1
+test_niquests_sync         169.8794 (6.17)       172.0863 (5.68)       171.1388 (5.96)      0.7578 (1.18)       171.3233 (5.99)       0.7722 (1.0)           2;0   5.8432 (0.17)          6           1
+test_urllib_sync         1,139.7685 (41.37)    1,147.2830 (37.87)    1,143.7662 (39.85)     2.9161 (4.54)     1,143.2564 (40.00)      4.2299 (5.48)          2;0   0.8743 (0.03)          5           1
+test_requests_sync       5,508.6240 (199.93)   5,639.1937 (186.14)   5,584.9020 (194.60)   60.9650 (94.96)    5,619.8474 (196.65)   106.0952 (137.39)        1;0   0.1791 (0.01)          5           1
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Legend:
+  Outliers: 1 Standard Deviation from Mean; 1.5 IQR (InterQuartile Range) from 1st Quartile and 3rd Quartile.
+  OPS: Operations Per Second, computed as 1 / Mean
+==================================================== 11 passed, 1215 warnings in 62.47s (0:01:02) =====================================================
+```
+
+![Median chart](https_linear_x100_1k.png)
+*Lower is better*
+
+### 100 Parralel Requests
+Perform 100 HTTPS requests to read 1kb text file with concurrency of 4 maintaininng
+single client session per thread/coroutine.
+
+* The efficiency of the network code.
+* The efficency of the HTTP/1.1 parser.
+* An ability to maintain connection pools.
+* Granularity of the internal locks.
+* Ability to release GIL when runnning native code.
+
+Run tests:
+```
+pytest benchmarks/test_https_p4_x100_1k.py
+```
+
+**Results (lower is better)**
+```
+================================================================= test session starts =================================================================
+platform linux -- Python 3.11.2, pytest-7.4.3, pluggy-1.4.0
+benchmark: 4.0.0 (defaults: timer=time.perf_counter disable_gc=False min_rounds=5 min_time=0.000005 max_time=1.0 calibration_precision=10 warmup=False warmup_iterations=100000)
+rootdir: /home/admin/bench/gufo_http
+plugins: anyio-4.3.0, benchmark-4.0.0
+collected 11 items                                                                                                                                    
+
+benchmarks/test_https_p4_x100_1k.py ...........                                                                                                 [100%]
+
+
+---------------------------------------------------------------------------------------- benchmark: 11 tests -----------------------------------------------------------------------------------------
+Name (time in ms)               Min                   Max                  Mean             StdDev                Median                IQR            Outliers      OPS            Rounds  Iterations
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+test_gufo_http_sync         21.1360 (1.0)         29.4575 (1.0)         25.4910 (1.02)      2.3480 (1.19)        25.9351 (1.04)      3.3171 (1.72)         16;0  39.2295 (0.98)         40           1
+test_pycurl_sync            21.3382 (1.01)        30.6251 (1.04)        25.0360 (1.0)       1.9783 (1.0)         25.0387 (1.0)       2.2491 (1.17)         11;1  39.9424 (1.0)          34           1
+test_gufo_http_async        46.4599 (2.20)        73.1334 (2.48)        56.4327 (2.25)      8.6226 (4.36)        54.3729 (2.17)      1.9234 (1.0)           8;8  17.7202 (0.44)         18           1
+test_aiohttp_async          68.1954 (3.23)        75.2719 (2.56)        72.5235 (2.90)      2.8257 (1.43)        73.5960 (2.94)      5.2576 (2.73)          3;0  13.7886 (0.35)          9           1
+test_httpx_sync            101.0239 (4.78)       125.3279 (4.25)       104.9345 (4.19)      7.2883 (3.68)       102.2178 (4.08)      2.3788 (1.24)          1;1   9.5298 (0.24)         10           1
+test_httpx_async           156.7438 (7.42)       172.7126 (5.86)       168.6394 (6.74)      6.0067 (3.04)       170.6249 (6.81)      2.8955 (1.51)          1;1   5.9298 (0.15)          6           1
+test_urllib3_sync          191.3591 (9.05)       218.9681 (7.43)       204.5412 (8.17)     11.2807 (5.70)       202.2406 (8.08)     20.2861 (10.55)         3;0   4.8890 (0.12)          6           1
+test_aiosonic_async        219.9907 (10.41)      245.8470 (8.35)       236.3696 (9.44)      9.6836 (4.89)       238.3812 (9.52)      7.5230 (3.91)          1;1   4.2307 (0.11)          5           1
+test_niquests_sync         260.7054 (12.33)      287.2331 (9.75)       275.4114 (11.00)    12.1043 (6.12)       282.2942 (11.27)    20.6499 (10.74)         1;0   3.6309 (0.09)          5           1
+test_urllib_sync           361.2022 (17.09)      402.9708 (13.68)      389.2026 (15.55)    18.0500 (9.12)       399.6454 (15.96)    25.9360 (13.48)         1;0   2.5694 (0.06)          5           1
+test_requests_sync       3,065.0650 (145.02)   3,245.8865 (110.19)   3,151.5214 (125.88)   68.7689 (34.76)    3,154.8421 (126.00)   97.8452 (50.87)         2;0   0.3173 (0.01)          5           1
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Legend:
+  Outliers: 1 Standard Deviation from Mean; 1.5 IQR (InterQuartile Range) from 1st Quartile and 3rd Quartile.
+  OPS: Operations Per Second, computed as 1 / Mean
+========================================================= 11 passed, 1131 warnings in 41.18s ==========================================================
+```
+
+![Median chart](https_p4_x100_1k.png)
+*Lower is better*
 
 ## Feedback
 

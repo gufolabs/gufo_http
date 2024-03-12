@@ -46,6 +46,18 @@ BENCHMARKS = [
         title="100 Parallel HTTP/1.1 Requests (Median)",
         path="docs/p4_x100_1k.png",
     ),
+    Benchmark(
+        title="Single HTTPS Requests (Median)",
+        path="docs/https_single_x100_1k.png",
+    ),
+    Benchmark(
+        title="100 Linear HTTPS Requests (Median)",
+        path="docs/https_linear_x100_1k.png",
+    ),
+    Benchmark(
+        title="100 Parallel HTTPS Requests (Median)",
+        path="docs/https_p4_x100_1k.png",
+    ),
 ]
 
 NAME_MAP = {"gufo_http": "Gufo HTTP", "pycurl": "PycURL"}

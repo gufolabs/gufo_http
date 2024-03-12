@@ -61,6 +61,21 @@ in the various scenarios. For example:
 ![Parallel requests](p4_x100_1k.png)
 *Lower is better*
 
+### Single HTTPS requests scenario
+
+![Single requests](https_single_x100_1k.png)
+*Lower is better*
+
+### 100 Linear HTTPS requests scenario
+
+![Linear requests](https_linear_x100_1k.png)
+*Lower is better*
+
+### 100 Parallel HTTPS requests scenario
+
+![Parallel requests](https_p4_x100_1k.png)
+*Lower is better*
+
 Refer to [benchmarks](benchmarks.md) for details.
 
 ## On Gufo Stack
