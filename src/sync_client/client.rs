@@ -134,7 +134,8 @@ impl SyncClient {
         if let Some(b) = body {
             req = req.body(b);
         }
-        let response = py.allow_threads(|| req.send()).map_err(HttpError::from)?;
-        Ok(SyncResponse::new(response))
+        Ok(py
+            .allow_threads(|| req.send().map(SyncResponse::new))
+            .map_err(HttpError::from)?)
     }
 }
