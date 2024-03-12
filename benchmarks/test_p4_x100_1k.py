@@ -189,8 +189,9 @@ def test_urllib3_sync(httpd: Httpd, benchmark) -> None:
     url = f"{httpd.prefix}/bench-1k.txt"
 
     def do_request():
+        pool = urllib3.HTTPConnectionPool(httpd._host, port=httpd._port)
         for _ in range(PER_TASK):
-            resp = urllib3.request("GET", url)
+            resp = pool.request("GET", url)
             _ = resp.data
 
     @benchmark
