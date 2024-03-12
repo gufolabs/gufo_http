@@ -10,6 +10,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 To see unreleased changes, please see the [CHANGELOG on the main branch guide](https://github.com/gufolabs/gufo_http/blob/main/CHANGELOG.md).
 
+## [Unreleased]
+
+### Added
+
+* Httpd: `mode` configuration parameter
+* Httpd: HTTPS mode.
+
 ## 0.1.2 - 2024-03-09
 
 ### Added

@@ -53,7 +53,8 @@ class HttpClient(object):
             must be a combination of `DEFLATE`, `GZIP`, `BROTLI`.
             Set to `None` to disable compression support.
         validate_cert: Set to `False` to disable TLS certificate
-            validation.
+            validation. Otherwise, raise `ConnectionError`
+            on invalid certificates.
         connect_timeout: Timeout to establish connection, in seconds.
         timeout: Request timeout, in seconds.
         auth: Authentication settings.

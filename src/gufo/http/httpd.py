@@ -13,6 +13,7 @@ import queue
 import subprocess
 import threading
 import time
+from enum import Enum
 from getpass import getuser
 from pathlib import Path
 from tempfile import TemporaryDirectory
@@ -20,6 +21,19 @@ from types import TracebackType
 from typing import Optional, Type
 
 logger = logging.getLogger("gufo.httpd.httpd")
+
+
+class HttpdMode(Enum):
+    """
+    Httpd mode.
+
+    Attributes:
+        HTTP: HTTP Mode.
+        HTTPS: HTTPS Mode.
+    """
+
+    HTTP = 0
+    HTTPS = 1
 
 
 class Httpd(object):
@@ -36,6 +50,7 @@ class Httpd(object):
         host: Server hostname.
         start_timeout: Maximum time to wait for nginx to start.
         check_config: Check nginx config on startup.
+        mode: HTTP or HTTPS
     """
 
     def __init__(
@@ -46,14 +61,17 @@ class Httpd(object):
         host: str = "local.gufolabs.com",
         start_timeout: float = 5.0,
         check_config: bool = True,
+        mode: HttpdMode = HttpdMode.HTTP,
     ) -> None:
         self._path = path
         self._address = address
         self._port = port
         self._host = host
         self._start_timeout = start_timeout
-        self._check_config = True
-        self.prefix = f"http://{host}:{port}"
+        self._check_config = check_config
+        self._mode = mode
+        proto = "http" if mode == HttpdMode.HTTP else "https"
+        self.prefix = f"{proto}://{host}:{port}"
 
     def __enter__(self: "Httpd") -> "Httpd":
         """Context manager entry."""
@@ -83,7 +101,7 @@ class Httpd(object):
         """Asynchronous context manager exit."""
         self._stop()
 
-    def get_config(self: "Httpd", prefix: Path) -> str:
+    def _get_http_config(self: "Httpd", prefix: Path) -> str:
         """Generate nginx.conf."""
         root = prefix / "data"
         user = getuser()
@@ -229,16 +247,107 @@ http {{
 }}
 """
 
+    def _get_https_config(self: "Httpd", prefix: Path) -> str:
+        """Generate nginx.conf."""
+        root = prefix / "data"
+        cert_root = prefix / "ssl"
+        user = getuser()
+        user_cfg = f"user {user};" if user == "root" else ""
+        pid = root / ".nginx.pid"
+        return f"""daemon off;
+{user_cfg}
+worker_processes auto;
+pid {pid};
+
+events {{
+    worker_connections 768;
+}}
+
+http {{
+    sendfile on;
+    tcp_nopush on;
+
+    types {{
+        text/html                             html htm shtml;
+    }}
+    default_type application/octet-stream;
+
+    access_log /dev/stdout;
+    error_log stderr info;
+    gzip on;
+    gzip_min_length 5;
+    gzip_types text/plain text/css application/json
+        application/javascript text/xml application/xml
+        application/xml+rss text/javascript;
+
+    server {{
+        listen {self._port} ssl http2;
+        server_name {self._host};
+        ssl_certificate {cert_root}/cert.pem;
+        ssl_certificate_key {cert_root}/key.pem;
+
+        # Global SSL settings
+        ssl_protocols TLSv1.3 TLSv1.2;
+        add_header
+            Strict-Transport-Security
+            "max-age=63072000; includeSubDomains";
+        add_header X-Content-Type-Options nosniff;
+        ssl_stapling on;
+        ssl_stapling_verify on;
+        ssl_session_cache shared:le_nginx_SSL:10m;
+        ssl_session_timeout 1440m;
+        ssl_session_tickets off;
+        ssl_ciphers "ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:DHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384";
+
+        location / {{
+            root {root};
+        }}
+    }}
+}}
+"""
+
+    def get_config(self: "Httpd", prefix: Path) -> str:
+        """Generate nginx.conf."""
+        if self._mode == HttpdMode.HTTP:
+            return self._get_http_config(prefix)
+        return self._get_https_config(prefix)
+
     def _start(self: "Httpd") -> None:
         logger.info("Starting nginx instance")
         self._dir = TemporaryDirectory(prefix="httpd-")
         dn = Path(self._dir.name)
         data_path = dn / "data"
+        # Config
         cfg = self.get_config(dn)
         logger.debug("httpd config:\n%s", cfg)
         cfg_path = dn / "nginx.conf"
         with open(cfg_path, "w") as fp:
             fp.write(cfg)
+        # Generate certificates
+        if self._mode == HttpdMode.HTTPS:
+            cert_root = dn / "ssl"
+            cert_path = cert_root / "cert.pem"
+            key_path = cert_root / "key.pem"
+            os.mkdir(cert_root)
+            subprocess.check_call(
+                [
+                    "openssl",
+                    "req",
+                    "-x509",
+                    "-newkey",
+                    "rsa:4096",
+                    "-keyout",
+                    str(key_path),
+                    "-out",
+                    str(cert_path),
+                    "-sha256",
+                    "-days",
+                    "90",
+                    "-nodes",
+                    "-subj",
+                    f"/C=IT/ST=Milano/L=Milano/O=GufoLabs/OU=Gufo HTTP/CN={self._host}",
+                ],
+            )
         # Write data
         os.mkdir(data_path)
         # index.html

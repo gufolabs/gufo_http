@@ -164,7 +164,9 @@ max-complexity = 15
   "PLR2004", #  Magic value used in comparison, consider replacing {x} with a constant variable
 ]
 "src/gufo/http/httpd.py" = [
+  "E501", # Line too long
   "S603", # `subprocess` call: check for execution of untrusted input
+  "S607", # Starting a process with a partial executable path
 ]
 "tests/*.py" = [
   "ANN401", # Dynamically typed expressions (typing.Any) are disallowed in `x`

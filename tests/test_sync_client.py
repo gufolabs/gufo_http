@@ -356,3 +356,17 @@ def test_auth(httpd: Httpd, path: str, auth: AuthBase, expected: int) -> None:
     with HttpClient(auth=auth) as client:
         resp = client.get(f"{httpd.prefix}{path}")
         assert resp.status == expected
+
+
+def test_tls_cert_check_fail(httpd_tls: Httpd) -> None:
+    with HttpClient() as client, pytest.raises(ConnectError):
+        client.get(f"{httpd_tls.prefix}/")
+
+
+def test_tls_get(httpd_tls: Httpd) -> None:
+    with HttpClient(validate_cert=False) as client:
+        resp = client.get(f"{httpd_tls.prefix}/")
+        assert resp.status == 200
+        data = resp.read()
+        assert data
+        assert b"</html>" in data

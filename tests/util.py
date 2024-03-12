@@ -15,6 +15,7 @@ HTTPD_PATH = "/usr/sbin/nginx"
 HTTPD_HOST = "local.gufolabs.com"
 HTTPD_ADDRESS = "127.0.0.1"
 HTTPD_PORT = random.randint(52000, 53999)
+HTTPD_TLS_PORT = random.randint(52000, 53999)
 UNROUTABLE_URL = "http://192.0.2.1/"
 UNROUTABLE_PROXY = "http://192.0.2.1:3128/"
 TEXT_PLAIN = "text/plain"

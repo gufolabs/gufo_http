@@ -465,3 +465,24 @@ def test_auth(httpd: Httpd, path: str, auth: AuthBase, expected: int) -> None:
             assert resp.status == expected
 
     asyncio.run(inner())
+
+
+def test_tls_cert_check_fail(httpd_tls: Httpd) -> None:
+    async def inner() -> None:
+        async with HttpClient() as client:
+            with pytest.raises(ConnectError):
+                await client.get(f"{httpd_tls.prefix}/")
+
+    asyncio.run(inner())
+
+
+def test_tls_get(httpd_tls: Httpd) -> None:
+    async def inner() -> None:
+        async with HttpClient(validate_cert=False) as client:
+            resp = await client.get(f"{httpd_tls.prefix}/")
+            assert resp.status == 200
+            data = await resp.read()
+            assert data
+            assert b"</html>" in data
+
+    asyncio.run(inner())
