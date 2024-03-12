@@ -28,13 +28,13 @@ from gufo.http import (
 from gufo.http.async_client import HttpClient
 from gufo.http.httpd import Httpd
 
-from .util import UNROUTABLE_PROXY, UNROUTABLE_URL, URL_PREFIX, with_env
+from .util import UNROUTABLE_PROXY, UNROUTABLE_URL, with_env
 
 
 def test_get(httpd: Httpd) -> None:
     async def inner() -> None:
         client = HttpClient()
-        resp = await client.get(f"{URL_PREFIX}/")
+        resp = await client.get(f"{httpd.prefix}/")
         assert resp.status == 200
         data = await resp.read()
         assert data
@@ -46,7 +46,7 @@ def test_get(httpd: Httpd) -> None:
 def test_head(httpd: Httpd) -> None:
     async def inner() -> None:
         client = HttpClient()
-        resp = await client.head(f"{URL_PREFIX}/")
+        resp = await client.head(f"{httpd.prefix}/")
         assert resp.status == 200
         data = await resp.read()
         assert data == b""
@@ -54,17 +54,10 @@ def test_head(httpd: Httpd) -> None:
     asyncio.run(inner())
 
 
-@pytest.mark.parametrize(
-    "url",
-    [
-        # "*", # Not allowed by reqwest
-        f"{URL_PREFIX}/options"
-    ],
-)
-def test_options(httpd: Httpd, url: str) -> None:
+def test_options(httpd: Httpd) -> None:
     async def inner() -> None:
         async with HttpClient() as client:
-            resp = await client.options(url)
+            resp = await client.options(f"{httpd.prefix}/options")
             assert resp.status == 204
             allow = resp.headers["Allow"]
             for m in (b"OPTIONS", b"GET", b"HEAD"):
@@ -76,7 +69,7 @@ def test_options(httpd: Httpd, url: str) -> None:
 def test_delete(httpd: Httpd) -> None:
     async def inner() -> None:
         async with HttpClient() as client:
-            resp = await client.delete(f"{URL_PREFIX}/delete")
+            resp = await client.delete(f"{httpd.prefix}/delete")
             assert resp.status == 200
             data = await resp.read()
             assert data == b"OK"
@@ -87,7 +80,7 @@ def test_delete(httpd: Httpd) -> None:
 def test_post(httpd: Httpd) -> None:
     async def inner() -> None:
         async with HttpClient() as client:
-            resp = await client.post(f"{URL_PREFIX}/post", b"TEST")
+            resp = await client.post(f"{httpd.prefix}/post", b"TEST")
             assert resp.status == 200
             data = await resp.read()
             assert data == b"OK"
@@ -98,7 +91,7 @@ def test_post(httpd: Httpd) -> None:
 def test_put(httpd: Httpd) -> None:
     async def inner() -> None:
         async with HttpClient() as client:
-            resp = await client.put(f"{URL_PREFIX}/put", b"TEST")
+            resp = await client.put(f"{httpd.prefix}/put", b"TEST")
             assert resp.status == 200
             data = await resp.read()
             assert data == b"OK"
@@ -109,7 +102,7 @@ def test_put(httpd: Httpd) -> None:
 def test_patch(httpd: Httpd) -> None:
     async def inner() -> None:
         async with HttpClient() as client:
-            resp = await client.patch(f"{URL_PREFIX}/patch", b"TEST")
+            resp = await client.patch(f"{httpd.prefix}/patch", b"TEST")
             assert resp.status == 200
             data = await resp.read()
             assert data == b"OK"
@@ -120,7 +113,7 @@ def test_patch(httpd: Httpd) -> None:
 def test_not_found(httpd: Httpd) -> None:
     async def inner() -> None:
         async with HttpClient() as client:
-            resp = await client.get(f"{URL_PREFIX}/not_found")
+            resp = await client.get(f"{httpd.prefix}/not_found")
             assert resp.status == 404
 
     asyncio.run(inner())
@@ -129,7 +122,7 @@ def test_not_found(httpd: Httpd) -> None:
 def test_double_read(httpd: Httpd) -> None:
     async def inner() -> None:
         client = HttpClient()
-        resp = await client.get(f"{URL_PREFIX}/")
+        resp = await client.get(f"{httpd.prefix}/")
         assert resp.status == 200
         data = await resp.read()
         assert data
@@ -155,7 +148,7 @@ def test_no_proxy(httpd: Httpd) -> None:
     async def inner() -> None:
         with with_env({"HTTP_PROXY": UNROUTABLE_PROXY}):
             async with HttpClient() as client:
-                resp = await client.get(f"{URL_PREFIX}/")
+                resp = await client.get(f"{httpd.prefix}/")
                 assert resp.status == 200
                 data = await resp.read()
                 assert data
@@ -174,7 +167,7 @@ def test_no_proxy(httpd: Httpd) -> None:
 def test_headers_getitem(header: str, expected: bytes, httpd: Httpd) -> None:
     async def inner() -> None:
         client = HttpClient()
-        resp = await client.get(f"{URL_PREFIX}/")
+        resp = await client.get(f"{httpd.prefix}/")
         h = resp.headers[header]
         assert h == expected
 
@@ -184,7 +177,7 @@ def test_headers_getitem(header: str, expected: bytes, httpd: Httpd) -> None:
 def test_headers_getitem_key_error(httpd: Httpd) -> None:
     async def inner() -> None:
         client = HttpClient()
-        resp = await client.get(f"{URL_PREFIX}/")
+        resp = await client.get(f"{httpd.prefix}/")
         with pytest.raises(KeyError):
             resp.headers["ctype"]
 
@@ -204,7 +197,7 @@ def test_headers_get(
 ) -> None:
     async def inner() -> None:
         client = HttpClient()
-        resp = await client.get(f"{URL_PREFIX}/")
+        resp = await client.get(f"{httpd.prefix}/")
         h = resp.headers.get(header)
         assert h == expected
 
@@ -214,7 +207,7 @@ def test_headers_get(
 def test_headers_get_default(httpd: Httpd) -> None:
     async def inner() -> None:
         client = HttpClient()
-        resp = await client.get(f"{URL_PREFIX}/")
+        resp = await client.get(f"{httpd.prefix}/")
         default = b"default/value"
         h = resp.headers.get("ctype", default)
         assert h == default
@@ -234,7 +227,7 @@ def test_headers_get_default(httpd: Httpd) -> None:
 def test_headers_in(header: str, expected: bool, httpd: Httpd) -> None:
     async def inner() -> None:
         client = HttpClient()
-        resp = await client.get(f"{URL_PREFIX}/")
+        resp = await client.get(f"{httpd.prefix}/")
         r = header in resp.headers
         assert r is expected
 
@@ -244,7 +237,7 @@ def test_headers_in(header: str, expected: bool, httpd: Httpd) -> None:
 def test_headers_keys(httpd: Httpd) -> None:
     async def inner() -> None:
         client = HttpClient()
-        resp = await client.get(f"{URL_PREFIX}/")
+        resp = await client.get(f"{httpd.prefix}/")
         keys = resp.headers.keys()
         assert isinstance(keys, Iterable)
         k = list(keys)
@@ -259,7 +252,7 @@ def test_headers_keys(httpd: Httpd) -> None:
 def test_headers_values(httpd: Httpd) -> None:
     async def inner() -> None:
         client = HttpClient()
-        resp = await client.get(f"{URL_PREFIX}/")
+        resp = await client.get(f"{httpd.prefix}/")
         values = resp.headers.values()
         assert isinstance(values, Iterable)
         k = list(values)
@@ -281,7 +274,7 @@ def test_headers_values(httpd: Httpd) -> None:
 def test_headers_items(httpd: Httpd) -> None:
     async def inner() -> None:
         client = HttpClient()
-        resp = await client.get(f"{URL_PREFIX}/")
+        resp = await client.get(f"{httpd.prefix}/")
         items = resp.headers.items()
         assert isinstance(items, Iterable)
         k = list(items)
@@ -300,7 +293,7 @@ def test_headers_items(httpd: Httpd) -> None:
 def test_redirect_to_root(httpd: Httpd) -> None:
     async def inner() -> None:
         async with HttpClient() as client:
-            resp = await client.get(f"{URL_PREFIX}/redirect/root")
+            resp = await client.get(f"{httpd.prefix}/redirect/root")
             assert resp.status == 200
             data = await resp.read()
             assert data
@@ -312,7 +305,7 @@ def test_redirect_to_root(httpd: Httpd) -> None:
 def test_no_redirect_to_root(httpd: Httpd) -> None:
     async def inner() -> None:
         async with HttpClient(max_redirects=None) as client:
-            resp = await client.get(f"{URL_PREFIX}/redirect/root")
+            resp = await client.get(f"{httpd.prefix}/redirect/root")
             assert resp.status == 302
 
     asyncio.run(inner())
@@ -323,7 +316,7 @@ def test_redirect_to_loop(httpd: Httpd, x: Type[BaseException]) -> None:
     async def inner() -> None:
         async with HttpClient() as client:
             with pytest.raises(x):
-                await client.get(f"{URL_PREFIX}/redirect/loop")
+                await client.get(f"{httpd.prefix}/redirect/loop")
 
     asyncio.run(inner())
 
@@ -331,7 +324,7 @@ def test_redirect_to_loop(httpd: Httpd, x: Type[BaseException]) -> None:
 def test_get_header(httpd: Httpd) -> None:
     async def inner() -> None:
         client = HttpClient()
-        resp = await client.get(f"{URL_PREFIX}/headers/get")
+        resp = await client.get(f"{httpd.prefix}/headers/get")
         assert resp.status == 200
         assert resp.headers["X-Gufo-HTTP"] == b"TEST"
         data = await resp.read()
@@ -344,7 +337,7 @@ def test_get_header(httpd: Httpd) -> None:
 def test_get_without_header(httpd: Httpd) -> None:
     async def inner() -> None:
         client = HttpClient()
-        resp = await client.get(f"{URL_PREFIX}/headers/check")
+        resp = await client.get(f"{httpd.prefix}/headers/check")
         assert resp.status == 403
         data = await resp.read()
         assert data
@@ -360,7 +353,7 @@ class MyHttpClient(HttpClient):
 def test_get_with_header_class(httpd: Httpd) -> None:
     async def inner() -> None:
         async with MyHttpClient() as client:
-            resp = await client.get(f"{URL_PREFIX}/headers/check")
+            resp = await client.get(f"{httpd.prefix}/headers/check")
             assert resp.status == 200
             data = await resp.read()
             assert data
@@ -372,7 +365,7 @@ def test_get_with_header_class(httpd: Httpd) -> None:
 def test_get_with_header_client(httpd: Httpd) -> None:
     async def inner() -> None:
         async with HttpClient(headers={"X-Gufo-HTTP": b"TEST"}) as client:
-            resp = await client.get(f"{URL_PREFIX}/headers/check")
+            resp = await client.get(f"{httpd.prefix}/headers/check")
             assert resp.status == 200
             data = await resp.read()
             assert data
@@ -385,7 +378,8 @@ def test_get_with_header_request(httpd: Httpd) -> None:
     async def inner() -> None:
         async with HttpClient() as client:
             resp = await client.get(
-                f"{URL_PREFIX}/headers/check", headers={"X-Gufo-HTTP": b"TEST"}
+                f"{httpd.prefix}/headers/check",
+                headers={"X-Gufo-HTTP": b"TEST"},
             )
             assert resp.status == 200
             data = await resp.read()
@@ -399,7 +393,7 @@ def test_get_with_header_request(httpd: Httpd) -> None:
 def test_compression(httpd: Httpd, compression: Optional[int]) -> None:
     async def inner() -> None:
         async with HttpClient(compression=compression) as client:
-            resp = await client.get(f"{URL_PREFIX}/")
+            resp = await client.get(f"{httpd.prefix}/")
             assert resp.status == 200
             data = await resp.read()
             assert data
@@ -421,7 +415,7 @@ def test_connect_timeout(httpd: Httpd, x: Type[BaseException]) -> None:
 def test_default_user_agent(httpd: Httpd) -> None:
     async def inner() -> None:
         async with HttpClient() as client:
-            resp = await client.get(f"{URL_PREFIX}/ua/default")
+            resp = await client.get(f"{httpd.prefix}/ua/default")
             assert resp.status == 200
 
     asyncio.run(inner())
@@ -430,7 +424,7 @@ def test_default_user_agent(httpd: Httpd) -> None:
 def test_set_user_agent(httpd: Httpd) -> None:
     async def inner() -> None:
         async with HttpClient(user_agent="Mozilla like gecko") as client:
-            resp = await client.get(f"{URL_PREFIX}/ua/custom")
+            resp = await client.get(f"{httpd.prefix}/ua/custom")
             assert resp.status == 200
 
     asyncio.run(inner())
@@ -445,31 +439,29 @@ def test_auth_invalid_class(httpd: Httpd) -> None:
     asyncio.run(inner())
 
 
-@pytest.mark.parametrize(
-    "url", [f"{URL_PREFIX}/auth/basic", f"{URL_PREFIX}/auth/bearer"]
-)
-def test_auth_basic_fail(httpd: Httpd, url: str) -> None:
+@pytest.mark.parametrize("path", ["/auth/basic", "/auth/bearer"])
+def test_auth_basic_fail(httpd: Httpd, path: str) -> None:
     async def inner() -> None:
         async with HttpClient() as client:
-            resp = await client.get(url)
+            resp = await client.get(f"{httpd.prefix}{path}")
             assert resp.status == 401
 
     asyncio.run(inner())
 
 
 @pytest.mark.parametrize(
-    ("url", "auth", "expected"),
+    ("path", "auth", "expected"),
     [
-        (f"{URL_PREFIX}/auth/basic", BasicAuth("scott", "tiger"), 200),
-        (f"{URL_PREFIX}/auth/basic", BasicAuth("scott", "tiger1"), 401),
-        (f"{URL_PREFIX}/auth/bearer", BearerAuth("123456"), 200),
-        (f"{URL_PREFIX}/auth/bearer", BearerAuth("1234567"), 401),
+        ("/auth/basic", BasicAuth("scott", "tiger"), 200),
+        ("/auth/basic", BasicAuth("scott", "tiger1"), 401),
+        ("/auth/bearer", BearerAuth("123456"), 200),
+        ("/auth/bearer", BearerAuth("1234567"), 401),
     ],
 )
-def test_auth(httpd: Httpd, url: str, auth: AuthBase, expected: int) -> None:
+def test_auth(httpd: Httpd, path: str, auth: AuthBase, expected: int) -> None:
     async def inner() -> None:
         async with HttpClient(auth=auth) as client:
-            resp = await client.get(url)
+            resp = await client.get(f"{httpd.prefix}{path}")
             assert resp.status == expected
 
     asyncio.run(inner())
