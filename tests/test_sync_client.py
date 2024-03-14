@@ -15,7 +15,6 @@ import pytest
 # Gufo HTTP Modules
 from gufo.http import (
     GZIP,
-    AlreadyReadError,
     AuthBase,
     BasicAuth,
     BearerAuth,
@@ -34,7 +33,7 @@ def test_get(httpd: Httpd) -> None:
     client = HttpClient()
     resp = client.get(f"{httpd.prefix}/")
     assert resp.status == 200
-    data = resp.read()
+    data = resp.content
     assert data
     assert b"</html>" in data
 
@@ -43,7 +42,7 @@ def test_head(httpd: Httpd) -> None:
     client = HttpClient()
     resp = client.head(f"{httpd.prefix}/")
     assert resp.status == 200
-    data = resp.read()
+    data = resp.content
     assert data == b""
 
 
@@ -60,7 +59,7 @@ def test_delete(httpd: Httpd) -> None:
     with HttpClient() as client:
         resp = client.delete(f"{httpd.prefix}/delete")
         assert resp.status == 200
-        data = resp.read()
+        data = resp.content
         assert data == b"OK"
 
 
@@ -68,7 +67,7 @@ def test_post(httpd: Httpd) -> None:
     with HttpClient() as client:
         resp = client.post(f"{httpd.prefix}/post", b"TEST")
         assert resp.status == 200
-        data = resp.read()
+        data = resp.content
         assert data == b"OK"
 
 
@@ -76,7 +75,7 @@ def test_put(httpd: Httpd) -> None:
     with HttpClient() as client:
         resp = client.put(f"{httpd.prefix}/put", b"TEST")
         assert resp.status == 200
-        data = resp.read()
+        data = resp.content
         assert data == b"OK"
 
 
@@ -84,7 +83,7 @@ def test_patch(httpd: Httpd) -> None:
     with HttpClient() as client:
         resp = client.patch(f"{httpd.prefix}/patch", b"TEST")
         assert resp.status == 200
-        data = resp.read()
+        data = resp.content
         assert data == b"OK"
 
 
@@ -92,16 +91,6 @@ def test_not_found(httpd: Httpd) -> None:
     with HttpClient() as client:
         resp = client.get(f"{httpd.prefix}/not_found")
         assert resp.status == 404
-
-
-def test_double_read(httpd: Httpd) -> None:
-    client = HttpClient()
-    resp = client.get(f"{httpd.prefix}/")
-    assert resp.status == 200
-    data = resp.read()
-    assert data
-    with pytest.raises(AlreadyReadError):
-        resp.read()
 
 
 @pytest.mark.parametrize(
@@ -116,7 +105,7 @@ def test_no_proxy(httpd: Httpd) -> None:
     with with_env({"HTTP_PROXY": UNROUTABLE_PROXY}), HttpClient() as client:
         resp = client.get(f"{httpd.prefix}/")
         assert resp.status == 200
-        data = resp.read()
+        data = resp.content
         assert data
         assert b"</html>" in data
 
@@ -234,7 +223,7 @@ def test_redirect_to_root(httpd: Httpd) -> None:
     with HttpClient() as client:
         resp = client.get(f"{httpd.prefix}/redirect/root")
         assert resp.status == 200
-        data = resp.read()
+        data = resp.content
         assert data
         assert b"</html>" in data
 
@@ -256,7 +245,7 @@ def test_get_header(httpd: Httpd) -> None:
     resp = client.get(f"{httpd.prefix}/headers/get")
     assert resp.status == 200
     assert resp.headers["X-Gufo-HTTP"] == b"TEST"
-    data = resp.read()
+    data = resp.content
     assert data
     assert data == b'{"status":true}'
 
@@ -265,7 +254,7 @@ def test_get_without_header(httpd: Httpd) -> None:
     client = HttpClient()
     resp = client.get(f"{httpd.prefix}/headers/check")
     assert resp.status == 403
-    data = resp.read()
+    data = resp.content
     assert data
     assert data == b'{"status":false}'
 
@@ -278,7 +267,7 @@ def test_get_with_header_class(httpd: Httpd) -> None:
     with MyHttpClient() as client:
         resp = client.get(f"{httpd.prefix}/headers/check")
         assert resp.status == 200
-        data = resp.read()
+        data = resp.content
         assert data
         assert data == b'{"status":true}'
 
@@ -287,7 +276,7 @@ def test_get_with_header_client(httpd: Httpd) -> None:
     with HttpClient(headers={"X-Gufo-HTTP": b"TEST"}) as client:
         resp = client.get(f"{httpd.prefix}/headers/check")
         assert resp.status == 200
-        data = resp.read()
+        data = resp.content
         assert data
         assert data == b'{"status":true}'
 
@@ -298,7 +287,7 @@ def test_get_with_header_request(httpd: Httpd) -> None:
             f"{httpd.prefix}/headers/check", headers={"X-Gufo-HTTP": b"TEST"}
         )
         assert resp.status == 200
-        data = resp.read()
+        data = resp.content
         assert data
         assert data == b'{"status":true}'
 
@@ -308,7 +297,7 @@ def test_compression(httpd: Httpd, compression: Optional[int]) -> None:
     with HttpClient(compression=compression) as client:
         resp = client.get(f"{httpd.prefix}/")
         assert resp.status == 200
-        data = resp.read()
+        data = resp.content
         assert data
         assert b"</html>" in data
 
@@ -367,6 +356,6 @@ def test_tls_get(httpd_tls: Httpd) -> None:
     with HttpClient(validate_cert=False) as client:
         resp = client.get(f"{httpd_tls.prefix}/")
         assert resp.status == 200
-        data = resp.read()
+        data = resp.content
         assert data
         assert b"</html>" in data

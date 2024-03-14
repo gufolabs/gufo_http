@@ -26,8 +26,8 @@ from ._fast import (
     POST,
     PUT,
     AuthBase,
+    Response,
     SyncClient,
-    SyncResponse,
 )
 from .util import merge_dict
 
@@ -103,7 +103,7 @@ class HttpClient(object):
         url: str,
         /,
         headers: Optional[Dict[str, bytes]] = None,
-    ) -> SyncResponse:
+    ) -> Response:
         """
         Send HTTP GET request and receive a response.
 
@@ -112,7 +112,7 @@ class HttpClient(object):
             headers: Optional request headers
 
         Returns:
-            SyncResponse instance.
+            Response instance.
         """
         return self._client.request(GET, url, headers, None)
 
@@ -121,7 +121,7 @@ class HttpClient(object):
         url: str,
         /,
         headers: Optional[Dict[str, bytes]] = None,
-    ) -> SyncResponse:
+    ) -> Response:
         """
         Send HTTP HEAD request and receive a response.
 
@@ -130,7 +130,7 @@ class HttpClient(object):
             headers: Optional request headers
 
         Returns:
-            SyncResponse instance.
+            Response instance.
         """
         return self._client.request(HEAD, url, headers, None)
 
@@ -139,7 +139,7 @@ class HttpClient(object):
         url: str,
         /,
         headers: Optional[Dict[str, bytes]] = None,
-    ) -> SyncResponse:
+    ) -> Response:
         """
         Send HTTP OPTIONS request and receive a response.
 
@@ -150,7 +150,7 @@ class HttpClient(object):
             headers: Optional request headers.
 
         Returns:
-            SyncResponse instance.
+            Response instance.
         """
         return self._client.request(OPTIONS, url, headers, None)
 
@@ -159,7 +159,7 @@ class HttpClient(object):
         url: str,
         /,
         headers: Optional[Dict[str, bytes]] = None,
-    ) -> SyncResponse:
+    ) -> Response:
         """
         Send HTTP DELETE request and receive a response.
 
@@ -168,7 +168,7 @@ class HttpClient(object):
             headers: Optional request headers.
 
         Returns:
-            SyncResponse instance.
+            Response instance.
         """
         return self._client.request(DELETE, url, headers, None)
 
@@ -178,7 +178,7 @@ class HttpClient(object):
         body: bytes,
         /,
         headers: Optional[Dict[str, bytes]] = None,
-    ) -> SyncResponse:
+    ) -> Response:
         """
         Send HTTP POST request and receive a response.
 
@@ -188,7 +188,7 @@ class HttpClient(object):
             headers: Optional request headers.
 
         Returns:
-            SyncResponse instance.
+            Response instance.
         """
         return self._client.request(POST, url, headers, body)
 
@@ -198,7 +198,7 @@ class HttpClient(object):
         body: bytes,
         /,
         headers: Optional[Dict[str, bytes]] = None,
-    ) -> SyncResponse:
+    ) -> Response:
         """
         Send HTTP PUT request and receive a response.
 
@@ -208,7 +208,7 @@ class HttpClient(object):
             headers: Optional request headers.
 
         Returns:
-            SyncResponse instance.
+            Response instance.
         """
         return self._client.request(PUT, url, headers, body)
 
@@ -218,7 +218,7 @@ class HttpClient(object):
         body: bytes,
         /,
         headers: Optional[Dict[str, bytes]] = None,
-    ) -> SyncResponse:
+    ) -> Response:
         """
         Send HTTP PATCH request and receive a response.
 
@@ -228,9 +228,9 @@ class HttpClient(object):
             headers: Optional request headers.
 
         Returns:
-            SyncResponse instance.
+            Response instance.
         """
         return self._client.request(PATCH, url, headers, body)
 
 
-__all__ = ["HttpClient", "SyncResponse"]
+__all__ = ["HttpClient", "Response"]

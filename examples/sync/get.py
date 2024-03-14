@@ -9,8 +9,7 @@ def main(url: str) -> None:
         if r.status != 200:
             print(f"Invalid response code: {r.status}")
             return
-        data = r.read()
-        print(data.decode())
+        print(r.content.decode())
 
 
 main(sys.argv[1])

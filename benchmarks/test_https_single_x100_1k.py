@@ -53,7 +53,7 @@ def test_gufo_http_sync(httpd: Httpd, benchmark) -> None:
     def bench():
         with SyncHttpClient(validate_cert=False) as client:
             resp = client.get(url)
-            resp.read()
+            _ = resp.content
 
 
 def test_gufo_http_async(httpd: Httpd, benchmark) -> None:
@@ -64,7 +64,7 @@ def test_gufo_http_async(httpd: Httpd, benchmark) -> None:
         async def inner():
             async with AsyncHttpClient(validate_cert=False) as client:
                 resp = await client.get(url)
-                await resp.read()
+                _ = resp.content
 
         asyncio.run(inner())
 

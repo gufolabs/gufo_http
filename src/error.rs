@@ -4,7 +4,11 @@
 // Copyright (C) 2024, Gufo Labs
 // See LICENSE.md for details
 // ------------------------------------------------------------------------
-use pyo3::{create_exception, exceptions::PyException, PyErr};
+use pyo3::{
+    create_exception,
+    exceptions::{PyException, PyValueError},
+    PyErr,
+};
 
 //pub type HttpResult<T> = Result<T, HttpError>;
 
@@ -13,7 +17,7 @@ pub enum HttpError {
     Request(String),
     Redirect,
     Connect,
-    AlreadyRead,
+    ValueError(String),
 }
 
 create_exception!(
@@ -33,7 +37,6 @@ create_exception!(
 );
 
 create_exception!(_fast, PyConnectError, PyHttpError, "Connect error");
-create_exception!(_fast, PyAlreadyReadError, PyHttpError, "Already read");
 
 impl From<HttpError> for PyErr {
     fn from(value: HttpError) -> Self {
@@ -41,7 +44,7 @@ impl From<HttpError> for PyErr {
             HttpError::Request(x) => PyRequestError::new_err(x),
             HttpError::Redirect => PyRedirectError::new_err("redirects limit exceeded"),
             HttpError::Connect => PyConnectError::new_err("connect error"),
-            HttpError::AlreadyRead => PyAlreadyReadError::new_err("already read"),
+            HttpError::ValueError(x) => PyValueError::new_err(x),
         }
     }
 }

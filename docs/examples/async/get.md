@@ -75,18 +75,13 @@ If status code is not OK, we print and error message and terminate our function.
 ``` py title="get.py" linenums="1" hl_lines="13"
 --8<-- "examples/async/get.py"
 ```
-`.read()` method waits and returns a whole response body.
-This is an asyncronous function which needs to be awaited.
-
-
-``` py title="get.py" linenums="1" hl_lines="14"
---8<-- "examples/async/get.py"
-```
-Here we print our response body. Note, `.read()` returns a `bytes` type,
+The `.content` attribute of `Response` contains the response
+body. This attribute has type of `bytes`,
 so we convert it into `str` using `.decode()` method. In our example
 we consider the response is encoding using UTF-8 encoding.
+Then we print decoded result.
 
-``` py title="get.py" linenums="1" hl_lines="17"
+``` py title="get.py" linenums="1" hl_lines="16"
 --8<-- "examples/async/get.py"
 ```
 Lets run our `main()` function pass first command-line parameter as url.

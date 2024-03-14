@@ -4,13 +4,15 @@
 // Copyright (C) 2024, Gufo Labs
 // See LICENSE.md for details
 // ------------------------------------------------------------------------
-use super::response::SyncResponse;
 use crate::auth::{AuthMethod, BasicAuth, BearerAuth, GetAuthMethod};
 use crate::error::HttpError;
+use crate::headers::Headers;
 use crate::method::{get_method, BROTLI, DEFLATE, GZIP};
+use crate::response::Response;
 use pyo3::{
     exceptions::{PyTypeError, PyValueError},
     prelude::*,
+    types::PyBytes,
 };
 use reqwest::{
     header::{HeaderMap, HeaderName, HeaderValue},
@@ -111,31 +113,50 @@ impl SyncClient {
         headers: Option<HashMap<&str, &[u8]>>,
         body: Option<Vec<u8>>,
         py: Python,
-    ) -> PyResult<SyncResponse> {
-        // Build request for method
-        let mut req = self.client.request(get_method(method)?, url);
-        // Add headers
-        if let Some(h) = headers {
-            for (k, v) in h {
-                req = req.header(
-                    HeaderName::from_bytes(k.as_ref())
-                        .map_err(|e| PyValueError::new_err(e.to_string()))?,
-                    HeaderValue::from_bytes(v).map_err(|e| PyValueError::new_err(e.to_string()))?,
-                )
-            }
-        }
-        // Add auth
-        match &self.auth {
-            AuthMethod::None => {}
-            AuthMethod::Basic { user, password } => req = req.basic_auth(user, password.as_ref()),
-            AuthMethod::Bearer { token } => req = req.bearer_auth(token),
-        }
-        // Add body
-        if let Some(b) = body {
-            req = req.body(b);
-        }
-        Ok(py
-            .allow_threads(|| req.send().map(SyncResponse::new))
-            .map_err(HttpError::from)?)
+    ) -> PyResult<Response> {
+        let method = get_method(method)?;
+        let (status, headers, buf) =
+            py.allow_threads(|| -> Result<(u16, Headers, bytes::Bytes), HttpError> {
+                // Build request for method
+                let mut req = self.client.request(method, url);
+                // Add headers
+                if let Some(h) = headers {
+                    for (k, v) in h {
+                        req = req.header(
+                            HeaderName::from_bytes(k.as_ref())
+                                .map_err(|e| HttpError::ValueError(e.to_string()))?,
+                            HeaderValue::from_bytes(v)
+                                .map_err(|e| HttpError::ValueError(e.to_string()))?,
+                        )
+                    }
+                }
+                // Add auth
+                match &self.auth {
+                    AuthMethod::None => {}
+                    AuthMethod::Basic { user, password } => {
+                        req = req.basic_auth(user, password.as_ref())
+                    }
+                    AuthMethod::Bearer { token } => req = req.bearer_auth(token),
+                }
+                // Add body
+                if let Some(b) = body {
+                    req = req.body(b);
+                }
+                // Send request
+                let resp = req.send().map_err(HttpError::from)?;
+                // Get status
+                let status: u16 = resp.status().into();
+                // Wrap headers
+                let headers = Headers::new(resp.headers().clone());
+                // Read response
+                let buf = resp.bytes().map_err(HttpError::from)?;
+                Ok((status, headers, buf))
+            })?;
+        // Return response
+        Ok(Response::new(
+            status,
+            headers,
+            PyBytes::new(py, buf.as_ref()).into(),
+        ))
     }
 }

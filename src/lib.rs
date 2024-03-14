@@ -11,6 +11,7 @@ mod auth;
 mod error;
 mod headers;
 mod method;
+mod response;
 mod sync_client;
 
 /// Module index
@@ -21,10 +22,6 @@ fn gufo_http(py: Python, m: &PyModule) -> PyResult<()> {
     m.add("RequestError", py.get_type::<error::PyRequestError>())?;
     m.add("ConnectError", py.get_type::<error::PyConnectError>())?;
     m.add("RedirectError", py.get_type::<error::PyRedirectError>())?;
-    m.add(
-        "AlreadyReadError",
-        py.get_type::<error::PyAlreadyReadError>(),
-    )?;
     // Request methods
     m.add("GET", method::GET)?;
     m.add("HEAD", method::HEAD)?;
@@ -43,11 +40,9 @@ fn gufo_http(py: Python, m: &PyModule) -> PyResult<()> {
     m.add_class::<auth::BearerAuth>()?;
     // Other
     m.add_class::<headers::Headers>()?;
-    // Async
-    m.add_class::<async_client::AsyncResponse>()?;
+    m.add_class::<response::Response>()?;
+    // Clients
     m.add_class::<async_client::AsyncClient>()?;
-    // Sync
-    m.add_class::<sync_client::SyncResponse>()?;
     m.add_class::<sync_client::SyncClient>()?;
     Ok(())
 }

@@ -16,7 +16,6 @@ import pytest
 # Gufo HTTP Modules
 from gufo.http import (
     GZIP,
-    AlreadyReadError,
     AuthBase,
     BasicAuth,
     BearerAuth,
@@ -36,7 +35,7 @@ def test_get(httpd: Httpd) -> None:
         client = HttpClient()
         resp = await client.get(f"{httpd.prefix}/")
         assert resp.status == 200
-        data = await resp.read()
+        data = resp.content
         assert data
         assert b"</html>" in data
 
@@ -48,7 +47,7 @@ def test_head(httpd: Httpd) -> None:
         client = HttpClient()
         resp = await client.head(f"{httpd.prefix}/")
         assert resp.status == 200
-        data = await resp.read()
+        data = resp.content
         assert data == b""
 
     asyncio.run(inner())
@@ -71,7 +70,7 @@ def test_delete(httpd: Httpd) -> None:
         async with HttpClient() as client:
             resp = await client.delete(f"{httpd.prefix}/delete")
             assert resp.status == 200
-            data = await resp.read()
+            data = resp.content
             assert data == b"OK"
 
     asyncio.run(inner())
@@ -82,7 +81,7 @@ def test_post(httpd: Httpd) -> None:
         async with HttpClient() as client:
             resp = await client.post(f"{httpd.prefix}/post", b"TEST")
             assert resp.status == 200
-            data = await resp.read()
+            data = resp.content
             assert data == b"OK"
 
     asyncio.run(inner())
@@ -93,7 +92,7 @@ def test_put(httpd: Httpd) -> None:
         async with HttpClient() as client:
             resp = await client.put(f"{httpd.prefix}/put", b"TEST")
             assert resp.status == 200
-            data = await resp.read()
+            data = resp.content
             assert data == b"OK"
 
     asyncio.run(inner())
@@ -104,7 +103,7 @@ def test_patch(httpd: Httpd) -> None:
         async with HttpClient() as client:
             resp = await client.patch(f"{httpd.prefix}/patch", b"TEST")
             assert resp.status == 200
-            data = await resp.read()
+            data = resp.content
             assert data == b"OK"
 
     asyncio.run(inner())
@@ -115,19 +114,6 @@ def test_not_found(httpd: Httpd) -> None:
         async with HttpClient() as client:
             resp = await client.get(f"{httpd.prefix}/not_found")
             assert resp.status == 404
-
-    asyncio.run(inner())
-
-
-def test_double_read(httpd: Httpd) -> None:
-    async def inner() -> None:
-        client = HttpClient()
-        resp = await client.get(f"{httpd.prefix}/")
-        assert resp.status == 200
-        data = await resp.read()
-        assert data
-        with pytest.raises(AlreadyReadError):
-            await resp.read()
 
     asyncio.run(inner())
 
@@ -150,7 +136,7 @@ def test_no_proxy(httpd: Httpd) -> None:
             async with HttpClient() as client:
                 resp = await client.get(f"{httpd.prefix}/")
                 assert resp.status == 200
-                data = await resp.read()
+                data = resp.content
                 assert data
                 assert b"</html>" in data
 
@@ -295,7 +281,7 @@ def test_redirect_to_root(httpd: Httpd) -> None:
         async with HttpClient() as client:
             resp = await client.get(f"{httpd.prefix}/redirect/root")
             assert resp.status == 200
-            data = await resp.read()
+            data = resp.content
             assert data
             assert b"</html>" in data
 
@@ -327,7 +313,7 @@ def test_get_header(httpd: Httpd) -> None:
         resp = await client.get(f"{httpd.prefix}/headers/get")
         assert resp.status == 200
         assert resp.headers["X-Gufo-HTTP"] == b"TEST"
-        data = await resp.read()
+        data = resp.content
         assert data
         assert data == b'{"status":true}'
 
@@ -339,7 +325,7 @@ def test_get_without_header(httpd: Httpd) -> None:
         client = HttpClient()
         resp = await client.get(f"{httpd.prefix}/headers/check")
         assert resp.status == 403
-        data = await resp.read()
+        data = resp.content
         assert data
         assert data == b'{"status":false}'
 
@@ -355,7 +341,7 @@ def test_get_with_header_class(httpd: Httpd) -> None:
         async with MyHttpClient() as client:
             resp = await client.get(f"{httpd.prefix}/headers/check")
             assert resp.status == 200
-            data = await resp.read()
+            data = resp.content
             assert data
             assert data == b'{"status":true}'
 
@@ -367,7 +353,7 @@ def test_get_with_header_client(httpd: Httpd) -> None:
         async with HttpClient(headers={"X-Gufo-HTTP": b"TEST"}) as client:
             resp = await client.get(f"{httpd.prefix}/headers/check")
             assert resp.status == 200
-            data = await resp.read()
+            data = resp.content
             assert data
             assert data == b'{"status":true}'
 
@@ -382,7 +368,7 @@ def test_get_with_header_request(httpd: Httpd) -> None:
                 headers={"X-Gufo-HTTP": b"TEST"},
             )
             assert resp.status == 200
-            data = await resp.read()
+            data = resp.content
             assert data
             assert data == b'{"status":true}'
 
@@ -395,7 +381,7 @@ def test_compression(httpd: Httpd, compression: Optional[int]) -> None:
         async with HttpClient(compression=compression) as client:
             resp = await client.get(f"{httpd.prefix}/")
             assert resp.status == 200
-            data = await resp.read()
+            data = resp.content
             assert data
             assert b"</html>" in data
 
@@ -481,7 +467,7 @@ def test_tls_get(httpd_tls: Httpd) -> None:
         async with HttpClient(validate_cert=False) as client:
             resp = await client.get(f"{httpd_tls.prefix}/")
             assert resp.status == 200
-            data = await resp.read()
+            data = resp.content
             assert data
             assert b"</html>" in data
 

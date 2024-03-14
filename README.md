@@ -28,7 +28,7 @@ The getting of single URL is a simple task:
 async with HttpClient() as client:
     resp = client.get("https://docs.gufolabs.com/")
     assert resp.status == 200
-    data = await resp.read()
+    data = resp.content
 ```
 
 The `HttpClient` is highly customizable, for example,
@@ -40,6 +40,16 @@ async with HttpClient(headers={"X-My-Header": b"test"}) as client:
     ...
 ```
 
+The response headers processing as easy as working with dicts:
+
+``` python
+async with HttpClient(headers={"X-My-Header": b"test"}) as client:
+    resp = client.get("https://docs.gufolabs.com/")
+    if resp.headers["Content-Type"] == "text/html":
+        ...
+```
+
+
 Gufo HTTP supports common authentication methods out-of-box:
 
 ``` python
@@ -47,6 +57,18 @@ async with HttpClient(auth=BasicAuth("scott", "tiger")) as client:
     resp = client.get("https://protected.example.com/")
     ...
 ```
+
+## Features
+
+* Clean async and blocking API.
+* High performance (see [Performance](#performance) section for details).
+* Built with security in mind.
+* Customizabile redirect policy.
+* TLS support.
+* Basic and bearer authorization schemes.
+* Full Python typing support.
+* Editor completion.
+* Well-tested, battle-proven code.
 
 ## Performance
 

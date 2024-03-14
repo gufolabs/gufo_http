@@ -4,13 +4,15 @@
 // Copyright (C) 2024, Gufo Labs
 // See LICENSE.md for details
 // ------------------------------------------------------------------------
-use super::response::AsyncResponse;
 use crate::auth::{AuthMethod, BasicAuth, BearerAuth, GetAuthMethod};
 use crate::error::HttpError;
+use crate::headers::Headers;
 use crate::method::{get_method, BROTLI, DEFLATE, GZIP};
+use crate::response::Response;
 use pyo3::{
     exceptions::{PyTypeError, PyValueError},
     prelude::*,
+    types::PyBytes,
 };
 use pyo3_asyncio::tokio::future_into_py;
 use reqwest::{
@@ -113,33 +115,52 @@ impl AsyncClient {
         headers: Option<HashMap<&str, &[u8]>>,
         body: Option<Vec<u8>>,
     ) -> PyResult<&'a PyAny> {
-        // Build request for method
-        let mut req = self.client.request(get_method(method)?, url);
-        // Add headers
-        if let Some(h) = headers {
-            for (k, v) in h {
-                req = req.header(
-                    HeaderName::from_bytes(k.as_ref())
-                        .map_err(|e| PyValueError::new_err(e.to_string()))?,
-                    HeaderValue::from_bytes(v).map_err(|e| PyValueError::new_err(e.to_string()))?,
-                )
+        // Get method
+        let method = get_method(method)?;
+        let req = py.allow_threads(|| -> Result<reqwest::RequestBuilder, HttpError> {
+            // Build request for method
+            let mut req = self.client.request(method, url);
+            // Add headers
+            if let Some(h) = headers {
+                for (k, v) in h {
+                    req = req.header(
+                        HeaderName::from_bytes(k.as_ref())
+                            .map_err(|e| HttpError::ValueError(e.to_string()))?,
+                        HeaderValue::from_bytes(v)
+                            .map_err(|e| HttpError::ValueError(e.to_string()))?,
+                    )
+                }
             }
-        }
-        // Add auth
-        match &self.auth {
-            AuthMethod::None => {}
-            AuthMethod::Basic { user, password } => req = req.basic_auth(user, password.as_ref()),
-            AuthMethod::Bearer { token } => req = req.bearer_auth(token),
-        }
-        // Add body
-        if let Some(b) = body {
-            req = req.body(b);
-        }
+            // Add auth
+            match &self.auth {
+                AuthMethod::None => {}
+                AuthMethod::Basic { user, password } => {
+                    req = req.basic_auth(user, password.as_ref())
+                }
+                AuthMethod::Bearer { token } => req = req.bearer_auth(token),
+            }
+            // Add body
+            if let Some(b) = body {
+                req = req.body(b);
+            }
+            Ok(req)
+        })?;
         // Create future
         future_into_py(py, async move {
             // Send request and wait for response
-            let response = req.send().await.map_err(HttpError::from)?;
-            Ok(AsyncResponse::new(response))
+            let resp = req.send().await.map_err(HttpError::from)?;
+            // Get status
+            let status: u16 = resp.status().into();
+            // Wrap headers
+            let headers = Headers::new(resp.headers().clone());
+            // Read body
+            let buf = resp.bytes().await.map_err(HttpError::from)?;
+            // Return response
+            Ok(Response::new(
+                status,
+                headers,
+                Python::with_gil(|py| PyBytes::new(py, buf.as_ref()).into()),
+            ))
         })
     }
 }
