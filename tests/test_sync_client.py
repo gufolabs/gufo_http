@@ -22,6 +22,7 @@ from gufo.http import (
     HttpError,
     RedirectError,
     RequestError,
+    RequestMethod,
 )
 from gufo.http.httpd import Httpd
 from gufo.http.sync_client import HttpClient
@@ -85,6 +86,48 @@ def test_patch(httpd: Httpd) -> None:
         assert resp.status == 200
         data = resp.content
         assert data == b"OK"
+
+
+@pytest.mark.parametrize(
+    ("method", "path", "body"),
+    [
+        (RequestMethod.GET, "/", None),
+        (RequestMethod.HEAD, "/", None),
+        (RequestMethod.OPTIONS, "/options", None),
+        (RequestMethod.DELETE, "/delete", None),
+        (RequestMethod.POST, "/post", b"TEST"),
+        (RequestMethod.PUT, "/put", b"TEST"),
+        (RequestMethod.PATCH, "/patch", b"TEST"),
+    ],
+)
+def test_request(
+    method: RequestMethod, path: str, body: Optional[bytes], httpd: Httpd
+) -> None:
+    with HttpClient() as client:
+        resp = client.request(method, f"{httpd.prefix}{path}", body=body)
+        assert 200 <= resp.status <= 299
+
+
+@pytest.mark.parametrize(
+    ("method", "path", "body"),
+    [
+        ("GET", "/", None),
+        ("HEAD", "/", None),
+        ("OPTIONS", "/options", None),
+        ("DELETE", "/delete", None),
+        ("POST", "/post", b"TEST"),
+        ("PUT", "/put", b"TEST"),
+        ("PATCH", "/patch", b"TEST"),
+    ],
+)
+def test_request_by_str(
+    method: str, path: str, body: Optional[bytes], httpd: Httpd
+) -> None:
+    with HttpClient() as client:
+        resp = client.request(
+            RequestMethod[method], f"{httpd.prefix}{path}", body=body
+        )
+        assert 200 <= resp.status <= 299
 
 
 def test_not_found(httpd: Httpd) -> None:

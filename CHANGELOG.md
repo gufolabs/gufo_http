@@ -14,9 +14,15 @@ To see unreleased changes, please see the [CHANGELOG on the main branch guide](h
 
 ### Added
 
+* `HttpClient.request()` function for both sync and async clients.
 * HTTPS benchmarks.
 * Httpd: `mode` configuration parameter.
 * Httpd: HTTPS mode.
+
+### Changed
+
+* `SyncRequest` and `AsyncRequest` are merged into unified `Request` class.
+* `Request.read()` meethod is replaced with `Request.content` property.
 
 ## 0.1.2 - 2024-03-09
 

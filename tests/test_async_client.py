@@ -23,6 +23,7 @@ from gufo.http import (
     HttpError,
     RedirectError,
     RequestError,
+    RequestMethod,
 )
 from gufo.http.async_client import HttpClient
 from gufo.http.httpd import Httpd
@@ -105,6 +106,56 @@ def test_patch(httpd: Httpd) -> None:
             assert resp.status == 200
             data = resp.content
             assert data == b"OK"
+
+    asyncio.run(inner())
+
+
+@pytest.mark.parametrize(
+    ("method", "path", "body"),
+    [
+        (RequestMethod.GET, "/", None),
+        (RequestMethod.HEAD, "/", None),
+        (RequestMethod.OPTIONS, "/options", None),
+        (RequestMethod.DELETE, "/delete", None),
+        (RequestMethod.POST, "/post", b"TEST"),
+        (RequestMethod.PUT, "/put", b"TEST"),
+        (RequestMethod.PATCH, "/patch", b"TEST"),
+    ],
+)
+def test_request(
+    method: RequestMethod, path: str, body: Optional[bytes], httpd: Httpd
+) -> None:
+    async def inner() -> None:
+        async with HttpClient() as client:
+            resp = await client.request(
+                method, f"{httpd.prefix}{path}", body=body
+            )
+            assert 200 <= resp.status <= 299
+
+    asyncio.run(inner())
+
+
+@pytest.mark.parametrize(
+    ("method", "path", "body"),
+    [
+        ("GET", "/", None),
+        ("HEAD", "/", None),
+        ("OPTIONS", "/options", None),
+        ("DELETE", "/delete", None),
+        ("POST", "/post", b"TEST"),
+        ("PUT", "/put", b"TEST"),
+        ("PATCH", "/patch", b"TEST"),
+    ],
+)
+def test_request_by_str(
+    method: str, path: str, body: Optional[bytes], httpd: Httpd
+) -> None:
+    async def inner() -> None:
+        async with HttpClient() as client:
+            resp = await client.request(
+                RequestMethod[method], f"{httpd.prefix}{path}", body=body
+            )
+            assert 200 <= resp.status <= 299
 
     asyncio.run(inner())
 

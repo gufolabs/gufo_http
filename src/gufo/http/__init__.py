@@ -25,6 +25,7 @@ from ._fast import (
     RedirectError,
     RequestError,
 )
+from .types import RequestMethod
 
 __version__: str = "0.1.2"
 __all__ = [
@@ -40,4 +41,5 @@ __all__ = [
     "AuthBase",
     "BasicAuth",
     "BearerAuth",
+    "RequestMethod",
 ]

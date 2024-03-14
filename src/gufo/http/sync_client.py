@@ -29,6 +29,7 @@ from ._fast import (
     Response,
     SyncClient,
 )
+from .types import RequestMethod
 from .util import merge_dict
 
 MAX_REDIRECTS = 10
@@ -97,6 +98,28 @@ class HttpClient(object):
         exc_tb: Optional[TracebackType],
     ) -> None:
         """Context manager exit."""
+
+    def request(
+        self: "HttpClient",
+        method: RequestMethod,
+        url: str,
+        /,
+        body: Optional[bytes] = None,
+        headers: Optional[Dict[str, bytes]] = None,
+    ) -> Response:
+        """
+        Send HTTP request and receive a response.
+
+        Args:
+            method: Request method
+            url: Request url
+            body: Request body
+            headers: Optional request headers
+
+        Returns:
+            Response instance.
+        """
+        return self._client.request(method.value, url, headers, body)
 
     def get(
         self: "HttpClient",
