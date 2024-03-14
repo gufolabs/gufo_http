@@ -27,7 +27,7 @@ from ._fast import (
 )
 from .types import RequestMethod
 
-__version__: str = "0.1.2"
+__version__: str = "0.2.0"
 __all__ = [
     "__version__",
     "HttpError",
