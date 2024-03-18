@@ -10,6 +10,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 To see unreleased changes, please see the [CHANGELOG on the main branch guide](https://github.com/gufolabs/gufo_http/blob/main/CHANGELOG.md).
 
+## [Unreleased]
+
+### Added
+
+* `RequestMethod` enum.
+
+### Changed
+
+* `HttpClient.request` accepts `RequestMethod`.
+
 ## 0.2.0 - 2024-03-14
 
 ### Added

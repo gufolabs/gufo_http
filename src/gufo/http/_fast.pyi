@@ -6,6 +6,7 @@
 # ---------------------------------------------------------------------
 
 # Python modules
+from enum import Enum
 from typing import Dict, Iterable, Optional, Tuple
 
 # Exceptions
@@ -25,14 +26,19 @@ class BasicAuth(AuthBase):
 class BearerAuth(AuthBase):
     def __init__(self: "BearerAuth", token: str) -> None: ...
 
-# Constants for request methods
-GET: int
-HEAD: int
-OPTIONS: int
-DELETE: int
-POST: int
-PUT: int
-PATCH: int
+# Request Method
+class RequestMethod(Enum):
+    GET: int
+    HEAD: int
+    OPTIONS: int
+    DELETE: int
+    POST: int
+    PUT: int
+    PATCH: int
+
+    # def __getitem__(self: "RequestMethod", name: str) -> "RequestMethod": ...
+    @staticmethod
+    def get(name: str) -> Optional["RequestMethod"]: ...
 
 # Constants for compression methods
 DEFLATE: int
@@ -71,7 +77,7 @@ class AsyncClient(object):
     ) -> None: ...
     async def request(
         self: "AsyncClient",
-        method: int,
+        method: RequestMethod,
         url: str,
         headers: Optional[Dict[str, bytes]],
         body: Optional[bytes],
@@ -91,7 +97,7 @@ class SyncClient(object):
     ) -> None: ...
     def request(
         self: "SyncClient",
-        method: int,
+        method: RequestMethod,
         url: str,
         headers: Optional[Dict[str, bytes]],
         body: Optional[bytes],

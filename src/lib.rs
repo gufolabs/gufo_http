@@ -23,13 +23,7 @@ fn gufo_http(py: Python, m: &PyModule) -> PyResult<()> {
     m.add("ConnectError", py.get_type::<error::PyConnectError>())?;
     m.add("RedirectError", py.get_type::<error::PyRedirectError>())?;
     // Request methods
-    m.add("GET", method::GET)?;
-    m.add("HEAD", method::HEAD)?;
-    m.add("OPTIONS", method::OPTIONS)?;
-    m.add("DELETE", method::DELETE)?;
-    m.add("POST", method::POST)?;
-    m.add("PUT", method::PUT)?;
-    m.add("PATCH", method::PATCH)?;
+    m.add_class::<method::RequestMethod>()?;
     // Compression methods
     m.add("DEFLATE", method::DEFLATE)?;
     m.add("GZIP", method::GZIP)?;

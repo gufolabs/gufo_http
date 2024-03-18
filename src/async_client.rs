@@ -7,7 +7,7 @@
 use crate::auth::{AuthMethod, BasicAuth, BearerAuth, GetAuthMethod};
 use crate::error::HttpError;
 use crate::headers::Headers;
-use crate::method::{get_method, BROTLI, DEFLATE, GZIP};
+use crate::method::{RequestMethod, BROTLI, DEFLATE, GZIP};
 use crate::response::Response;
 use pyo3::{
     exceptions::{PyTypeError, PyValueError},
@@ -110,16 +110,15 @@ impl AsyncClient {
     fn request<'a>(
         &self,
         py: Python<'a>,
-        method: usize,
+        method: &RequestMethod,
         url: String,
         headers: Option<HashMap<&str, &[u8]>>,
         body: Option<Vec<u8>>,
     ) -> PyResult<&'a PyAny> {
         // Get method
-        let method = get_method(method)?;
         let req = py.allow_threads(|| -> Result<reqwest::RequestBuilder, HttpError> {
             // Build request for method
-            let mut req = self.client.request(method, url);
+            let mut req = self.client.request((*method).into(), url);
             // Add headers
             if let Some(h) = headers {
                 for (k, v) in h {

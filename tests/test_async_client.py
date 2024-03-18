@@ -153,7 +153,7 @@ def test_request_by_str(
     async def inner() -> None:
         async with HttpClient() as client:
             resp = await client.request(
-                RequestMethod[method], f"{httpd.prefix}{path}", body=body
+                RequestMethod.get(method), f"{httpd.prefix}{path}", body=body
             )
             assert 200 <= resp.status <= 299
 

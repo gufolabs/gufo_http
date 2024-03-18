@@ -17,19 +17,12 @@ from . import __version__
 from ._fast import (
     BROTLI,
     DEFLATE,
-    DELETE,
-    GET,
     GZIP,
-    HEAD,
-    OPTIONS,
-    PATCH,
-    POST,
-    PUT,
     AuthBase,
+    RequestMethod,
     Response,
     SyncClient,
 )
-from .types import RequestMethod
 from .util import merge_dict
 
 MAX_REDIRECTS = 10
@@ -119,7 +112,7 @@ class HttpClient(object):
         Returns:
             Response instance.
         """
-        return self._client.request(method.value, url, headers, body)
+        return self._client.request(method, url, headers, body)
 
     def get(
         self: "HttpClient",
@@ -137,7 +130,7 @@ class HttpClient(object):
         Returns:
             Response instance.
         """
-        return self._client.request(GET, url, headers, None)
+        return self._client.request(RequestMethod.GET, url, headers, None)
 
     def head(
         self: "HttpClient",
@@ -155,7 +148,7 @@ class HttpClient(object):
         Returns:
             Response instance.
         """
-        return self._client.request(HEAD, url, headers, None)
+        return self._client.request(RequestMethod.HEAD, url, headers, None)
 
     def options(
         self: "HttpClient",
@@ -175,7 +168,7 @@ class HttpClient(object):
         Returns:
             Response instance.
         """
-        return self._client.request(OPTIONS, url, headers, None)
+        return self._client.request(RequestMethod.OPTIONS, url, headers, None)
 
     def delete(
         self: "HttpClient",
@@ -193,7 +186,7 @@ class HttpClient(object):
         Returns:
             Response instance.
         """
-        return self._client.request(DELETE, url, headers, None)
+        return self._client.request(RequestMethod.DELETE, url, headers, None)
 
     def post(
         self: "HttpClient",
@@ -213,7 +206,7 @@ class HttpClient(object):
         Returns:
             Response instance.
         """
-        return self._client.request(POST, url, headers, body)
+        return self._client.request(RequestMethod.POST, url, headers, body)
 
     def put(
         self: "HttpClient",
@@ -233,7 +226,7 @@ class HttpClient(object):
         Returns:
             Response instance.
         """
-        return self._client.request(PUT, url, headers, body)
+        return self._client.request(RequestMethod.PUT, url, headers, body)
 
     def patch(
         self: "HttpClient",
@@ -253,7 +246,7 @@ class HttpClient(object):
         Returns:
             Response instance.
         """
-        return self._client.request(PATCH, url, headers, body)
+        return self._client.request(RequestMethod.PATCH, url, headers, body)
 
 
-__all__ = ["HttpClient", "Response"]
+__all__ = ["HttpClient"]

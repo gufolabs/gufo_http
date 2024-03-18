@@ -17,19 +17,12 @@ from . import __version__
 from ._fast import (
     BROTLI,
     DEFLATE,
-    DELETE,
-    GET,
     GZIP,
-    HEAD,
-    OPTIONS,
-    PATCH,
-    POST,
-    PUT,
     AsyncClient,
     AuthBase,
+    RequestMethod,
     Response,
 )
-from .types import RequestMethod
 from .util import merge_dict
 
 MAX_REDIRECTS = 10
@@ -119,7 +112,7 @@ class HttpClient(object):
         Returns:
             Response instance.
         """
-        return await self._client.request(method.value, url, headers, body)
+        return await self._client.request(method, url, headers, body)
 
     async def get(
         self: "HttpClient",
@@ -137,7 +130,9 @@ class HttpClient(object):
         Returns:
             Response instance.
         """
-        return await self._client.request(GET, url, headers, None)
+        return await self._client.request(
+            RequestMethod.GET, url, headers, None
+        )
 
     async def head(
         self: "HttpClient",
@@ -155,7 +150,9 @@ class HttpClient(object):
         Returns:
             Response instance.
         """
-        return await self._client.request(HEAD, url, headers, None)
+        return await self._client.request(
+            RequestMethod.HEAD, url, headers, None
+        )
 
     async def options(
         self: "HttpClient",
@@ -175,7 +172,9 @@ class HttpClient(object):
         Returns:
             Response instance.
         """
-        return await self._client.request(OPTIONS, url, headers, None)
+        return await self._client.request(
+            RequestMethod.OPTIONS, url, headers, None
+        )
 
     async def delete(
         self: "HttpClient",
@@ -193,7 +192,9 @@ class HttpClient(object):
         Returns:
             Response instance.
         """
-        return await self._client.request(DELETE, url, headers, None)
+        return await self._client.request(
+            RequestMethod.DELETE, url, headers, None
+        )
 
     async def post(
         self: "HttpClient",
@@ -213,7 +214,9 @@ class HttpClient(object):
         Returns:
             Response instance.
         """
-        return await self._client.request(POST, url, headers, body)
+        return await self._client.request(
+            RequestMethod.POST, url, headers, body
+        )
 
     async def put(
         self: "HttpClient",
@@ -233,7 +236,9 @@ class HttpClient(object):
         Returns:
             Response instance.
         """
-        return await self._client.request(PUT, url, headers, body)
+        return await self._client.request(
+            RequestMethod.PUT, url, headers, body
+        )
 
     async def patch(
         self: "HttpClient",
@@ -253,7 +258,9 @@ class HttpClient(object):
         Returns:
             Response instance.
         """
-        return await self._client.request(PATCH, url, headers, body)
+        return await self._client.request(
+            RequestMethod.PATCH, url, headers, body
+        )
 
 
-__all__ = ["HttpClient", "Response"]
+__all__ = ["HttpClient"]

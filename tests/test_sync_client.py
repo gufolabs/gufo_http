@@ -125,7 +125,7 @@ def test_request_by_str(
 ) -> None:
     with HttpClient() as client:
         resp = client.request(
-            RequestMethod[method], f"{httpd.prefix}{path}", body=body
+            RequestMethod.get(method), f"{httpd.prefix}{path}", body=body
         )
         assert 200 <= resp.status <= 299
 

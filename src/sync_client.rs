@@ -7,7 +7,7 @@
 use crate::auth::{AuthMethod, BasicAuth, BearerAuth, GetAuthMethod};
 use crate::error::HttpError;
 use crate::headers::Headers;
-use crate::method::{get_method, BROTLI, DEFLATE, GZIP};
+use crate::method::{RequestMethod, BROTLI, DEFLATE, GZIP};
 use crate::response::Response;
 use pyo3::{
     exceptions::{PyTypeError, PyValueError},
@@ -108,17 +108,16 @@ impl SyncClient {
     }
     fn request(
         &self,
-        method: usize,
+        method: &RequestMethod,
         url: String,
         headers: Option<HashMap<&str, &[u8]>>,
         body: Option<Vec<u8>>,
         py: Python,
     ) -> PyResult<Response> {
-        let method = get_method(method)?;
         let (status, headers, buf) =
             py.allow_threads(|| -> Result<(u16, Headers, bytes::Bytes), HttpError> {
                 // Build request for method
-                let mut req = self.client.request(method, url);
+                let mut req = self.client.request((*method).into(), url);
                 // Add headers
                 if let Some(h) = headers {
                     for (k, v) in h {

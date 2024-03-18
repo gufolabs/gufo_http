@@ -24,8 +24,9 @@ from ._fast import (
     HttpError,
     RedirectError,
     RequestError,
+    RequestMethod,
+    Response,
 )
-from .types import RequestMethod
 
 __version__: str = "0.2.0"
 __all__ = [
@@ -42,4 +43,5 @@ __all__ = [
     "BasicAuth",
     "BearerAuth",
     "RequestMethod",
+    "Response",
 ]
