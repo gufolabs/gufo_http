@@ -8,7 +8,7 @@
 """Gufo HTTP: The accelerated Python HTTP client library.
 
 Attributes:
-    __version__: Current version
+    __version__: Current version.
 """
 
 # Gufo Labs modules

@@ -10,15 +10,31 @@ from enum import Enum
 from typing import Dict, Iterable, Optional, Tuple
 
 # Exceptions
-class HttpError(Exception): ...
-class RequestError(HttpError): ...
-class ConnectError(HttpError): ...
-class RedirectError(HttpError): ...
+class HttpError(Exception):
+    """Base class for Gufo HTTP errors."""
+
+class RequestError(HttpError):
+    """Request error."""
+
+class ConnectError(HttpError):
+    """Connection error."""
+
+class RedirectError(HttpError):
+    """Redirects limits exceeded."""
 
 # Auth
-class AuthBase(object): ...
+class AuthBase(object):
+    """Base class for authentication settings."""
 
 class BasicAuth(AuthBase):
+    """
+    HTTP Basic Authentication.
+
+    Args:
+        user: User name.
+        password: Optional password.
+    """
+
     def __init__(
         self: "BasicAuth", user: str, password: Optional[str]
     ) -> None: ...

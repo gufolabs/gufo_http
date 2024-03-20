@@ -14,7 +14,17 @@ mod method;
 mod response;
 mod sync_client;
 
-/// Module index
+/// Internal implementation in native codes.
+///
+/// This mode contains an Gufo HTTP internals
+/// implemeted in the native codes.
+/// You shouldn't import implementations from
+/// _fast directly.
+///
+/// Attributes:
+///     DEFLATE: Deflate method for `compression` argument.
+///     GZIP: GZIP method for `compression` argument.
+///     BROTLI: Brotli method for `compression` argument.
 #[pymodule]
 #[pyo3(name = "_fast")]
 fn gufo_http(py: Python, m: &PyModule) -> PyResult<()> {
