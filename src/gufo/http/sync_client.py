@@ -41,8 +41,14 @@ class HttpClient(object):
         user_agent: Default user agent.
 
     Args:
-        max_redirects: Maximal amount of redirects. Use `None`
-            to disable redirect processing.
+        max_redirects: Set up redirects policy:
+
+            * **None**: Disable automatic redirect processing.
+            * **0**: Deny redirects. Will raise `RedirectError`
+                on 3xx response.
+            * **>0**: Follow redirects automatically. Will raise
+                `RedirectError` when redirects limit exceeded.
+
         compression: Acceptable compression methods,
             must be a combination of `DEFLATE`, `GZIP`, `BROTLI`.
             Set to `None` to disable compression support.

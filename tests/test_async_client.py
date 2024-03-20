@@ -348,6 +348,15 @@ def test_no_redirect_to_root(httpd: Httpd) -> None:
     asyncio.run(inner())
 
 
+def test_no_redirect_forbidden(httpd: Httpd) -> None:
+    async def inner() -> None:
+        async with HttpClient(max_redirects=0) as client:
+            with pytest.raises(RedirectError):
+                await client.get(f"{httpd.prefix}/redirect/root")
+
+    asyncio.run(inner())
+
+
 @pytest.mark.parametrize("x", [HttpError, RedirectError])
 def test_redirect_to_loop(httpd: Httpd, x: Type[BaseException]) -> None:
     async def inner() -> None:

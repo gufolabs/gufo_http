@@ -277,6 +277,11 @@ def test_no_redirect_to_root(httpd: Httpd) -> None:
         assert resp.status == 302
 
 
+def test_redirects_forbidden(httpd: Httpd) -> None:
+    with HttpClient(max_redirects=0) as client, pytest.raises(RedirectError):
+        client.get(f"{httpd.prefix}/redirect/root")
+
+
 @pytest.mark.parametrize("x", [HttpError, RedirectError])
 def test_redirect_to_loop(httpd: Httpd, x: Type[BaseException]) -> None:
     with HttpClient() as client, pytest.raises(x):
