@@ -10,10 +10,10 @@ use pyo3::{
     PyErr,
 };
 
-//pub type HttpResult<T> = Result<T, HttpError>;
+pub type HttpResult<T> = Result<T, GufoHttpError>;
 
 #[derive(Debug)]
-pub enum HttpError {
+pub enum GufoHttpError {
     Request(String),
     Redirect,
     Connect,
@@ -22,41 +22,36 @@ pub enum HttpError {
 
 create_exception!(
     _fast,
-    PyHttpError,
+    HttpError,
     PyException,
     "Base class for Gufo HTTP Errors"
 );
 
-create_exception!(_fast, PyRequestError, PyHttpError, "Request error");
+create_exception!(_fast, RequestError, HttpError, "Request error");
 
-create_exception!(
-    _fast,
-    PyRedirectError,
-    PyHttpError,
-    "Redirects limit exceeded"
-);
+create_exception!(_fast, RedirectError, HttpError, "Redirects limit exceeded");
 
-create_exception!(_fast, PyConnectError, PyHttpError, "Connect error");
+create_exception!(_fast, ConnectError, HttpError, "Connect error");
 
-impl From<HttpError> for PyErr {
-    fn from(value: HttpError) -> Self {
+impl From<GufoHttpError> for PyErr {
+    fn from(value: GufoHttpError) -> Self {
         match value {
-            HttpError::Request(x) => PyRequestError::new_err(x),
-            HttpError::Redirect => PyRedirectError::new_err("redirects limit exceeded"),
-            HttpError::Connect => PyConnectError::new_err("connect error"),
-            HttpError::ValueError(x) => PyValueError::new_err(x),
+            GufoHttpError::Request(x) => RequestError::new_err(x),
+            GufoHttpError::Redirect => RedirectError::new_err("redirects limit exceeded"),
+            GufoHttpError::Connect => ConnectError::new_err("connect error"),
+            GufoHttpError::ValueError(x) => PyValueError::new_err(x),
         }
     }
 }
 
-impl From<reqwest::Error> for HttpError {
+impl From<reqwest::Error> for GufoHttpError {
     fn from(value: reqwest::Error) -> Self {
         if value.is_connect() {
-            return HttpError::Connect;
+            return GufoHttpError::Connect;
         }
         if value.is_redirect() {
-            return HttpError::Redirect;
+            return GufoHttpError::Redirect;
         }
-        HttpError::Request(value.to_string())
+        GufoHttpError::Request(value.to_string())
     }
 }

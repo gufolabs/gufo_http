@@ -5,7 +5,7 @@
 // See LICENSE.md for details
 // ------------------------------------------------------------------------
 use crate::auth::{AuthMethod, BasicAuth, BearerAuth, GetAuthMethod};
-use crate::error::HttpError;
+use crate::error::{GufoHttpError, HttpResult};
 use crate::headers::Headers;
 use crate::method::{RequestMethod, BROTLI, DEFLATE, GZIP};
 use crate::response::Response;
@@ -116,7 +116,7 @@ impl AsyncClient {
         body: Option<Vec<u8>>,
     ) -> PyResult<&'a PyAny> {
         // Get method
-        let req = py.allow_threads(|| -> Result<reqwest::RequestBuilder, HttpError> {
+        let req = py.allow_threads(|| -> HttpResult<reqwest::RequestBuilder> {
             // Build request for method
             let mut req = self.client.request((*method).into(), url);
             // Add headers
@@ -124,9 +124,9 @@ impl AsyncClient {
                 for (k, v) in h {
                     req = req.header(
                         HeaderName::from_bytes(k.as_ref())
-                            .map_err(|e| HttpError::ValueError(e.to_string()))?,
+                            .map_err(|e| GufoHttpError::ValueError(e.to_string()))?,
                         HeaderValue::from_bytes(v)
-                            .map_err(|e| HttpError::ValueError(e.to_string()))?,
+                            .map_err(|e| GufoHttpError::ValueError(e.to_string()))?,
                     )
                 }
             }
@@ -147,13 +147,13 @@ impl AsyncClient {
         // Create future
         future_into_py(py, async move {
             // Send request and wait for response
-            let resp = req.send().await.map_err(HttpError::from)?;
+            let resp = req.send().await.map_err(GufoHttpError::from)?;
             // Get status
             let status: u16 = resp.status().into();
             // Wrap headers
             let headers = Headers::new(resp.headers().clone());
             // Read body
-            let buf = resp.bytes().await.map_err(HttpError::from)?;
+            let buf = resp.bytes().await.map_err(GufoHttpError::from)?;
             // Return response
             Ok(Response::new(
                 status,

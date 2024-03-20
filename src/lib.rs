@@ -18,10 +18,10 @@ mod sync_client;
 #[pymodule]
 #[pyo3(name = "_fast")]
 fn gufo_http(py: Python, m: &PyModule) -> PyResult<()> {
-    m.add("HttpError", py.get_type::<error::PyHttpError>())?;
-    m.add("RequestError", py.get_type::<error::PyRequestError>())?;
-    m.add("ConnectError", py.get_type::<error::PyConnectError>())?;
-    m.add("RedirectError", py.get_type::<error::PyRedirectError>())?;
+    m.add("HttpError", py.get_type::<error::HttpError>())?;
+    m.add("RequestError", py.get_type::<error::RequestError>())?;
+    m.add("ConnectError", py.get_type::<error::ConnectError>())?;
+    m.add("RedirectError", py.get_type::<error::RedirectError>())?;
     // Request methods
     m.add_class::<method::RequestMethod>()?;
     // Compression methods

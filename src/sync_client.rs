@@ -5,7 +5,7 @@
 // See LICENSE.md for details
 // ------------------------------------------------------------------------
 use crate::auth::{AuthMethod, BasicAuth, BearerAuth, GetAuthMethod};
-use crate::error::HttpError;
+use crate::error::{GufoHttpError, HttpResult};
 use crate::headers::Headers;
 use crate::method::{RequestMethod, BROTLI, DEFLATE, GZIP};
 use crate::response::Response;
@@ -115,7 +115,7 @@ impl SyncClient {
         py: Python,
     ) -> PyResult<Response> {
         let (status, headers, buf) =
-            py.allow_threads(|| -> Result<(u16, Headers, bytes::Bytes), HttpError> {
+            py.allow_threads(|| -> HttpResult<(u16, Headers, bytes::Bytes)> {
                 // Build request for method
                 let mut req = self.client.request((*method).into(), url);
                 // Add headers
@@ -123,9 +123,9 @@ impl SyncClient {
                     for (k, v) in h {
                         req = req.header(
                             HeaderName::from_bytes(k.as_ref())
-                                .map_err(|e| HttpError::ValueError(e.to_string()))?,
+                                .map_err(|e| GufoHttpError::ValueError(e.to_string()))?,
                             HeaderValue::from_bytes(v)
-                                .map_err(|e| HttpError::ValueError(e.to_string()))?,
+                                .map_err(|e| GufoHttpError::ValueError(e.to_string()))?,
                         )
                     }
                 }
@@ -142,13 +142,13 @@ impl SyncClient {
                     req = req.body(b);
                 }
                 // Send request
-                let resp = req.send().map_err(HttpError::from)?;
+                let resp = req.send().map_err(GufoHttpError::from)?;
                 // Get status
                 let status: u16 = resp.status().into();
                 // Wrap headers
                 let headers = Headers::new(resp.headers().clone());
                 // Read response
-                let buf = resp.bytes().map_err(HttpError::from)?;
+                let buf = resp.bytes().map_err(GufoHttpError::from)?;
                 Ok((status, headers, buf))
             })?;
         // Return response

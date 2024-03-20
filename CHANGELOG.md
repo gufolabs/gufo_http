@@ -16,6 +16,10 @@ To see unreleased changes, please see the [CHANGELOG on the main branch guide](h
 
 * `RequestMethod` enum.
 
+### Fixed
+
+* Exception names shown without _Py_ prefix.
+
 ### Changed
 
 * `HttpClient.request` accepts `RequestMethod`.
