@@ -16,9 +16,6 @@ class HttpError(Exception):
 class RequestError(HttpError):
     """Request error."""
 
-class ConnectError(HttpError):
-    """Connection error."""
-
 class RedirectError(HttpError):
     """Redirects limits exceeded."""
 

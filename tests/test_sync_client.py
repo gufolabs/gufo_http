@@ -18,7 +18,6 @@ from gufo.http import (
     AuthBase,
     BasicAuth,
     BearerAuth,
-    ConnectError,
     HttpError,
     RedirectError,
     RequestError,
@@ -350,9 +349,11 @@ def test_compression(httpd: Httpd, compression: Optional[int]) -> None:
         assert b"</html>" in data
 
 
-@pytest.mark.parametrize("x", [HttpError, ConnectError])
-def test_connect_timeout(httpd: Httpd, x: Type[BaseException]) -> None:
-    with HttpClient(connect_timeout=1.0) as client, pytest.raises(x):
+def test_connect_timeout(httpd: Httpd) -> None:
+    with (
+        HttpClient(connect_timeout=1.0) as client,
+        pytest.raises(ConnectionError),
+    ):
         client.get(UNROUTABLE_URL)
 
 
@@ -396,7 +397,7 @@ def test_auth(httpd: Httpd, path: str, auth: AuthBase, expected: int) -> None:
 
 
 def test_tls_cert_check_fail(httpd_tls: Httpd) -> None:
-    with HttpClient() as client, pytest.raises(ConnectError):
+    with HttpClient() as client, pytest.raises(ConnectionError):
         client.get(f"{httpd_tls.prefix}/")
 
 

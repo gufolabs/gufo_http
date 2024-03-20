@@ -30,7 +30,6 @@ mod sync_client;
 fn gufo_http(py: Python, m: &PyModule) -> PyResult<()> {
     m.add("HttpError", py.get_type::<error::HttpError>())?;
     m.add("RequestError", py.get_type::<error::RequestError>())?;
-    m.add("ConnectError", py.get_type::<error::ConnectError>())?;
     m.add("RedirectError", py.get_type::<error::RedirectError>())?;
     // Request methods
     m.add_class::<method::RequestMethod>()?;

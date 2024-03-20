@@ -23,6 +23,7 @@ To see unreleased changes, please see the [CHANGELOG on the main branch guide](h
 ### Changed
 
 * `HttpClient.request` accepts `RequestMethod`.
+* `ConnectError` replaced with Python's builtin `ConnectionError`.
 
 ## 0.2.0 - 2024-03-14
 

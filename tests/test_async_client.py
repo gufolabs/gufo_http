@@ -19,7 +19,6 @@ from gufo.http import (
     AuthBase,
     BasicAuth,
     BearerAuth,
-    ConnectError,
     HttpError,
     RedirectError,
     RequestError,
@@ -448,11 +447,10 @@ def test_compression(httpd: Httpd, compression: Optional[int]) -> None:
     asyncio.run(inner())
 
 
-@pytest.mark.parametrize("x", [HttpError, ConnectError])
-def test_connect_timeout(httpd: Httpd, x: Type[BaseException]) -> None:
+def test_connect_timeout(httpd: Httpd) -> None:
     async def inner() -> None:
         async with HttpClient(connect_timeout=1.0) as client:
-            with pytest.raises(x):
+            with pytest.raises(ConnectionError):
                 await client.get(UNROUTABLE_URL)
 
     asyncio.run(inner())
@@ -516,7 +514,7 @@ def test_auth(httpd: Httpd, path: str, auth: AuthBase, expected: int) -> None:
 def test_tls_cert_check_fail(httpd_tls: Httpd) -> None:
     async def inner() -> None:
         async with HttpClient() as client:
-            with pytest.raises(ConnectError):
+            with pytest.raises(ConnectionError):
                 await client.get(f"{httpd_tls.prefix}/")
 
     asyncio.run(inner())
