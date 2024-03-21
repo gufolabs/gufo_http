@@ -87,7 +87,15 @@ class HttpClient(object):
         )
 
     async def __aenter__(self: "HttpClient") -> "HttpClient":
-        """Asynchronous context manager entry."""
+        """
+        Asynchronous context manager entry.
+
+        Example:
+            ``` python
+            async with HttpClient() as client:
+                ...
+            ```
+        """
         return self
 
     async def __aexit__(
@@ -117,6 +125,12 @@ class HttpClient(object):
 
         Returns:
             Response instance.
+
+        Raises:
+            TimeoutError: on timeouts.
+            ConnectionError: when failed to establish connection.
+            RedirectError: when redirects limit reached.
+            RequestError: on other errors related with request processing.
         """
         return await self._client.request(method, url, headers, body)
 
@@ -135,6 +149,12 @@ class HttpClient(object):
 
         Returns:
             Response instance.
+
+        Raises:
+            TimeoutError: on timeouts.
+            ConnectionError: when failed to establish connection.
+            RedirectError: when redirects limit reached.
+            RequestError: on other errors related with request processing.
         """
         return await self._client.request(
             RequestMethod.GET, url, headers, None
@@ -155,6 +175,12 @@ class HttpClient(object):
 
         Returns:
             Response instance.
+
+        Raises:
+            TimeoutError: on timeouts.
+            ConnectionError: when failed to establish connection.
+            RedirectError: when redirects limit reached.
+            RequestError: on other errors related with request processing.
         """
         return await self._client.request(
             RequestMethod.HEAD, url, headers, None
@@ -177,6 +203,12 @@ class HttpClient(object):
 
         Returns:
             Response instance.
+
+        Raises:
+            TimeoutError: on timeouts.
+            ConnectionError: when failed to establish connection.
+            RedirectError: when redirects limit reached.
+            RequestError: on other errors related with request processing.
         """
         return await self._client.request(
             RequestMethod.OPTIONS, url, headers, None
@@ -197,6 +229,12 @@ class HttpClient(object):
 
         Returns:
             Response instance.
+
+        Raises:
+            TimeoutError: on timeouts.
+            ConnectionError: when failed to establish connection.
+            RedirectError: when redirects limit reached.
+            RequestError: on other errors related with request processing.
         """
         return await self._client.request(
             RequestMethod.DELETE, url, headers, None
@@ -219,6 +257,12 @@ class HttpClient(object):
 
         Returns:
             Response instance.
+
+        Raises:
+            TimeoutError: on timeouts.
+            ConnectionError: when failed to establish connection.
+            RedirectError: when redirects limit reached.
+            RequestError: on other errors related with request processing.
         """
         return await self._client.request(
             RequestMethod.POST, url, headers, body
@@ -241,6 +285,12 @@ class HttpClient(object):
 
         Returns:
             Response instance.
+
+        Raises:
+            TimeoutError: on timeouts.
+            ConnectionError: when failed to establish connection.
+            RedirectError: when redirects limit reached.
+            RequestError: on other errors related with request processing.
         """
         return await self._client.request(
             RequestMethod.PUT, url, headers, body
@@ -263,6 +313,12 @@ class HttpClient(object):
 
         Returns:
             Response instance.
+
+        Raises:
+            TimeoutError: on timeouts.
+            ConnectionError: when failed to establish connection.
+            RedirectError: when redirects limit reached.
+            RequestError: on other errors related with request processing.
         """
         return await self._client.request(
             RequestMethod.PATCH, url, headers, body
