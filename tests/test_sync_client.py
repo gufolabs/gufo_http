@@ -350,10 +350,8 @@ def test_compression(httpd: Httpd, compression: Optional[int]) -> None:
 
 
 def test_connect_timeout(httpd: Httpd) -> None:
-    with (
-        HttpClient(connect_timeout=1.0) as client,
-        pytest.raises(ConnectionError),
-    ):
+    x = ConnectionError
+    with HttpClient(connect_timeout=1.0) as client, pytest.raises(x):
         client.get(UNROUTABLE_URL)
 
 
