@@ -27,7 +27,7 @@ from gufo.http import (
 from gufo.http.async_client import HttpClient
 from gufo.http.httpd import Httpd
 
-from .util import UNROUTABLE_PROXY, UNROUTABLE_URL, with_env
+from .util import UNROUTABLE_PROXY, UNROUTABLE_URL, BlackholeHttpd, with_env
 
 
 def test_get(httpd: Httpd) -> None:
@@ -452,6 +452,15 @@ def test_connect_timeout(httpd: Httpd) -> None:
         async with HttpClient(connect_timeout=1.0) as client:
             with pytest.raises(ConnectionError):
                 await client.get(UNROUTABLE_URL)
+
+    asyncio.run(inner())
+
+
+def test_request_timeout(httpd_blackhole: BlackholeHttpd) -> None:
+    async def inner() -> None:
+        async with HttpClient(timeout=1.0) as client:
+            with pytest.raises(TimeoutError):
+                await client.get(f"{httpd_blackhole.prefix}/")
 
     asyncio.run(inner())
 

@@ -6,7 +6,7 @@
 // ------------------------------------------------------------------------
 use pyo3::{
     create_exception,
-    exceptions::{PyConnectionError, PyException, PyValueError},
+    exceptions::{PyConnectionError, PyException, PyTimeoutError, PyValueError},
     PyErr,
 };
 
@@ -18,6 +18,7 @@ pub enum GufoHttpError {
     Redirect,
     Connect(String),
     ValueError(String),
+    Timeout,
 }
 
 create_exception!(
@@ -38,6 +39,7 @@ impl From<GufoHttpError> for PyErr {
             GufoHttpError::Redirect => RedirectError::new_err("redirects limit exceeded"),
             GufoHttpError::Connect(x) => PyConnectionError::new_err(x),
             GufoHttpError::ValueError(x) => PyValueError::new_err(x),
+            GufoHttpError::Timeout => PyTimeoutError::new_err("timed out"),
         }
     }
 }
@@ -46,6 +48,9 @@ impl From<reqwest::Error> for GufoHttpError {
     fn from(value: reqwest::Error) -> Self {
         if value.is_connect() {
             return GufoHttpError::Connect(value.to_string());
+        }
+        if value.is_timeout() {
+            return GufoHttpError::Timeout;
         }
         if value.is_redirect() {
             return GufoHttpError::Redirect;

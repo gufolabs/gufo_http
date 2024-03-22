@@ -18,6 +18,7 @@ To see unreleased changes, please see the [CHANGELOG on the main branch guide](h
 
 ### Fixed
 
+* Raise `TimeoutError` on request timeout, instead of `RequestError`.
 * Exception names shown without _Py_ prefix.
 
 ### Changed

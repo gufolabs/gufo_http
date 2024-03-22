@@ -26,7 +26,7 @@ from gufo.http import (
 from gufo.http.httpd import Httpd
 from gufo.http.sync_client import HttpClient
 
-from .util import UNROUTABLE_PROXY, UNROUTABLE_URL, with_env
+from .util import UNROUTABLE_PROXY, UNROUTABLE_URL, BlackholeHttpd, with_env
 
 
 def test_get(httpd: Httpd) -> None:
@@ -355,6 +355,11 @@ def test_connect_timeout(httpd: Httpd) -> None:
         pytest.raises(ConnectionError),
     ):
         client.get(UNROUTABLE_URL)
+
+
+def test_request_timeout(httpd_blackhole: BlackholeHttpd) -> None:
+    with HttpClient(timeout=1.0) as client, pytest.raises(TimeoutError):
+        client.get(f"{httpd_blackhole.prefix}/")
 
 
 def test_default_user_agent(httpd: Httpd) -> None:

@@ -17,10 +17,12 @@ from gufo.http.httpd import Httpd, HttpdMode
 
 from .util import (
     HTTPD_ADDRESS,
+    HTTPD_BLACKHOLE_PORT,
     HTTPD_HOST,
     HTTPD_PATH,
     HTTPD_PORT,
     HTTPD_TLS_PORT,
+    BlackholeHttpd,
 )
 
 
@@ -48,4 +50,12 @@ def httpd_tls() -> Iterator[Httpd]:
         host=HTTPD_HOST,
         mode=HttpdMode.HTTPS,
     ) as httpd:
+        yield httpd
+
+
+@pytest.fixture(scope="session")
+def httpd_blackhole() -> Iterator[BlackholeHttpd]:
+    logger = logging.getLogger("gufo.http.httpd")
+    logger.setLevel(logging.DEBUG)
+    with BlackholeHttpd(port=HTTPD_BLACKHOLE_PORT) as httpd:
         yield httpd
