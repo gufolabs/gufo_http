@@ -17,3 +17,4 @@ syntax: glob
 *.dist-info/
 __pycache__
 /Cargo.lock
+/perf.data*

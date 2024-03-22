@@ -9,7 +9,8 @@ crate-type = ["cdylib"] # Comment for bench
 name = "gufo_http"
 
 [profile.release]
-strip = "debuginfo"
+strip = "debuginfo" # Uncomment for release
+# debug = true # Uncomment for perf
 
 [dependencies]
 bytes = "1.5"
