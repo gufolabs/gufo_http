@@ -25,6 +25,7 @@ To see unreleased changes, please see the [CHANGELOG on the main branch guide](h
 
 * `HttpClient.request` accepts `RequestMethod`.
 * `ConnectError` replaced with Python's builtin `ConnectionError`.
+* Use Rust 1.77.0.
 * Use `reqwest` 0.12.
 
 ## 0.2.0 - 2024-03-14
