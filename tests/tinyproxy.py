@@ -11,7 +11,6 @@ import logging
 import queue
 import subprocess
 import threading
-import time
 from pathlib import Path
 from tempfile import TemporaryDirectory
 from types import TracebackType

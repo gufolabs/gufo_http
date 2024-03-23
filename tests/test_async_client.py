@@ -553,7 +553,7 @@ def test_invalid_proxy(proxy: Any) -> None:
 
 
 def test_proxy_connect_timeout() -> None:
-    async def inner():
+    async def inner() -> None:
         async with HttpClient(
             connect_timeout=1.0, proxy=[Proxy(UNROUTABLE_PROXY)]
         ) as client:
@@ -564,7 +564,7 @@ def test_proxy_connect_timeout() -> None:
 
 
 def test_proxy_request_timeout(httpd_blackhole: BlackholeHttpd) -> None:
-    async def inner():
+    async def inner() -> None:
         async with HttpClient(
             timeout=1.0, proxy=[Proxy(httpd_blackhole.prefix)]
         ) as client:
@@ -575,7 +575,7 @@ def test_proxy_request_timeout(httpd_blackhole: BlackholeHttpd) -> None:
 
 
 def test_proxy_get(httpd: Httpd, proxy: Proxy) -> None:
-    async def inner():
+    async def inner() -> None:
         async with HttpClient(
             connect_timeout=1.0, timeout=3.0, proxy=[Proxy(proxy.url)]
         ) as client:
