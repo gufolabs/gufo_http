@@ -21,6 +21,7 @@ from ._fast import (
     BearerAuth,
     Headers,
     HttpError,
+    Proxy,
     RedirectError,
     RequestError,
     RequestMethod,
@@ -42,4 +43,5 @@ __all__ = [
     "BearerAuth",
     "RequestMethod",
     "Response",
+    "Proxy",
 ]

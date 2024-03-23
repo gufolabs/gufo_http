@@ -8,7 +8,7 @@
 # Python modules
 import asyncio
 from collections.abc import Iterable
-from typing import ClassVar, Dict, Optional, Type
+from typing import Any, ClassVar, Dict, Optional, Type
 
 # Third-party modules
 import pytest
@@ -20,6 +20,7 @@ from gufo.http import (
     BasicAuth,
     BearerAuth,
     HttpError,
+    Proxy,
     RedirectError,
     RequestError,
     RequestMethod,
@@ -539,3 +540,12 @@ def test_tls_get(httpd_tls: Httpd) -> None:
             assert b"</html>" in data
 
     asyncio.run(inner())
+
+
+@pytest.mark.parametrize(
+    "proxy",
+    [1, "x", [1], [Proxy("http://127.0.0.1:3128"), BasicAuth("test", None)]],
+)
+def test_invalid_proxy(proxy: Any) -> None:
+    with pytest.raises(TypeError):
+        HttpClient(proxy=proxy)

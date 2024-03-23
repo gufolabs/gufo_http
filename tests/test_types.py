@@ -12,7 +12,7 @@ from typing import Optional
 import pytest
 
 # Gufo HTTP modules
-from gufo.http import RequestMethod
+from gufo.http import Proxy, RequestMethod
 
 
 @pytest.mark.parametrize(
@@ -51,3 +51,8 @@ def test_method_get(name: str, expected: Optional[RequestMethod]) -> None:
 def _test_invalid_method() -> None:
     with pytest.raises(KeyError):
         RequestMethod["foobar"]
+
+
+def test_proxy_invalid_scheme() -> None:
+    with pytest.raises(ValueError):
+        Proxy("httpz://127.0.0.1:3128/")

@@ -7,7 +7,7 @@
 
 # Python modules
 from enum import Enum
-from typing import Dict, Iterable, Optional, Tuple
+from typing import Dict, Iterable, List, Optional, Tuple
 
 # Exceptions
 class HttpError(Exception):
@@ -76,6 +76,9 @@ class Response(object):
     @property
     def content(self: "Response") -> bytes: ...
 
+class Proxy(object):
+    def __init__(self: "Proxy", url: str) -> None: ...
+
 class AsyncClient(object):
     def __init__(
         self: "AsyncClient",
@@ -87,6 +90,7 @@ class AsyncClient(object):
         compression: Optional[int],
         user_agent: Optional[str],
         auth: Optional[AuthBase],
+        proxy: Optional[List[Proxy]],
     ) -> None: ...
     async def request(
         self: "AsyncClient",
@@ -107,6 +111,7 @@ class SyncClient(object):
         compression: Optional[int],
         user_agent: Optional[str],
         auth: Optional[AuthBase],
+        proxy: Optional[List[Proxy]],
     ) -> None: ...
     def request(
         self: "SyncClient",

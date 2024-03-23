@@ -28,14 +28,15 @@ This benchmark evaluates several Python HTTP client libraries:
 - [niquests][niquests] (3.5.2)
 - [PycURL][pycurl] (7.45.3)
 - [urllib][urllib] from Python standard library
-- [urllibb3][urllib3] (2.2.1)
+- [urllib3][urllib3] (2.2.1)
 
 The evaluation covers the following aspects:
 
 * Performance in synchronous (blocking) mode, if supported.
-* Performance in asynchronous mode, if supported.
+* Performance in asynchronous (non-blocking) mode, if supported.
 * Performance in plain-text (HTTP) and encrypted (HTTPS) modes.
 * Ability to maintain pools of connections.
+* The efficiency of the resolver.
 * Ability to release GIL in multi-threaded applications.
 
 All benchmarks are performed against a local nginx installation
@@ -82,6 +83,7 @@ Perform http requests to read 1kb text file. This test evaluates:
 
 * The cost of client's initialization.
 * The efficiency of the network code.
+* The efficiency of the resolver.
 * The efficiency HTTP/1.1 parser. 
 
 Run tests:
@@ -240,6 +242,7 @@ Perform HTTP/2 requests to read 1kb text file. This test evaluates:
 * The efficiency of the network code.
 * The efficiency HTTP/1.1 or HTTP/2 parser. 
 * The efficency of the crypto.
+* The efficiency of the resolver.
 
 Run tests:
 ```

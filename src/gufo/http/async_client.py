@@ -9,7 +9,7 @@
 
 # Python modules
 from types import TracebackType
-from typing import Dict, Optional, Type
+from typing import Dict, List, Optional, Type
 
 from . import __version__
 
@@ -20,6 +20,7 @@ from ._fast import (
     GZIP,
     AsyncClient,
     AuthBase,
+    Proxy,
     RequestMethod,
     Response,
 )
@@ -58,6 +59,7 @@ class HttpClient(object):
         connect_timeout: Timeout to establish connection, in seconds.
         timeout: Request timeout, in seconds.
         auth: Authentication settings.
+        proxy: Optional list of Proxy istances.
     """
 
     user_agent = f"Gufo HTTP/{__version__}"
@@ -74,6 +76,7 @@ class HttpClient(object):
         timeout: float = DEFAULT_TIMEOUT,
         user_agent: Optional[str] = None,
         auth: Optional[AuthBase] = None,
+        proxy: Optional[List[Proxy]] = None,
     ) -> None:
         self._client = AsyncClient(
             validate_cert,
@@ -84,6 +87,7 @@ class HttpClient(object):
             compression,
             user_agent or self.user_agent,
             auth,
+            proxy,
         )
 
     async def __aenter__(self: "HttpClient") -> "HttpClient":

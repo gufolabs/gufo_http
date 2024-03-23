@@ -8,6 +8,7 @@ use crate::auth::{AuthMethod, BasicAuth, BearerAuth, GetAuthMethod};
 use crate::error::{GufoHttpError, HttpResult};
 use crate::headers::Headers;
 use crate::method::{RequestMethod, BROTLI, DEFLATE, GZIP};
+use crate::proxy::Proxy;
 use crate::response::Response;
 use pyo3::{
     exceptions::{PyTypeError, PyValueError},
@@ -40,6 +41,7 @@ impl SyncClient {
         compression: Option<u8>,
         user_agent: Option<&str>,
         auth: Option<&PyAny>,
+        proxy: Option<Vec<&PyAny>>,
     ) -> PyResult<Self> {
         let builder = reqwest::blocking::Client::builder();
         // Set up redirect policy
@@ -100,6 +102,19 @@ impl SyncClient {
             }
             None => AuthMethod::None,
         };
+        // Proxy
+        if let Some(proxy) = proxy {
+            for p in proxy {
+                match p.extract::<Proxy>() {
+                    Ok(p) => {
+                        builder = builder.proxy(p.into());
+                    }
+                    Err(_) => {
+                        return Err(PyTypeError::new_err("proxy must contain Proxy instances"))
+                    }
+                }
+            }
+        }
         // Build client
         let client = builder
             .build()
