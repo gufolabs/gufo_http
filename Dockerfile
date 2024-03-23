@@ -1,5 +1,5 @@
 FROM python:3.12-slim-bullseye AS dev
-COPY .requirements tools/build/setup-rust.sh tools/build/setup-nginx.sh /tmp
+COPY .requirements tools/build/setup-rust.sh tools/build/setup-nginx.sh tools/build/setup-tinyproxy.sh /tmp
 ENV \
     PATH=/usr/local/cargo/bin:$PATH\
     RUSTUP_HOME=/usr/local/rustup\
@@ -16,10 +16,11 @@ RUN \
     libc6-dev\
     curl\
     && /tmp/setup-nginx.sh \
+    && /tmp/setup-tinyproxy.sh \
     && /tmp/setup-rust.sh \
     && rustup component add\
     rust-analysis\
-    rust-src \
+    rust-src\
     rls\
     clippy\
     rustfmt\

@@ -572,3 +572,17 @@ def test_proxy_request_timeout(httpd_blackhole: BlackholeHttpd) -> None:
                 await client.get("https://gufolabs.com/")
 
     asyncio.run(inner())
+
+
+def test_proxy_get(httpd: Httpd, proxy: Proxy) -> None:
+    async def inner():
+        async with HttpClient(
+            connect_timeout=1.0, timeout=3.0, proxy=[Proxy(proxy.url)]
+        ) as client:
+            resp = await client.get(f"{httpd.prefix}/")
+            assert resp.status == 200
+            data = resp.content
+            assert data
+            assert b"</html>" in data
+
+    asyncio.run(inner())

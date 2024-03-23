@@ -20,6 +20,7 @@ HTTPD_BLACKHOLE_PORT = random.randint(52000, 53999)
 UNROUTABLE_URL = "http://192.0.2.1/"
 UNROUTABLE_PROXY = "http://192.0.2.1:3128/"
 TEXT_PLAIN = "text/plain"
+PROXY_PORT = random.randint(52000, 53999)
 
 
 @contextlib.contextmanager

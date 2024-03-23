@@ -16,6 +16,7 @@ import pytest
 from gufo.http.httpd import Httpd, HttpdMode
 
 from .blackhole import BlackholeHttpd
+from .tinyproxy import Tinyproxy
 from .util import (
     HTTPD_ADDRESS,
     HTTPD_BLACKHOLE_PORT,
@@ -23,6 +24,7 @@ from .util import (
     HTTPD_PATH,
     HTTPD_PORT,
     HTTPD_TLS_PORT,
+    PROXY_PORT,
 )
 
 
@@ -59,3 +61,11 @@ def httpd_blackhole() -> Iterator[BlackholeHttpd]:
     logger.setLevel(logging.DEBUG)
     with BlackholeHttpd(port=HTTPD_BLACKHOLE_PORT) as httpd:
         yield httpd
+
+
+@pytest.fixture(scope="session")
+def proxy() -> Iterator[Tinyproxy]:
+    logger = logging.getLogger("gufo.http.httpd")
+    logger.setLevel(logging.DEBUG)
+    with Tinyproxy(port=PROXY_PORT) as proxy:
+        yield proxy

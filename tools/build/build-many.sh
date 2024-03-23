@@ -29,6 +29,11 @@ echo "## Installing nginx"
 echo "##"
 ./tools/build/setup-nginx.sh
 
+echo "##"
+echo "## Installing tinyproxy"
+echo "##"
+./tools/build/setup-tinyproxy.sh
+
 while [ $# -gt 0 ]
 do
     echo "##"
