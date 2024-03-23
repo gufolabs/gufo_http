@@ -15,6 +15,7 @@ To see unreleased changes, please see the [CHANGELOG on the main branch guide](h
 ### Added
 
 * `RequestMethod` enum.
+* Proxy support.
 
 ### Fixed
 

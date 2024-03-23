@@ -27,7 +27,8 @@ from gufo.http import (
 from gufo.http.httpd import Httpd
 from gufo.http.sync_client import HttpClient
 
-from .util import UNROUTABLE_PROXY, UNROUTABLE_URL, BlackholeHttpd, with_env
+from .blackhole import BlackholeHttpd
+from .util import UNROUTABLE_PROXY, UNROUTABLE_URL, with_env
 
 
 def test_get(httpd: Httpd) -> None:

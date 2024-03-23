@@ -15,6 +15,7 @@ import pytest
 # Gufo HTTP modules
 from gufo.http.httpd import Httpd, HttpdMode
 
+from .blackhole import BlackholeHttpd
 from .util import (
     HTTPD_ADDRESS,
     HTTPD_BLACKHOLE_PORT,
@@ -22,7 +23,6 @@ from .util import (
     HTTPD_PATH,
     HTTPD_PORT,
     HTTPD_TLS_PORT,
-    BlackholeHttpd,
 )
 
 
