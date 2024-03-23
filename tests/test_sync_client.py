@@ -422,3 +422,19 @@ def test_tls_get(httpd_tls: Httpd) -> None:
 def test_invalid_proxy(proxy: Any) -> None:
     with pytest.raises(TypeError):
         HttpClient(proxy=proxy)
+
+
+def test_proxy_connect_timeout() -> None:
+    with HttpClient(
+        connect_timeout=1.0, proxy=[Proxy(UNROUTABLE_PROXY)]
+    ) as client:
+        with pytest.raises(ConnectionError):
+            client.get("https://gufolabs.com/")
+
+
+def test_proxy_request_timeout(httpd_blackhole: BlackholeHttpd) -> None:
+    with HttpClient(
+        timeout=1.0, proxy=[Proxy(httpd_blackhole.prefix)]
+    ) as client:
+        with pytest.raises(TimeoutError):
+            client.get("https://gufolabs.com/")

@@ -179,6 +179,7 @@ max-complexity = 15
   "PT011", # {exc} is too broad, set the `match` parameter or use a more specific exception.
   "PLR2004", # Magic value used in comparison, consider replacing {value} with a constant variable
   "S311", # Standard pseudo-random generators are not suitable for cryptographic purposes
+  "SIM117", # Use a single `with` statement with multiple contexts instead of nested `with` statements
 ]
 
 [[tool.setuptools-rust.ext-modules]]
