@@ -1,27 +1,25 @@
 # ---------------------------------------------------------------------
-# Gufo HTTP: Tinyproxy context manager
+# Gufo HTTP: ProxyServer context manager
 # ---------------------------------------------------------------------
 # Copyright (C) 2024, Gufo Labs
 # See LICENSE.md for details
 # ---------------------------------------------------------------------
-"""Tinyproxy context manager for tests."""
+"""ProxyServer context manager for tests."""
 
 # Python modules
 import logging
 import queue
 import subprocess
 import threading
-from pathlib import Path
-from tempfile import TemporaryDirectory
 from types import TracebackType
 from typing import Optional, Type
 
 logger = logging.getLogger("gufo.httpd.httpd")
 
 
-class Tinyproxy(object):
+class ProxyServer(object):
     """
-    Tinyproxy test context manager.
+    ProxyServer test context manager.
 
     Attributes:
         url: URL for proxy settings.
@@ -33,8 +31,8 @@ class Tinyproxy(object):
     """
 
     def __init__(
-        self: "Tinyproxy",
-        path: str = "/usr/bin/tinyproxy",
+        self: "ProxyServer",
+        path: str = "/usr/local/bin/proxy",
         address: str = "127.0.0.1",
         port: int = 10088,
     ) -> None:
@@ -45,13 +43,13 @@ class Tinyproxy(object):
         self._start_timeout = 5.0
         self._proc = None
 
-    def __enter__(self: "Tinyproxy") -> "Tinyproxy":
+    def __enter__(self: "ProxyServer") -> "ProxyServer":
         """Context manager entry."""
         self._start()
         return self
 
     def __exit__(
-        self: "Tinyproxy",
+        self: "ProxyServer",
         exc_type: Optional[Type[BaseException]],
         exc_val: Optional[BaseException],
         exc_tb: Optional[TracebackType],
@@ -59,13 +57,13 @@ class Tinyproxy(object):
         """Context manager exit."""
         self._stop()
 
-    async def __aenter__(self: "Tinyproxy") -> "Tinyproxy":
+    async def __aenter__(self: "ProxyServer") -> "ProxyServer":
         """Asynchronous context manager entry."""
         self._start()
         return self
 
     async def __aexit__(
-        self: "Tinyproxy",
+        self: "ProxyServer",
         exc_type: Optional[Type[BaseException]],
         exc_val: Optional[BaseException],
         exc_tb: Optional[TracebackType],
@@ -73,34 +71,16 @@ class Tinyproxy(object):
         """Asynchronous context manager exit."""
         self._stop()
 
-    def get_config(self: "Tinyproxy", prefix: Path) -> str:
-        """Generate config."""
-        cfg = [
-            f"Port {self._port}",
-            f"Listen {self._address}",
-            "Allow 127.0.0.1",
-            "Timeout 600",
-            "MaxClients 100",
-            "StartServers 5",
-        ]
-        return "\n".join(cfg)
-
-    def _start(self: "Tinyproxy") -> None:
-        logger.info("Starting tinyproxy instance")
-        self._dir = TemporaryDirectory(prefix="tp-")
-        dn = Path(self._dir.name)
-        # Config
-        cfg_path = dn / "tinyproxy.conf"
-        cfg = self.get_config(cfg_path)
-        logger.debug("tinyproxy config:\n%s", cfg)
-        with open(cfg_path, "w") as fp:
-            fp.write(cfg)
+    def _start(self: "ProxyServer") -> None:
+        logger.info("Starting proxy.py instance")
         # Run process
         args = [
             self._path,
-            "-d",
-            "-c",
-            str(cfg_path),
+            f"--host={self._address}",
+            f"--port={self._port}",
+            "--threadless",
+            "--log-level=DEBUG",
+            "--log-file=/dev/stdout",
         ]
         self._proc = subprocess.Popen(
             args, stdout=subprocess.PIPE, encoding="utf-8", text=True
@@ -109,8 +89,8 @@ class Tinyproxy(object):
         self._wait()
         self._consume_stdout()
 
-    def _wait(self: "Tinyproxy") -> None:
-        """Wait until tinyproxy is ready."""
+    def _wait(self: "ProxyServer") -> None:
+        """Wait until proxy.py is ready."""
         if self._proc is None:
             msg = "_wait() must not be started directly"
             raise RuntimeError(msg)
@@ -128,12 +108,12 @@ class Tinyproxy(object):
         if err is not None:
             raise RuntimeError(err)
         if t.is_alive():
-            msg = "tinyproxy failed to start"
+            msg = "proxy.py failed to start"
             logger.error(msg)
             raise TimeoutError(msg)
 
     def _wait_inner(
-        self: "Tinyproxy", q: "queue.Queue[Optional[str]]"
+        self: "ProxyServer", q: "queue.Queue[Optional[str]]"
     ) -> None:
         """
         Inner implementation of httpd waiter.
@@ -144,33 +124,31 @@ class Tinyproxy(object):
             q: Result queue.
         """
         if self._proc and self._proc.stdout:
-            logger.info("Waiting for tinyproxy")
+            logger.info("Waiting for proxy.py")
             for line in self._proc.stdout:
-                logger.debug("tinyproxy: %s", line[:-1])
-                if "Accepting connections" in line:
-                    logger.info("tinyproxy is up")
+                logger.debug("proxy.py: %s", line[:-1])
+                if "Started " in line:
+                    logger.info("proxy.py is up")
                     q.put(None)
                     return
             # Premature termination of snmpd
-            logging.error("tinyproxy is terminated prematurely")
-            q.put("tinyproxy is terminated prematurely")
+            logging.error("proxy.py is terminated prematurely")
+            q.put("proxy.py is terminated prematurely")
             return
-        q.put("tinyproxy is not active")
+        q.put("proxy.py is not active")
 
-    def _consume_stdout(self: "Tinyproxy") -> None:
+    def _consume_stdout(self: "ProxyServer") -> None:
         def inner() -> None:
             if self._proc and self._proc.stdout:
                 for line in self._proc.stdout:
-                    logger.debug("tinyproxy: %s", line[:-1])
+                    logger.debug("proxy.py: %s", line[:-1])
 
         t = threading.Thread(target=inner)
         t.daemon = True
         t.start()
 
-    def _stop(self: "Tinyproxy") -> None:
-        """Terminate tinyproxy instance."""
+    def _stop(self: "ProxyServer") -> None:
+        """Terminate proxy.py instance."""
         if self._proc:
-            logger.info("Stopping tinyproxy")
+            logger.info("Stopping proxy.py")
             self._proc.kill()
-        if self._dir:
-            self._dir.cleanup()

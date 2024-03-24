@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 To see unreleased changes, please see the [CHANGELOG on the main branch guide](https://github.com/gufolabs/gufo_http/blob/main/CHANGELOG.md).
 
-## 0.3.0 -2024-03-24
+## 0.3.0 - 2024-03-24
 
 ### Added
 
@@ -25,7 +25,7 @@ To see unreleased changes, please see the [CHANGELOG on the main branch guide](h
 ### Changed
 
 * `HttpClient.request` accepts `RequestMethod`.
-* `HttpClient` acceepts optional `proxy` argument.
+* `HttpClient` accepts optional `proxy` argument.
 * `ConnectError` replaced with Python's builtin `ConnectionError`.
 * Use Rust 1.77.0.
 * Use `reqwest` 0.12.

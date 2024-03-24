@@ -25,7 +25,7 @@ else
     SUDO="sudo"
 fi
 
-echo "Installing snmpd for $OS"
+echo "Installing nginx for $OS"
 case $OS in
     rhel)
         $SUDO yum install -y nginx

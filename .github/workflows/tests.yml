@@ -134,9 +134,6 @@ jobs:
       - name: Install nginx
         run: ./tools/build/setup-nginx.sh
 
-      - name: Install tinyproxy
-        run: ./tools/build/setup-tinyproxy.sh
-
       - name: Run Tests
         run: coverage run -m pytest -vv tests/
 
