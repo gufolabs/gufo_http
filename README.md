@@ -66,6 +66,7 @@ async with HttpClient(auth=BasicAuth("scott", "tiger")) as client:
 * Customizabile redirect policy.
 * TLS support.
 * Basic and bearer authorization schemes.
+* HTTP/HTTPS/SOCKS5 Proxy support. 
 * Full Python typing support.
 * Editor completion.
 * Well-tested, battle-proven code.

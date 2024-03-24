@@ -58,6 +58,7 @@ async with HttpClient(headers={"X-My-Header": b"test"}) as client:
 * Customizabile redirect policy.
 * TLS support.
 * Basic and bearer authorization schemes.
+* HTTP/HTTPS/SOCKS5 Proxy support.
 * Full Python typing support.
 * Editor completion.
 * Well-tested, battle-proven code.
