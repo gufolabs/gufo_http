@@ -32,7 +32,7 @@ class ProxyServer(object):
 
     def __init__(
         self: "ProxyServer",
-        path: str = "/usr/local/bin/proxy",
+        path: str = "proxy",
         address: str = "127.0.0.1",
         port: int = 10088,
     ) -> None:
