@@ -338,7 +338,7 @@ Legend:
 ![Median chart](https_linear_x100_1k.png)
 *Lower is better*
 
-### 100 Parralel Requests
+### 100 Parallel Requests
 Perform 100 HTTPS requests to read 1kb text file with concurrency of 4 maintaininng
 single client session per thread/coroutine.
 
