@@ -38,6 +38,7 @@ fn gufo_http(py: Python, m: &PyModule) -> PyResult<()> {
     m.add("DEFLATE", method::DEFLATE)?;
     m.add("GZIP", method::GZIP)?;
     m.add("BROTLI", method::BROTLI)?;
+    m.add("ZSTD", method::ZSTD)?;
     // Auth
     m.add_class::<auth::AuthBase>()?;
     m.add_class::<auth::BasicAuth>()?;

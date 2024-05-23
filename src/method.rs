@@ -26,6 +26,7 @@ pub enum RequestMethod {
 pub const DEFLATE: u8 = 1;
 pub const GZIP: u8 = 1 << 1;
 pub const BROTLI: u8 = 1 << 2;
+pub const ZSTD: u8 = 1 << 3;
 
 // All request methods
 static METHODS: [Method; 7] = [

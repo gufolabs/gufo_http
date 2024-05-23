@@ -16,8 +16,8 @@ strip = "debuginfo" # Uncomment for release
 bytes = "1.5"
 pyo3 = {version = "0.20", features = ["extension-module"]}
 pyo3-asyncio = {version = "0.20", features = ["attributes", "tokio-runtime"]}
-reqwest = {version = "0.12", features = ["blocking", "rustls-tls", "cookies", "gzip", "brotli", "deflate", "hickory-dns", "http2", "socks"], default_features = false}
-tokio = "1.36"
+reqwest = {version = "0.12.4", features = ["blocking", "rustls-tls", "cookies", "gzip", "brotli", "deflate", "zstd", "hickory-dns", "http2", "socks"], default_features = false}
+tokio = "1.37"
 
 [dev-dependencies]
 criterion = "0.4"

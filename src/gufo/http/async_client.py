@@ -51,7 +51,7 @@ class HttpClient(object):
                 `RedirectError` when redirects limit exceeded.
 
         compression: Acceptable compression methods,
-            must be a combination of `DEFLATE`, `GZIP`, `BROTLI`.
+            must be a combination of `DEFLATE`, `GZIP`, `BROTLI`, and `ZSTD`.
             Set to `None` to disable compression support.
         validate_cert: Set to `False` to disable TLS certificate
             validation. Otherwise, raise `ConnectionError`

@@ -57,6 +57,7 @@ class RequestMethod(Enum):
 DEFLATE: int
 GZIP: int
 BROTLI: int
+ZSTD: int
 
 class Headers(object):
     def __contains__(self: "Headers", k: str) -> bool: ...

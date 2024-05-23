@@ -7,7 +7,7 @@
 use crate::auth::{AuthMethod, BasicAuth, BearerAuth, GetAuthMethod};
 use crate::error::{GufoHttpError, HttpResult};
 use crate::headers::Headers;
-use crate::method::{RequestMethod, BROTLI, DEFLATE, GZIP};
+use crate::method::{RequestMethod, BROTLI, DEFLATE, GZIP, ZSTD};
 use crate::proxy::Proxy;
 use crate::response::Response;
 use pyo3::{
@@ -71,6 +71,9 @@ impl SyncClient {
             }
             if c | BROTLI == BROTLI {
                 builder = builder.brotli(true);
+            }
+            if c | ZSTD == ZSTD {
+                builder = builder.zstd(true);
             }
         }
         // Set up certificate validation
