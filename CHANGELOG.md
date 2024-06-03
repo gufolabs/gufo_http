@@ -16,6 +16,10 @@ To see unreleased changes, please see the [CHANGELOG on the main branch guide](h
 
 * `ZSTD` compression support.
 
+### Fixed
+
+* Include rust files into sdist.
+
 ## 0.3.0 - 2024-03-24
 
 ### Added
