@@ -10,7 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 To see unreleased changes, please see the [CHANGELOG on the main branch guide](https://github.com/gufolabs/gufo_http/blob/main/CHANGELOG.md).
 
-## [Unreleased]
+## 0.3.1 - 2024-06-03
 
 ### Added
 
