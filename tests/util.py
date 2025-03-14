@@ -8,25 +8,19 @@
 # Python modules
 import contextlib
 import os
-import random
 from typing import Dict
 
 HTTPD_PATH = "/usr/sbin/nginx"
 HTTPD_HOST = "local.gufolabs.com"
 HTTPD_ADDRESS = "127.0.0.1"
-HTTPD_PORT = random.randint(52000, 53999)
-HTTPD_TLS_PORT = random.randint(52000, 53999)
-HTTPD_BLACKHOLE_PORT = random.randint(52000, 53999)
 UNROUTABLE_URL = "http://192.0.2.1/"
 UNROUTABLE_PROXY = "http://192.0.2.1:3128/"
 TEXT_PLAIN = "text/plain"
-PROXY_PORT = random.randint(52000, 53999)
 
 
 @contextlib.contextmanager
 def with_env(env: Dict[str, str]) -> None:
-    """
-    Temporary setup environment variables.
+    """Temporary setup environment variables.
 
     Set up environment variables during context
     and restore previous state on exit.

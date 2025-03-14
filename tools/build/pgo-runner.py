@@ -1,26 +1,31 @@
 # ---------------------------------------------------------------------
 # Gufo HTTP: Collect PGO data
 # ---------------------------------------------------------------------
-# Copyright (C) 2024, Gufo Labs
+# Copyright (C) 2024-25, Gufo Labs
 # See LICENSE.md for details
 # ---------------------------------------------------------------------
-"""Run variuous workload to collect Profile Guided Optimization data"""
+"""Run variuous workload to collect Profile Guided Optimization data."""
 
 # Python modules
 import asyncio
-import random
+import socket
 
 # Gufo HTTP modules
+from gufo.http.async_client import HttpClient as AsyncHttpClient
 from gufo.http.httpd import Httpd, HttpdMode
 from gufo.http.sync_client import HttpClient as SyncHttpClient
-from gufo.http.async_client import HttpClient as AsyncHttpClient
+
+
+def get_free_port() -> int:
+    """Get free TCP port."""
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
+        sock.bind(("127.0.0.1", 0))  # Bind to a random available port
+        return sock.getsockname()[1]  # Get assigned port
 
 
 HTTPD_PATH = "/usr/sbin/nginx"
 HTTPD_HOST = "local.gufolabs.com"
 HTTPD_ADDRESS = "127.0.0.1"
-HTTPD_PORT = random.randint(52000, 53999)
-HTTPD_SSL_PORT = random.randint(52000, 53999)
 REPEATS = 100
 
 
@@ -35,7 +40,7 @@ def run_single_sync(prefix: str) -> None:
     for _ in range(REPEATS):
         with SyncHttpClient(validate_cert=False) as client:
             resp = client.get(url)
-            resp.read()
+            resp.content.decode()
 
 
 async def run_single_async(prefix: str) -> None:
@@ -49,7 +54,7 @@ async def run_single_async(prefix: str) -> None:
     for _ in range(REPEATS):
         async with AsyncHttpClient(validate_cert=False) as client:
             resp = await client.get(url)
-            await resp.read()
+            resp.content.decode()
 
 
 def run_linear_sync(prefix: str) -> None:
@@ -63,7 +68,7 @@ def run_linear_sync(prefix: str) -> None:
     with SyncHttpClient(validate_cert=False) as client:
         for _ in range(REPEATS):
             resp = client.get(url)
-            resp.read()
+            resp.content.decode()
 
 
 async def run_linear_async(prefix: str) -> None:
@@ -77,7 +82,7 @@ async def run_linear_async(prefix: str) -> None:
     async with AsyncHttpClient(validate_cert=False) as client:
         for _ in range(REPEATS):
             resp = await client.get(url)
-            await resp.read()
+            resp.content.decode()
 
 
 def main() -> None:
@@ -86,7 +91,7 @@ def main() -> None:
     httpd = Httpd(
         path=HTTPD_PATH,
         address=HTTPD_ADDRESS,
-        port=HTTPD_PORT,
+        port=get_free_port(),
         host=HTTPD_HOST,
     )
     httpd._start()
@@ -94,7 +99,7 @@ def main() -> None:
     httpd_ssl = Httpd(
         path=HTTPD_PATH,
         address=HTTPD_ADDRESS,
-        port=HTTPD_SSL_PORT,
+        port=get_free_port(),
         host=HTTPD_HOST,
         mode=HttpdMode.HTTPS,
     )

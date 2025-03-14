@@ -18,8 +18,7 @@ logger = logging.getLogger("gufo.httpd.httpd")
 
 
 class ProxyServer(object):
-    """
-    ProxyServer test context manager.
+    """ProxyServer test context manager.
 
     Attributes:
         url: URL for proxy settings.
@@ -76,7 +75,7 @@ class ProxyServer(object):
         # Run process
         args = [
             self._path,
-            f"--host={self._address}",
+            f"--hostname={self._address}",
             f"--port={self._port}",
             "--threadless",
             "--log-level=DEBUG",
@@ -115,8 +114,7 @@ class ProxyServer(object):
     def _wait_inner(
         self: "ProxyServer", q: "queue.Queue[Optional[str]]"
     ) -> None:
-        """
-        Inner implementation of httpd waiter.
+        """Inner implementation of httpd waiter.
 
         Launched from the separate thread.
 
