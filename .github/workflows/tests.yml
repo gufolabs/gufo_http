@@ -45,7 +45,7 @@ jobs:
         run: pip install -IU -r ./.requirements/lint.txt
 
       - name: Check Formatting
-        run: black --check examples/ src/ tests/ benchmarks/
+        run: ruff format --check examples/ src/ tests/ benchmarks/
 
       - name: Check ruff
         run: ruff -q examples/ src/ tests/ benchmarks/

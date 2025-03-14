@@ -10,6 +10,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 To see unreleased changes, please see the [CHANGELOG on the main branch guide](https://github.com/gufolabs/gufo_http/blob/main/CHANGELOG.md).
 
+## [Unreleased]
+
+### Infrastructure
+* Rust 1.85.0.
+* PyO3 0.24.
+* Move from `black` to `ruff format`.
+
 ## 0.3.1 - 2024-06-03
 
 ### Added
