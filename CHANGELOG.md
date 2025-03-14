@@ -24,6 +24,7 @@ To see unreleased changes, please see the [CHANGELOG on the main branch guide](h
 
 ### Infrastructure
 * Rust 1.85.0.
+* Rust edition 2024.
 * PyO3 0.24.
 * Move from `black` to `ruff format`.
 
