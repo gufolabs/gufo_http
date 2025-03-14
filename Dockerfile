@@ -22,6 +22,7 @@ RUN \
     rls\
     clippy\
     rustfmt\
+    llvm-tools-preview \
     && pip install --upgrade pip\
     && pip install --upgrade build\
     && pip install\
