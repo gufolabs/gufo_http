@@ -21,8 +21,7 @@ rx_name = re.compile(r"^Name \(time in (\S+)\)")
 
 @dataclass
 class Benchmark(object):
-    """
-    Benchmark descriptor.
+    """Benchmark descriptor.
 
     Attributes:
         path: Output chart path.
@@ -64,8 +63,7 @@ NAME_MAP = {"gufo_http": "Gufo HTTP", "pycurl": "PycURL"}
 
 
 def normalize_name(s: str) -> str:
-    """
-    Normalize test name.
+    """Normalize test name.
 
     Args:
         s: Test name.
@@ -89,8 +87,7 @@ def normalize_name(s: str) -> str:
 def build_barchart(
     bench: Benchmark, data: List[Tuple[str, float]], scale: str
 ) -> None:
-    """
-    Build bar chart into PNG file.
+    """Build bar chart into PNG file.
 
     Args:
         bench: Benchmark description.
@@ -138,8 +135,7 @@ def build_barchart(
 
 
 class Mode(enum.Enum):
-    """
-    Parser mode.
+    """Parser mode.
 
     Attributes:
         WAITING: Waiting for table of results.
@@ -153,8 +149,7 @@ class Mode(enum.Enum):
 
 
 def iter_results(path: str) -> Iterable[Tuple[str, List[Tuple[str, float]]]]:
-    """
-    Read benchmarks docs and extract values for charts.
+    """Read benchmarks docs and extract values for charts.
 
     Args:
         path: README.md path

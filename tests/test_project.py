@@ -23,8 +23,7 @@ def _get_root() -> str:
 
 
 def _get_project_info() -> Tuple[str, str]:
-    """
-    Get project information.
+    """Get project information.
 
     Returns:
         Tuple of (project path, project module)

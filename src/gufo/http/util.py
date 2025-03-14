@@ -13,8 +13,7 @@ from typing import Dict, Optional
 def merge_dict(
     x: Optional[Dict[str, bytes]], y: Optional[Dict[str, bytes]]
 ) -> Optional[Dict[str, bytes]]:
-    """
-    Merge optional dicts of x and y.
+    """Merge optional dicts of x and y.
 
     Args:
         x: First dictionary.

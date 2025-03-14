@@ -5,6 +5,8 @@
 # See LICENSE.md for details
 # ---------------------------------------------------------------------
 
+"""Generate reference pages."""
+
 # Python module
 from itertools import chain
 from pathlib import Path

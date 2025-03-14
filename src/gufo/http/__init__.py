@@ -30,18 +30,18 @@ from ._fast import (
 
 __version__: str = "0.3.1"
 __all__ = [
-    "__version__",
-    "HttpError",
-    "RedirectError",
-    "RequestError",
-    "Headers",
+    "BROTLI",
     "DEFLATE",
     "GZIP",
-    "BROTLI",
     "AuthBase",
     "BasicAuth",
     "BearerAuth",
+    "Headers",
+    "HttpError",
+    "Proxy",
+    "RedirectError",
+    "RequestError",
     "RequestMethod",
     "Response",
-    "Proxy",
+    "__version__",
 ]

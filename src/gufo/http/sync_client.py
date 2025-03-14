@@ -33,8 +33,7 @@ NS = 1_000_000_000.0
 
 
 class HttpClient(object):
-    """
-    Synchronous HTTP client.
+    """Synchronous HTTP client.
 
     Attributes:
         headers: Headers to be added to every request.
@@ -91,8 +90,7 @@ class HttpClient(object):
         )
 
     def __enter__(self: "HttpClient") -> "HttpClient":
-        """
-        Context manager entry.
+        """Context manager entry.
 
         Example:
             ``` python
@@ -118,8 +116,7 @@ class HttpClient(object):
         body: Optional[bytes] = None,
         headers: Optional[Dict[str, bytes]] = None,
     ) -> Response:
-        """
-        Send HTTP request and receive a response.
+        """Send HTTP request and receive a response.
 
         Args:
             method: Request method
@@ -144,8 +141,7 @@ class HttpClient(object):
         /,
         headers: Optional[Dict[str, bytes]] = None,
     ) -> Response:
-        """
-        Send HTTP GET request and receive a response.
+        """Send HTTP GET request and receive a response.
 
         Args:
             url: Request url
@@ -168,8 +164,7 @@ class HttpClient(object):
         /,
         headers: Optional[Dict[str, bytes]] = None,
     ) -> Response:
-        """
-        Send HTTP HEAD request and receive a response.
+        """Send HTTP HEAD request and receive a response.
 
         Args:
             url: Request url
@@ -192,8 +187,7 @@ class HttpClient(object):
         /,
         headers: Optional[Dict[str, bytes]] = None,
     ) -> Response:
-        """
-        Send HTTP OPTIONS request and receive a response.
+        """Send HTTP OPTIONS request and receive a response.
 
         Usually returns `204 No content` response.
 
@@ -218,8 +212,7 @@ class HttpClient(object):
         /,
         headers: Optional[Dict[str, bytes]] = None,
     ) -> Response:
-        """
-        Send HTTP DELETE request and receive a response.
+        """Send HTTP DELETE request and receive a response.
 
         Args:
             url: Request url, use `*` to get options for server.
@@ -243,8 +236,7 @@ class HttpClient(object):
         /,
         headers: Optional[Dict[str, bytes]] = None,
     ) -> Response:
-        """
-        Send HTTP POST request and receive a response.
+        """Send HTTP POST request and receive a response.
 
         Args:
             url: Request url, use `*` to get options for server.
@@ -269,8 +261,7 @@ class HttpClient(object):
         /,
         headers: Optional[Dict[str, bytes]] = None,
     ) -> Response:
-        """
-        Send HTTP PUT request and receive a response.
+        """Send HTTP PUT request and receive a response.
 
         Args:
             url: Request url, use `*` to get options for server.
@@ -289,8 +280,7 @@ class HttpClient(object):
         /,
         headers: Optional[Dict[str, bytes]] = None,
     ) -> Response:
-        """
-        Send HTTP PATCH request and receive a response.
+        """Send HTTP PATCH request and receive a response.
 
         Args:
             url: Request url, use `*` to get options for server.

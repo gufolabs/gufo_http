@@ -24,8 +24,7 @@ class AuthBase(object):
     """Base class for authentication settings."""
 
 class BasicAuth(AuthBase):
-    """
-    HTTP Basic Authentication.
+    """HTTP Basic Authentication.
 
     Args:
         user: User name.

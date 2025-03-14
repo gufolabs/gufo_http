@@ -24,8 +24,7 @@ logger = logging.getLogger("gufo.httpd.httpd")
 
 
 class HttpdMode(Enum):
-    """
-    Httpd mode.
+    """Httpd mode.
 
     Attributes:
         HTTP: HTTP Mode.
@@ -37,8 +36,7 @@ class HttpdMode(Enum):
 
 
 class Httpd(object):
-    """
-    Httpd test context manager.
+    """Httpd test context manager.
 
     Attributes:
         prefix: URL prefix.
@@ -411,8 +409,7 @@ http {{
             raise TimeoutError(msg)
 
     def _wait_inner(self: "Httpd", q: "queue.Queue[Optional[str]]") -> None:
-        """
-        Inner implementation of httpd waiter.
+        """Inner implementation of httpd waiter.
 
         Launched from the separate thread.
 
