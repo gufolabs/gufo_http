@@ -1,7 +1,7 @@
 // ------------------------------------------------------------------------
 // Gufo HTTP: SynncClient implementation
 // ------------------------------------------------------------------------
-// Copyright (C) 2024, Gufo Labs
+// Copyright (C) 2024-25, Gufo Labs
 // See LICENSE.md for details
 // ------------------------------------------------------------------------
 use crate::auth::{AuthMethod, BasicAuth, BearerAuth, GetAuthMethod};
@@ -13,13 +13,12 @@ use crate::response::Response;
 use pyo3::{
     exceptions::{PyTypeError, PyValueError},
     prelude::*,
-    types::PyBytes,
+    types::{PyBytes, PyDict, PyList, PyString},
 };
 use reqwest::{
     header::{HeaderMap, HeaderName, HeaderValue},
     redirect::Policy,
 };
-use std::collections::HashMap;
 use std::time::Duration;
 
 #[pyclass(module = "gufo.http.sync_client")]
@@ -37,11 +36,11 @@ impl SyncClient {
         connect_timeout: u64,
         timeout: u64,
         max_redirect: Option<usize>,
-        headers: Option<HashMap<&str, &[u8]>>,
+        headers: Option<&Bound<'_, PyDict>>,
         compression: Option<u8>,
-        user_agent: Option<&str>,
-        auth: Option<&PyAny>,
-        proxy: Option<Vec<&PyAny>>,
+        user_agent: Option<&Bound<'_, PyString>>,
+        auth: Option<&Bound<'_, PyAny>>,
+        proxy: Option<&Bound<'_, PyList>>,
     ) -> PyResult<Self> {
         let builder = reqwest::blocking::Client::builder();
         // Set up redirect policy
@@ -54,9 +53,12 @@ impl SyncClient {
             let mut map = HeaderMap::with_capacity(h.len());
             for (k, v) in h {
                 map.insert(
-                    HeaderName::from_bytes(k.as_ref())
+                    HeaderName::from_bytes(
+                        k.downcast::<PyString>()?.as_borrowed().to_string().as_ref(),
+                    )
+                    .map_err(|e| PyValueError::new_err(e.to_string()))?,
+                    HeaderValue::from_bytes(v.downcast::<PyBytes>()?.as_bytes())
                         .map_err(|e| PyValueError::new_err(e.to_string()))?,
-                    HeaderValue::from_bytes(v).map_err(|e| PyValueError::new_err(e.to_string()))?,
                 );
             }
             builder = builder.default_headers(map);
@@ -88,7 +90,7 @@ impl SyncClient {
         builder = builder.no_proxy();
         // Set user agent
         if let Some(ua) = user_agent {
-            builder = builder.user_agent(ua);
+            builder = builder.user_agent(ua.as_borrowed().to_string());
         }
         // Auth
         let auth = match auth {
@@ -124,41 +126,45 @@ impl SyncClient {
             .map_err(|x| PyValueError::new_err(x.to_string()))?;
         Ok(SyncClient { client, auth })
     }
-    fn request(
+    fn request<'a>(
         &self,
         method: &RequestMethod,
-        url: String,
-        headers: Option<HashMap<&str, &[u8]>>,
-        body: Option<Vec<u8>>,
-        py: Python,
+        url: &str,
+        headers: Option<&Bound<'a, PyDict>>,
+        body: Option<&Bound<'a, PyBytes>>,
+        py: Python<'a>,
     ) -> PyResult<Response> {
+        // Build request for method
+        let mut req = self.client.request((*method).into(), url);
+        // Add headers, under GIL
+        if let Some(h) = headers {
+            for (k, v) in h {
+                req = req.header(
+                    HeaderName::from_bytes(
+                        k.downcast::<PyString>()?.as_borrowed().to_string().as_ref(),
+                    )
+                    .map_err(|e| GufoHttpError::ValueError(e.to_string()))?,
+                    HeaderValue::from_bytes(v.downcast::<PyBytes>()?.as_bytes())
+                        .map_err(|e| GufoHttpError::ValueError(e.to_string()))?,
+                )
+            }
+        }
+        // Add auth
+        match &self.auth {
+            AuthMethod::None => {}
+            AuthMethod::Basic { user, password } => req = req.basic_auth(user, password.as_ref()),
+            AuthMethod::Bearer { token } => req = req.bearer_auth(token),
+        }
+        // Add body
+        if let Some(b) = body {
+            // Zero-copy mapping
+            // body will always outlive our function
+            let bytes: &'static [u8] = unsafe { std::mem::transmute(b.as_bytes()) };
+            req = req.body(bytes);
+        }
+        // Release GIL
         let (status, headers, buf) =
             py.allow_threads(|| -> HttpResult<(u16, Headers, bytes::Bytes)> {
-                // Build request for method
-                let mut req = self.client.request((*method).into(), url);
-                // Add headers
-                if let Some(h) = headers {
-                    for (k, v) in h {
-                        req = req.header(
-                            HeaderName::from_bytes(k.as_ref())
-                                .map_err(|e| GufoHttpError::ValueError(e.to_string()))?,
-                            HeaderValue::from_bytes(v)
-                                .map_err(|e| GufoHttpError::ValueError(e.to_string()))?,
-                        )
-                    }
-                }
-                // Add auth
-                match &self.auth {
-                    AuthMethod::None => {}
-                    AuthMethod::Basic { user, password } => {
-                        req = req.basic_auth(user, password.as_ref())
-                    }
-                    AuthMethod::Bearer { token } => req = req.bearer_auth(token),
-                }
-                // Add body
-                if let Some(b) = body {
-                    req = req.body(b);
-                }
                 // Send request
                 let resp = req.send().map_err(GufoHttpError::from)?;
                 // Get status

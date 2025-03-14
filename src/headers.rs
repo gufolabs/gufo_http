@@ -1,7 +1,7 @@
 // ------------------------------------------------------------------------
 // Gufo HTTP: Headers impmentation
 // ------------------------------------------------------------------------
-// Copyright (C) 2024, Gufo Labs
+// Copyright (C) 2024-25, Gufo Labs
 // See LICENSE.md for details
 // ------------------------------------------------------------------------
 use pyo3::{exceptions::PyKeyError, prelude::*, types::PyBytes};
@@ -28,11 +28,17 @@ impl Headers {
     fn __contains__(&self, key: &str) -> bool {
         self.0.contains_key(key)
     }
-    fn get<'a>(&'a self, key: &str, default: Option<&'a [u8]>) -> PyResult<Option<&'a [u8]>> {
+    #[pyo3(signature = (key, default = None))]
+    fn get<'a>(
+        &'a self,
+        key: &str,
+        default: Option<&Bound<'a, PyBytes>>,
+        py: Python<'a>,
+    ) -> PyResult<Option<Bound<'a, PyBytes>>> {
         match self.0.get(key) {
-            Some(x) => Ok(Some(x.as_ref())),
+            Some(x) => Ok(Some(PyBytes::new(py, x.as_ref()).into())),
             None => match default {
-                Some(d) => Ok(Some(d)),
+                Some(d) => Ok(Some(d.clone())),
                 None => Ok(None),
             },
         }

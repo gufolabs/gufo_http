@@ -7,7 +7,7 @@
 use pyo3::{
     create_exception,
     exceptions::{PyConnectionError, PyException, PyTimeoutError, PyValueError},
-    PyErr,
+    DowncastError, PyErr,
 };
 
 pub type HttpResult<T> = Result<T, GufoHttpError>;
@@ -19,6 +19,7 @@ pub enum GufoHttpError {
     Connect(String),
     ValueError(String),
     Timeout,
+    Downcast,
 }
 
 create_exception!(
@@ -40,6 +41,7 @@ impl From<GufoHttpError> for PyErr {
             GufoHttpError::Connect(x) => PyConnectionError::new_err(x),
             GufoHttpError::ValueError(x) => PyValueError::new_err(x),
             GufoHttpError::Timeout => PyTimeoutError::new_err("timed out"),
+            GufoHttpError::Downcast => PyValueError::new_err("downcast error"),
         }
     }
 }
@@ -56,5 +58,11 @@ impl From<reqwest::Error> for GufoHttpError {
             return GufoHttpError::Redirect;
         }
         GufoHttpError::Request(value.to_string())
+    }
+}
+
+impl From<DowncastError<'_, '_>> for GufoHttpError {
+    fn from(_value: DowncastError) -> Self {
+        GufoHttpError::Downcast
     }
 }

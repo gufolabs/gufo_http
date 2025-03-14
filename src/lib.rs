@@ -1,7 +1,7 @@
 // ------------------------------------------------------------------------
 // Gufo HTTP: Module definition
 // ------------------------------------------------------------------------
-// Copyright (C) 2024, Gufo Labs
+// Copyright (C) 2024-25, Gufo Labs
 // See LICENSE.md for details
 // ------------------------------------------------------------------------
 
@@ -28,7 +28,7 @@ mod sync_client;
 ///     BROTLI: Brotli method for `compression` argument.
 #[pymodule]
 #[pyo3(name = "_fast")]
-fn gufo_http(py: Python, m: &PyModule) -> PyResult<()> {
+fn gufo_http(py: Python, m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add("HttpError", py.get_type::<error::HttpError>())?;
     m.add("RequestError", py.get_type::<error::RequestError>())?;
     m.add("RedirectError", py.get_type::<error::RedirectError>())?;

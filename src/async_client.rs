@@ -1,11 +1,11 @@
 // ------------------------------------------------------------------------
 // Gufo HTTP: AsyncClient implementation
 // ------------------------------------------------------------------------
-// Copyright (C) 2024, Gufo Labs
+// Copyright (C) 2024-25, Gufo Labs
 // See LICENSE.md for details
 // ------------------------------------------------------------------------
 use crate::auth::{AuthMethod, BasicAuth, BearerAuth, GetAuthMethod};
-use crate::error::{GufoHttpError, HttpResult};
+use crate::error::GufoHttpError;
 use crate::headers::Headers;
 use crate::method::{RequestMethod, BROTLI, DEFLATE, GZIP, ZSTD};
 use crate::proxy::Proxy;
@@ -13,14 +13,13 @@ use crate::response::Response;
 use pyo3::{
     exceptions::{PyTypeError, PyValueError},
     prelude::*,
-    types::PyBytes,
+    types::{PyAny, PyBytes, PyDict, PyList, PyString},
 };
-use pyo3_asyncio::tokio::future_into_py;
+use pyo3_async_runtimes::tokio::future_into_py;
 use reqwest::{
     header::{HeaderMap, HeaderName, HeaderValue},
     redirect::Policy,
 };
-use std::collections::HashMap;
 use std::time::Duration;
 
 #[pyclass(module = "gufo.http.async_client")]
@@ -38,11 +37,11 @@ impl AsyncClient {
         connect_timeout: u64,
         timeout: u64,
         max_redirect: Option<usize>,
-        headers: Option<HashMap<&str, &[u8]>>,
+        headers: Option<&Bound<'_, PyDict>>,
         compression: Option<u8>,
-        user_agent: Option<&str>,
-        auth: Option<&PyAny>,
-        proxy: Option<Vec<&PyAny>>,
+        user_agent: Option<&Bound<'_, PyString>>,
+        auth: Option<&Bound<'_, PyAny>>,
+        proxy: Option<&Bound<'_, PyList>>,
     ) -> PyResult<Self> {
         let builder = reqwest::Client::builder();
         // Set up redirect policy
@@ -55,9 +54,12 @@ impl AsyncClient {
             let mut map = HeaderMap::with_capacity(h.len());
             for (k, v) in h {
                 map.insert(
-                    HeaderName::from_bytes(k.as_ref())
+                    HeaderName::from_bytes(
+                        k.downcast::<PyString>()?.as_borrowed().to_string().as_ref(),
+                    )
+                    .map_err(|e| PyValueError::new_err(e.to_string()))?,
+                    HeaderValue::from_bytes(v.downcast::<PyBytes>()?.as_bytes())
                         .map_err(|e| PyValueError::new_err(e.to_string()))?,
-                    HeaderValue::from_bytes(v).map_err(|e| PyValueError::new_err(e.to_string()))?,
                 );
             }
             builder = builder.default_headers(map);
@@ -89,7 +91,7 @@ impl AsyncClient {
         builder = builder.no_proxy();
         // Set user agent
         if let Some(ua) = user_agent {
-            builder = builder.user_agent(ua);
+            builder = builder.user_agent(ua.as_borrowed().to_string());
         }
         // Auth
         let auth = match auth {
@@ -129,39 +131,38 @@ impl AsyncClient {
         &self,
         py: Python<'a>,
         method: &RequestMethod,
-        url: String,
-        headers: Option<HashMap<&str, &[u8]>>,
-        body: Option<Vec<u8>>,
-    ) -> PyResult<&'a PyAny> {
-        // Get method
-        let req = py.allow_threads(|| -> HttpResult<reqwest::RequestBuilder> {
-            // Build request for method
-            let mut req = self.client.request((*method).into(), url);
-            // Add headers
-            if let Some(h) = headers {
-                for (k, v) in h {
-                    req = req.header(
-                        HeaderName::from_bytes(k.as_ref())
-                            .map_err(|e| GufoHttpError::ValueError(e.to_string()))?,
-                        HeaderValue::from_bytes(v)
-                            .map_err(|e| GufoHttpError::ValueError(e.to_string()))?,
+        url: &str,
+        headers: Option<&Bound<'a, PyDict>>,
+        body: Option<&Bound<'a, PyBytes>>,
+    ) -> PyResult<Bound<'a, PyAny>> {
+        // Build request for method
+        let mut req = self.client.request((*method).into(), url);
+        // Add headers, under GIL
+        if let Some(h) = headers {
+            for (k, v) in h {
+                req = req.header(
+                    HeaderName::from_bytes(
+                        k.downcast::<PyString>()?.as_borrowed().to_string().as_ref(),
                     )
-                }
+                    .map_err(|e| GufoHttpError::ValueError(e.to_string()))?,
+                    HeaderValue::from_bytes(v.downcast::<PyBytes>()?.as_bytes())
+                        .map_err(|e| GufoHttpError::ValueError(e.to_string()))?,
+                )
             }
-            // Add auth
-            match &self.auth {
-                AuthMethod::None => {}
-                AuthMethod::Basic { user, password } => {
-                    req = req.basic_auth(user, password.as_ref())
-                }
-                AuthMethod::Bearer { token } => req = req.bearer_auth(token),
-            }
-            // Add body
-            if let Some(b) = body {
-                req = req.body(b);
-            }
-            Ok(req)
-        })?;
+        }
+        // Add auth
+        match &self.auth {
+            AuthMethod::None => {}
+            AuthMethod::Basic { user, password } => req = req.basic_auth(user, password.as_ref()),
+            AuthMethod::Bearer { token } => req = req.bearer_auth(token),
+        }
+        // Add body
+        if let Some(b) = body {
+            // Zero-copy mapping
+            // body will always outlive our function
+            let bytes: &'static [u8] = unsafe { std::mem::transmute(b.as_bytes()) };
+            req = req.body(bytes);
+        }
         // Create future
         future_into_py(py, async move {
             // Send request and wait for response

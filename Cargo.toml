@@ -14,10 +14,10 @@ strip = "debuginfo" # Uncomment for release
 
 [dependencies]
 bytes = "1.5"
-pyo3 = {version = "0.20", features = ["extension-module"]}
-pyo3-asyncio = {version = "0.20", features = ["attributes", "tokio-runtime"]}
-reqwest = {version = "0.12.4", features = ["blocking", "rustls-tls", "cookies", "gzip", "brotli", "deflate", "zstd", "hickory-dns", "http2", "socks"], default_features = false}
-tokio = "1.37"
+pyo3 = {version = "0.24", features = ["extension-module"]}
+pyo3-async-runtimes = {version = "0.24", features = ["attributes", "tokio-runtime"]}
+reqwest = {version = "0.12.4", features = ["blocking", "rustls-tls", "cookies", "gzip", "brotli", "deflate", "zstd", "hickory-dns", "http2", "socks"], default-features = false}
+tokio = "1.44"
 
 [dev-dependencies]
 criterion = "0.4"

@@ -1,11 +1,12 @@
 // ------------------------------------------------------------------------
 // Gufo HTTP: Authentication primitives
 // ------------------------------------------------------------------------
-// Copyright (C) 2024, Gufo Labs
+// Copyright (C) 2024-25, Gufo Labs
 // See LICENSE.md for details
 // ------------------------------------------------------------------------
 
 use pyo3::prelude::*;
+use pyo3::types::PyString;
 
 #[derive(Debug, Clone)]
 pub enum AuthMethod {
@@ -46,11 +47,11 @@ impl AuthBase {
 #[pymethods]
 impl BasicAuth {
     #[new]
-    fn new(user: &str, password: Option<&str>) -> (Self, AuthBase) {
+    fn new(user: &str, password: Option<Bound<'_, PyString>>) -> (Self, AuthBase) {
         (
             Self(AuthMethod::Basic {
                 user: user.into(),
-                password: password.map(|x| x.into()),
+                password: password.map(|x| x.to_string()),
             }),
             AuthBase::new(),
         )

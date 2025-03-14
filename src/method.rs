@@ -10,8 +10,8 @@ use reqwest::Method;
 
 // Request methods
 #[allow(clippy::upper_case_acronyms)]
-#[pyclass(module = "gufo.http")]
-#[derive(Debug, Clone, Copy)]
+#[pyclass(module = "gufo.http", eq)]
+#[derive(Debug, Clone, Copy, PartialEq)]
 pub enum RequestMethod {
     GET,
     HEAD,
@@ -47,7 +47,7 @@ impl From<RequestMethod> for Method {
 
 #[pymethods]
 impl RequestMethod {
-    // __getitem__ for enum is not implemented.
+    // __getitem__ for enum is not implemented. Not working
     // See issue: https://github.com/PyO3/pyo3/issues/2887
     pub fn __getitem__(&self, name: &str) -> PyResult<Self> {
         match name {
