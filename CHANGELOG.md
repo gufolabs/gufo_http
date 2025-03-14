@@ -15,6 +15,8 @@ To see unreleased changes, please see the [CHANGELOG on the main branch guide](h
 ### Added
 
 * Python 3.13 support.
+* Linux ARM64 binary wheels.
+* MUSL AMD64 and ARM64 wheels.
 
 ### Removed
 
