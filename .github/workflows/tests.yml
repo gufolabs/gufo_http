@@ -48,7 +48,7 @@ jobs:
         run: ruff format --check examples/ src/ tests/ benchmarks/
 
       - name: Check ruff
-        run: ruff -q examples/ src/ tests/ benchmarks/
+        run: ruff check -q examples/ src/ tests/ benchmarks/
 
       - name: Check Mypy
         run: mypy src/
