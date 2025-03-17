@@ -36,7 +36,7 @@ impl Headers {
         py: Python<'a>,
     ) -> PyResult<Option<Bound<'a, PyBytes>>> {
         match self.0.get(key) {
-            Some(x) => Ok(Some(PyBytes::new(py, x.as_ref()).into())),
+            Some(x) => Ok(Some(PyBytes::new(py, x.as_ref()))),
             None => match default {
                 Some(d) => Ok(Some(d.clone())),
                 None => Ok(None),
