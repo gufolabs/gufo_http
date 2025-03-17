@@ -5,9 +5,8 @@
 // See LICENSE.md for details
 // ------------------------------------------------------------------------
 use pyo3::{
-    create_exception,
+    DowncastError, PyErr, create_exception,
     exceptions::{PyConnectionError, PyException, PyTimeoutError, PyValueError},
-    DowncastError, PyErr,
 };
 
 pub type HttpResult<T> = Result<T, GufoHttpError>;

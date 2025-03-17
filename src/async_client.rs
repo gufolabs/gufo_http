@@ -7,7 +7,7 @@
 use crate::auth::{AuthMethod, BasicAuth, BearerAuth, GetAuthMethod};
 use crate::error::GufoHttpError;
 use crate::headers::Headers;
-use crate::method::{RequestMethod, BROTLI, DEFLATE, GZIP, ZSTD};
+use crate::method::{BROTLI, DEFLATE, GZIP, RequestMethod, ZSTD};
 use crate::proxy::Proxy;
 use crate::response::Response;
 use pyo3::{
@@ -116,7 +116,7 @@ impl AsyncClient {
                         builder = builder.proxy(p.into());
                     }
                     Err(_) => {
-                        return Err(PyTypeError::new_err("proxy must contain Proxy instances"))
+                        return Err(PyTypeError::new_err("proxy must contain Proxy instances"));
                     }
                 }
             }
