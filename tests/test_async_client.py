@@ -128,9 +128,7 @@ def test_request(
 ) -> None:
     async def inner() -> None:
         async with HttpClient() as client:
-            resp = await client.request(
-                method, f"{httpd.prefix}{path}", body=body
-            )
+            resp = await client.request(method, f"{httpd.prefix}{path}", body=body)
             assert 200 <= resp.status <= 299
 
     asyncio.run(inner())
@@ -170,9 +168,7 @@ def test_not_found(httpd: Httpd) -> None:
     asyncio.run(inner())
 
 
-@pytest.mark.parametrize(
-    "url", ["ldap://127.0.0.1/", "http://700.700:202020/"]
-)
+@pytest.mark.parametrize("url", ["ldap://127.0.0.1/", "http://700.700:202020/"])
 def test_invalid_url(httpd: Httpd, url: str) -> None:
     async def inner() -> None:
         async with HttpClient() as client:
@@ -230,9 +226,7 @@ def test_headers_getitem_key_error(httpd: Httpd) -> None:
         ("ctype", None),
     ],
 )
-def test_headers_get(
-    header: str, expected: Optional[bytes], httpd: Httpd
-) -> None:
+def test_headers_get(header: str, expected: Optional[bytes], httpd: Httpd) -> None:
     async def inner() -> None:
         client = HttpClient()
         resp = await client.get(f"{httpd.prefix}/")

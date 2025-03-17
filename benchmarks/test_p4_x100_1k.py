@@ -49,9 +49,7 @@ def httpd() -> Iterable[Httpd]:
 
 
 def run_on_threadpool(fn):
-    with concurrent.futures.ThreadPoolExecutor(
-        max_workers=CONCURRENCY
-    ) as executor:
+    with concurrent.futures.ThreadPoolExecutor(max_workers=CONCURRENCY) as executor:
         futures = [executor.submit(fn) for _ in range(CONCURRENCY)]
         concurrent.futures.wait(futures)
 

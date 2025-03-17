@@ -111,9 +111,7 @@ class ProxyServer(object):
             logger.error(msg)
             raise TimeoutError(msg)
 
-    def _wait_inner(
-        self: "ProxyServer", q: "queue.Queue[Optional[str]]"
-    ) -> None:
+    def _wait_inner(self: "ProxyServer", q: "queue.Queue[Optional[str]]") -> None:
         """Inner implementation of httpd waiter.
 
         Launched from the separate thread.

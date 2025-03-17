@@ -156,9 +156,7 @@ class HttpClient(object):
             RedirectError: when redirects limit reached.
             RequestError: on other errors related with request processing.
         """
-        return await self._client.request(
-            RequestMethod.GET, url, headers, None
-        )
+        return await self._client.request(RequestMethod.GET, url, headers, None)
 
     async def head(
         self: "HttpClient",
@@ -181,9 +179,7 @@ class HttpClient(object):
             RedirectError: when redirects limit reached.
             RequestError: on other errors related with request processing.
         """
-        return await self._client.request(
-            RequestMethod.HEAD, url, headers, None
-        )
+        return await self._client.request(RequestMethod.HEAD, url, headers, None)
 
     async def options(
         self: "HttpClient",
@@ -208,9 +204,7 @@ class HttpClient(object):
             RedirectError: when redirects limit reached.
             RequestError: on other errors related with request processing.
         """
-        return await self._client.request(
-            RequestMethod.OPTIONS, url, headers, None
-        )
+        return await self._client.request(RequestMethod.OPTIONS, url, headers, None)
 
     async def delete(
         self: "HttpClient",
@@ -233,9 +227,7 @@ class HttpClient(object):
             RedirectError: when redirects limit reached.
             RequestError: on other errors related with request processing.
         """
-        return await self._client.request(
-            RequestMethod.DELETE, url, headers, None
-        )
+        return await self._client.request(RequestMethod.DELETE, url, headers, None)
 
     async def post(
         self: "HttpClient",
@@ -260,9 +252,7 @@ class HttpClient(object):
             RedirectError: when redirects limit reached.
             RequestError: on other errors related with request processing.
         """
-        return await self._client.request(
-            RequestMethod.POST, url, headers, body
-        )
+        return await self._client.request(RequestMethod.POST, url, headers, body)
 
     async def put(
         self: "HttpClient",
@@ -287,9 +277,7 @@ class HttpClient(object):
             RedirectError: when redirects limit reached.
             RequestError: on other errors related with request processing.
         """
-        return await self._client.request(
-            RequestMethod.PUT, url, headers, body
-        )
+        return await self._client.request(RequestMethod.PUT, url, headers, body)
 
     async def patch(
         self: "HttpClient",
@@ -314,9 +302,7 @@ class HttpClient(object):
             RedirectError: when redirects limit reached.
             RequestError: on other errors related with request processing.
         """
-        return await self._client.request(
-            RequestMethod.PATCH, url, headers, body
-        )
+        return await self._client.request(RequestMethod.PATCH, url, headers, body)
 
 
 __all__ = ["HttpClient"]

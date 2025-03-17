@@ -137,9 +137,7 @@ def test_not_found(httpd: Httpd) -> None:
         assert resp.status == 404
 
 
-@pytest.mark.parametrize(
-    "url", ["ldap://127.0.0.1/", "http://700.700:202020/"]
-)
+@pytest.mark.parametrize("url", ["ldap://127.0.0.1/", "http://700.700:202020/"])
 def test_invalid_url(httpd: Httpd, url: str) -> None:
     with HttpClient() as client, pytest.raises(RequestError):
         client.get(url)
@@ -183,9 +181,7 @@ def test_headers_getitem_key_error(httpd: Httpd) -> None:
         ("ctype", None),
     ],
 )
-def test_headers_get(
-    header: str, expected: Optional[bytes], httpd: Httpd
-) -> None:
+def test_headers_get(header: str, expected: Optional[bytes], httpd: Httpd) -> None:
     client = HttpClient()
     resp = client.get(f"{httpd.prefix}/")
     h = resp.headers.get(header)
@@ -425,17 +421,13 @@ def test_invalid_proxy(proxy: Any) -> None:
 
 
 def test_proxy_connect_timeout() -> None:
-    with HttpClient(
-        connect_timeout=1.0, proxy=[Proxy(UNROUTABLE_PROXY)]
-    ) as client:
+    with HttpClient(connect_timeout=1.0, proxy=[Proxy(UNROUTABLE_PROXY)]) as client:
         with pytest.raises(ConnectionError):
             client.get("https://gufolabs.com/")
 
 
 def test_proxy_request_timeout(httpd_blackhole: BlackholeHttpd) -> None:
-    with HttpClient(
-        timeout=1.0, proxy=[Proxy(httpd_blackhole.prefix)]
-    ) as client:
+    with HttpClient(timeout=1.0, proxy=[Proxy(httpd_blackhole.prefix)]) as client:
         with pytest.raises(TimeoutError):
             client.get("https://gufolabs.com/")
 
