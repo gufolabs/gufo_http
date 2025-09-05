@@ -12,6 +12,10 @@ To see unreleased changes, please see the [CHANGELOG on the main branch guide](h
 
 ## [Unreleased]
 
+### Added
+
+* Python 3.14 support.
+
 ### Infrastructure
 
 * Move dependencies to pyproject.toml
