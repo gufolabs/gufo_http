@@ -18,6 +18,7 @@ To see unreleased changes, please see the [CHANGELOG on the main branch guide](h
 * Rust 1.89.0
 * PyO3 0.26
 * tokio 1.47.1
+* reqwest 1.12.23
 * devcontainer: Replace `rls` with `rust-analyzer`.
 
 ## 0.4.0 - 2025-03-17

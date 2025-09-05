@@ -17,7 +17,7 @@ lto = "fat" # Full link-time optimization
 bytes = "1.5"
 pyo3 = {version = "0.26", features = ["extension-module"]}
 pyo3-async-runtimes = {version = "0.26", features = ["attributes", "tokio-runtime"]}
-reqwest = {version = "0.12.4", features = ["blocking", "rustls-tls", "cookies", "gzip", "brotli", "deflate", "zstd", "hickory-dns", "http2", "socks"], default-features = false}
+reqwest = {version = "0.12.23", features = ["blocking", "rustls-tls", "cookies", "gzip", "brotli", "deflate", "zstd", "hickory-dns", "http2", "socks"], default-features = false}
 tokio = "1.47.1"
 
 [dev-dependencies]
