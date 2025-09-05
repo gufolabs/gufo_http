@@ -61,6 +61,7 @@ async with HttpClient(headers={"X-My-Header": b"test"}) as client:
 * HTTP/HTTPS/SOCKS5 Proxy support.
 * Full Python typing support.
 * Editor completion.
+* Built with security in mind.
 * Well-tested, battle-proven code.
 
 ## Performance
