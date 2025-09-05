@@ -97,7 +97,7 @@ impl ValuesIterator {
     fn __iter__(slf: PyRef<'_, Self>) -> PyRef<'_, Self> {
         slf
     }
-    fn __next__(mut slf: PyRefMut<'_, Self>, py: Python) -> Option<PyObject> {
+    fn __next__(mut slf: PyRefMut<'_, Self>, py: Python) -> Option<Py<PyAny>> {
         slf.0.next().map(|boxed| {
             let bytes = PyBytes::new(py, &boxed);
             bytes.into()
@@ -114,7 +114,7 @@ impl ItemsIterator {
     fn __iter__(slf: PyRef<'_, Self>) -> PyRef<'_, Self> {
         slf
     }
-    fn __next__(mut slf: PyRefMut<'_, Self>, py: Python) -> Option<(String, PyObject)> {
+    fn __next__(mut slf: PyRefMut<'_, Self>, py: Python) -> Option<(String, Py<PyAny>)> {
         slf.0.next().map(|(k, v)| {
             let bytes = PyBytes::new(py, &v);
             (k, bytes.into())

@@ -164,7 +164,7 @@ impl SyncClient {
         }
         // Release GIL
         let (status, headers, buf) =
-            py.allow_threads(|| -> HttpResult<(u16, Headers, bytes::Bytes)> {
+            py.detach(|| -> HttpResult<(u16, Headers, bytes::Bytes)> {
                 // Send request
                 let resp = req.send().map_err(GufoHttpError::from)?;
                 // Get status

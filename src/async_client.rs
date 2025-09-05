@@ -177,7 +177,7 @@ impl AsyncClient {
             Ok(Response::new(
                 status,
                 headers,
-                Python::with_gil(|py| PyBytes::new(py, buf.as_ref()).into()),
+                Python::attach(|py| PyBytes::new(py, buf.as_ref()).into()),
             ))
         })
     }
