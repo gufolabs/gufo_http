@@ -15,8 +15,8 @@ RUN \
     gcc\
     libc6-dev\
     curl\
-    && /tmp/setup-nginx.sh \
-    && /tmp/setup-rust.sh \
+    && ./tools/build/setup-nginx.sh \
+    && ./tools/build/setup-rust.sh \
     && rustup component add\
     rust-analysis\
     rust-src\
@@ -26,4 +26,4 @@ RUN \
     llvm-tools-preview \
     && pip install --upgrade pip\
     && pip install --upgrade build\
-    && pip install -e .[build,docs,ipython,lint,test,bench]
+    && pip install -e .[build,docs,ipython,lint,test]
