@@ -20,7 +20,7 @@ RUN \
     && rustup component add\
     rust-analysis\
     rust-src\
-    rls\
+    rust-analyzer\
     clippy\
     rustfmt\
     llvm-tools-preview \

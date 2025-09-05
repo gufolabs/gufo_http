@@ -15,8 +15,10 @@ To see unreleased changes, please see the [CHANGELOG on the main branch guide](h
 ### Infrastructure
 
 * Move dependencies to pyproject.toml
+* Rust 1.89.0
 * PyO3 0.26
 * tokio 1.47.1
+* devcontainer: Replace `rls` with `rust-analyzer`.
 
 ## 0.4.0 - 2025-03-17
 
