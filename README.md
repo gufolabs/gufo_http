@@ -3,6 +3,7 @@
 *The accelerated Python HTTP client library.*
 
 [![PyPi version](https://img.shields.io/pypi/v/gufo_http.svg)](https://pypi.python.org/pypi/gufo_http/)
+![Downloads](https://img.shields.io/pypi/dw/gufo_http)
 ![Python Versions](https://img.shields.io/pypi/pyversions/gufo_http)
 [![License](https://img.shields.io/badge/License-BSD_3--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)
 ![Build](https://img.shields.io/github/actions/workflow/status/gufolabs/gufo_http/tests.yml?branch=master)
