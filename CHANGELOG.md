@@ -10,6 +10,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 To see unreleased changes, please see the [CHANGELOG on the main branch guide](https://github.com/gufolabs/gufo_http/blob/main/CHANGELOG.md).
 
+## [Unreleased]
+
+### Infrastructure
+
+* Move dependencies to pyproject.toml
+
 ## 0.4.0 - 2025-03-17
 
 ### Added

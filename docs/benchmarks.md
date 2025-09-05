@@ -72,7 +72,7 @@ Install local nginx:
 Install dependencies:
 
 ```
-pip3 install -r .requirements/test.txt -r .requirements/bench.txt gufo-http
+pip3 install -e .[test,bench[ gufo-http
 ```
 
 ## HTTP/1.1 Requests

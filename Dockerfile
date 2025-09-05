@@ -1,5 +1,6 @@
-FROM python:3.12-slim-bullseye AS dev
-COPY .requirements tools/build/setup-rust.sh tools/build/setup-nginx.sh /tmp
+FROM python:3.13-slim-bullseye AS dev
+COPY . /workspaces/gufo_http
+WORKDIR /workspaces/gufo_http
 ENV \
     PATH=/usr/local/cargo/bin:$PATH\
     RUSTUP_HOME=/usr/local/rustup\
@@ -25,10 +26,4 @@ RUN \
     llvm-tools-preview \
     && pip install --upgrade pip\
     && pip install --upgrade build\
-    && pip install\
-    -r /tmp/build.txt\
-    -r /tmp/docs.txt\
-    -r /tmp/ipython.txt\
-    -r /tmp/lint.txt\
-    -r /tmp/test.txt\
-    -r /tmp/bench.txt
+    && pip install -e .[build,docs,ipython,lint,test,bench]
