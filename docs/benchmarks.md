@@ -69,10 +69,16 @@ Install local nginx:
 ./tools/build/setup-nginx.sh
 ```
 
-Install dependencies:
+Install test dependencies:
 
 ```
-pip3 install -e .[test,bench[ gufo-http
+pip3 install -e .[test] gufo-http
+```
+
+Install third-party packages to bench:
+
+```
+./tools/build/setup-bench.sh
 ```
 
 ## HTTP/1.1 Requests
