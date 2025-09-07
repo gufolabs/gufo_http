@@ -107,7 +107,7 @@ omit = ["*tests*", "*examples*"]
 directory = "dist/coverage"
 
 [tool.cibuildwheel]
-before-test = "pip install -e {project}[test]"
+before-test = "pip install -e {project}[test,test-extra]"
 test-command = "cd {project} && pytest -v tests/"
 
 [tool.cibuildwheel.linux]

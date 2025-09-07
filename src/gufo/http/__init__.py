@@ -1,7 +1,7 @@
 # ---------------------------------------------------------------------
 # Gufo HTTP: Python HTTP Client Library
 # ---------------------------------------------------------------------
-# Copyright (C) 2024, Gufo Labs
+# Copyright (C) 2024-25, Gufo Labs
 # See LICENSE.md for details
 # ---------------------------------------------------------------------
 
@@ -28,7 +28,7 @@ from ._fast import (
     Response,
 )
 
-__version__: str = "0.4.0"
+__version__: str = "0.5.0"
 __all__ = [
     "BROTLI",
     "DEFLATE",
