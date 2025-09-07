@@ -26,4 +26,4 @@ RUN \
     llvm-tools-preview \
     && pip install --upgrade pip\
     && pip install --upgrade build\
-    && pip install -e .[build,docs,ipython,lint,test]
+    && pip install -e .[build,docs,ipython,lint,test,test-extra]

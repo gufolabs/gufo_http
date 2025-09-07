@@ -66,6 +66,9 @@ test = [
   "coverage[toml]==7.6.4",
   "PyYAML>=6.0",
 ]
+test-extra = [
+  "proxy.py==2.4.10",
+]
 
 [project.readme]
 content-type = "text/markdown"
