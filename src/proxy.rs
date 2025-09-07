@@ -14,6 +14,11 @@ pub struct Proxy(reqwest::Proxy);
 impl Proxy {
     #[new]
     fn new(url: &str) -> PyResult<Self> {
+        // check schemes. reqwest doesn't do it
+        if !url.starts_with("http://") && !url.starts_with("https://") {
+            return Err(PyValueError::new_err("invalid scheme"));
+        }
+        // Create proxy
         let proxy = reqwest::Proxy::all(url).map_err(|x| PyValueError::new_err(x.to_string()))?;
         Ok(Self(proxy))
     }
