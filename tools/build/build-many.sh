@@ -88,7 +88,6 @@ do
     header "Building for Python $1"
     # Convert version to ABI
     case "$1" in
-        3.8) ABI=cp38-cp38 ;;
         3.9) ABI=cp39-cp39 ;;
         3.10) ABI=cp310-cp310 ;;
         3.11) ABI=cp311-cp311 ;;
@@ -117,7 +116,7 @@ do
     elapsed
     section "Setup build dependencies..."
     checkpoint
-    pip install e .[build,test]
+    pip install e .[build,test,test-extra]
     elapsed
     section "Collecting PGO..."
     checkpoint
