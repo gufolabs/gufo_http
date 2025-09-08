@@ -10,6 +10,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 To see unreleased changes, please see the [CHANGELOG on the main branch guide](https://github.com/gufolabs/gufo_http/blob/main/CHANGELOG.md).
 
+## 0.5.1
+
+### Infrastructure
+
+* Remove `[bench]` dependencies from pyproject.toml
+
 ## 0.5.0 - 2025-09-07
 
 ### Added
