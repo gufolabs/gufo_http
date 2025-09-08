@@ -15,6 +15,7 @@ To see unreleased changes, please see the [CHANGELOG on the main branch guide](h
 ### Security
 
 * Install security updates during devcontainer build.
+* Use python:3.13-slim-trixie as base for devcontainer.
 
 ### Infrastructure
 
