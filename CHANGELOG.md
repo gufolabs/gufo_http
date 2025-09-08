@@ -12,6 +12,10 @@ To see unreleased changes, please see the [CHANGELOG on the main branch guide](h
 
 ## 0.5.1
 
+### Security
+
+* Install security updates during devcontainer build.
+
 ### Infrastructure
 
 * Remove `[bench]` dependencies from pyproject.toml
