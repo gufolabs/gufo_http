@@ -40,9 +40,12 @@ def test_get(httpd: Httpd) -> None:
     assert b"</html>" in data
 
 
-def test_get_localhost(httpd: Httpd) -> None:
+@pytest.mark.parametrize(
+    "url", ["http://localhost:{port}/", "http://127.0.0.1:{port}/"]
+)
+def test_get_localhost(httpd: Httpd, url: str) -> None:
     client = HttpClient()
-    resp = client.get("http://localhost/")
+    resp = client.get(url.replace("{port}", str(httpd.port)))
     assert resp.status == 200
     data = resp.content
     assert data

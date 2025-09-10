@@ -133,7 +133,7 @@ http {{
 
     server {{
         listen {self._port};
-        server_name {self._host} localhost;
+        server_name {self._host} localhost 127.0.0.1;
 
         location /redirect/root {{
             rewrite ^/redirect/root$ / redirect;
@@ -280,7 +280,7 @@ http {{
 
     server {{
         listen {self._port} ssl http2;
-        server_name {self._host};
+        server_name {self._host} localhost 127.0.0.1;
         ssl_certificate {cert_root}/cert.pem;
         ssl_certificate_key {cert_root}/key.pem;
 
@@ -451,3 +451,8 @@ http {{
             self._proc.kill()
         if self._dir:
             self._dir.cleanup()
+
+    @property
+    def port(self) -> int:
+        """Get server's port."""
+        return self._port

@@ -37,8 +37,14 @@ def test_cli_get_stdout(
     assert "</html>" in captured.out
 
 
-def test_cli_get_localhost(httpd: Httpd, capsys: pytest.CaptureFixture[str]) -> None:
-    r = GuardedCli().run(["http://localhost/"])
+@pytest.mark.parametrize(
+    "url", ["http://localhost:{port}/", "http://127.0.0.1:{port}/"]
+)
+def test_cli_get_localhost(
+    httpd: Httpd, capsys: pytest.CaptureFixture[str], url: str
+) -> None:
+    req_url = url.replace("{port}", str(httpd.port))
+    r = GuardedCli().run([req_url])
     captured = capsys.readouterr()
     assert r == ExitCode.OK
     assert "</html>" in captured.out
