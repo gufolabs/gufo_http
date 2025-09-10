@@ -12,8 +12,6 @@ from typing import List, Optional
 # Third-party modules
 import pytest
 
-from gufo.http import HttpError
-
 # Gufo HTTP modules
 from gufo.http.cli import Cli, ExitCode
 from gufo.http.httpd import Httpd
@@ -61,7 +59,7 @@ def test_cli_get_file(
 def test_cli_get_wrong_file(
     httpd: Httpd,
 ) -> None:
-    path = "/tmpxxxxxx/yyyyy/zzzzzz"
+    path = "/tmpxxxxxx/yyyyy/zzzzzz"  # noqa: S108
     cli_args = ["-o", path, httpd.prefix]
     with pytest.raises(RuntimeError):
         GuardedCli().run(cli_args)

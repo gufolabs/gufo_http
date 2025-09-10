@@ -1,5 +1,5 @@
 // ------------------------------------------------------------------------
-// Gufo HTTP: SynncClient implementation
+// Gufo HTTP: SyncClient implementation
 // ------------------------------------------------------------------------
 // Copyright (C) 2024-25, Gufo Labs
 // See LICENSE.md for details
