@@ -28,7 +28,7 @@ from ._fast import (
     Response,
 )
 
-__version__: str = "0.5.1"
+__version__: str = "0.6.0"
 __all__ = [
     "BROTLI",
     "DEFLATE",
