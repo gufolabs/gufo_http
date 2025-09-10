@@ -133,7 +133,7 @@ http {{
 
     server {{
         listen {self._port};
-        server_name {self._host};
+        server_name {self._host} localhost;
 
         location /redirect/root {{
             rewrite ^/redirect/root$ / redirect;

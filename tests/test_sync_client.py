@@ -40,6 +40,15 @@ def test_get(httpd: Httpd) -> None:
     assert b"</html>" in data
 
 
+def test_get_localhost(httpd: Httpd) -> None:
+    client = HttpClient()
+    resp = client.get("http://localhost/")
+    assert resp.status == 200
+    data = resp.content
+    assert data
+    assert b"</html>" in data
+
+
 def test_head(httpd: Httpd) -> None:
     client = HttpClient()
     resp = client.head(f"{httpd.prefix}/")

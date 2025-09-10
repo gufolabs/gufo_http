@@ -44,6 +44,18 @@ def test_get(httpd: Httpd) -> None:
     asyncio.run(inner())
 
 
+def test_get_localhost(httpd: Httpd) -> None:
+    async def inner() -> None:
+        client = HttpClient()
+        resp = await client.get("http://localhost/")
+        assert resp.status == 200
+        data = resp.content
+        assert data
+        assert b"</html>" in data
+
+    asyncio.run(inner())
+
+
 def test_head(httpd: Httpd) -> None:
     async def inner() -> None:
         client = HttpClient()

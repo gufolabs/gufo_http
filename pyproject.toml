@@ -65,6 +65,9 @@ test-extra = [
 content-type = "text/markdown"
 file = "README.md"
 
+[project.scripts]
+gufo-http = "gufo.http.cli:main"
+
 [project.urls]
 "Bug Tracker" = "https://github.com/gufolabs/gufo_http/issues"
 Changelog = "https://github.com/gufolabs/gufo_http/blob/master/CHANGELOG.md"
