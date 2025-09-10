@@ -10,6 +10,7 @@
 import logging
 import os
 import queue
+import socket
 import subprocess
 import threading
 import time
@@ -65,6 +66,7 @@ class Httpd(object):
         self._address = address
         self._port = port
         self._host = host
+        self._hostname = socket.gethostname()
         self._start_timeout = start_timeout
         self._check_config = check_config
         self._mode = mode
@@ -133,7 +135,7 @@ http {{
 
     server {{
         listen {self._port};
-        server_name {self._host} localhost 127.0.0.1;
+        server_name {self._host} localhost 127.0.0.1 {self._hostname};
 
         location /redirect/root {{
             rewrite ^/redirect/root$ / redirect;
@@ -280,7 +282,7 @@ http {{
 
     server {{
         listen {self._port} ssl http2;
-        server_name {self._host} localhost 127.0.0.1;
+        server_name {self._host} localhost 127.0.0.1 {self._hostname};
         ssl_certificate {cert_root}/cert.pem;
         ssl_certificate_key {cert_root}/key.pem;
 
@@ -452,7 +454,15 @@ http {{
         if self._dir:
             self._dir.cleanup()
 
-    @property
-    def port(self) -> int:
-        """Get server's port."""
-        return self._port
+    def expand_url(self, tpl: str) -> str:
+        """
+        Expand url template.
+
+        Replace:
+
+        * `{port}` - server's port
+        * `{hostname}` - current host's name.
+        """
+        return tpl.replace("{port}", str(self._port)).replace(
+            "{hostname}", self._hostname
+        )

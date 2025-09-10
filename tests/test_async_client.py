@@ -45,12 +45,17 @@ def test_get(httpd: Httpd) -> None:
 
 
 @pytest.mark.parametrize(
-    "url", ["http://localhost:{port}/", "http://127.0.0.1:{port}/"]
+    "url",
+    [
+        "http://localhost:{port}/",
+        "http://127.0.0.1:{port}/",
+        "http://{hostname}:{port}",
+    ],
 )
 def test_get_localhost(httpd: Httpd, url: str) -> None:
     async def inner() -> None:
         client = HttpClient()
-        resp = await client.get(url.replace("{port}", str(httpd.port)))
+        resp = await client.get(httpd.expand_url(url))
         assert resp.status == 200
         data = resp.content
         assert data
