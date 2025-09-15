@@ -158,11 +158,8 @@ jobs:
             3.12
             3.13
 
-      - name: Check paths
-        run: ls -l $RUNNER_TOOL_CACHE/Python/*
-
-      - name: Stop
-        run: /bin/false
+      # - name: Stop
+      #   run: /bin/false
 
       - name: Setup Rust
         run: ./tools/build/build-many.sh 3.9 3.10 3.11 3.12 3.13

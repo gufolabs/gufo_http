@@ -57,6 +57,8 @@ elapsed() {
     echo "** Elapsed time: $diff seconds"
 }
 
+# Detect environment
+OSNAME=$(uname -s)
 # Save base path
 BASE_PATH=$PATH
 # Rust settings
@@ -99,12 +101,19 @@ do
             exit 2
             ;;
     esac
-    # Adjust path
+    # Mimic manylinux
+    if [ $OSNAME == "Darwin"]; then
+        PV=$(ls $RUNNER_TOOL_CACHE/Python | grep "^$1" | sort -V | tail -n1)
+        mkdir -p /opt/python/
+        ln -s $RUNNER_TOOL_CACHE/Python/$PV/arm64 /opt/python/$ABI
+
+    fi
+    # Adjust paths
     PATH=$CARGO_HOME/bin:/opt/python/$ABI/bin:$BASE_PATH
-    # Check python version is supported in docker image
     export PYO3_PYTHON=/opt/python/$ABI/bin/python3
+    # Check python version is supported in file system
     if [ ! -f $PYO3_PYTHON ]; then
-        echo "Python version $1 is not supported by image"
+        echo "Python version $1 is not supported"
         exit 2
     fi
     # Check python
