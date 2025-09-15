@@ -159,7 +159,7 @@ jobs:
             3.13
 
       - name: Check paths
-        run: ls -s $RUNNER_TOOL_CACHE/Python
+        run: ls -l $RUNNER_TOOL_CACHE/Python/*
 
       - name: Stop
         run: /bin/false
