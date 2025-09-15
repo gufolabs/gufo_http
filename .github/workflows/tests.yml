@@ -141,7 +141,7 @@ jobs:
 
   # @todo: Move to package.yml
   build-darwin-arm64:
-    runs-on: macos-13
+    runs-on: macos-14
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v4
@@ -150,7 +150,7 @@ jobs:
         uses: actions/setup-python@v6
         with:
           check-latest: true
-          #update-environment: false
+          update-environment: false
           python-version: |
             3.9
             3.10
