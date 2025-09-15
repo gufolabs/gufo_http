@@ -158,14 +158,14 @@ jobs:
             3.12
             3.13
 
-      - name: env
-        run: env
+      - name: Check paths
+        run: ls -s $RUNNER_TOOL_CACHE/Python
 
       - name: Stop
         run: /bin/false
 
       - name: Setup Rust
-        run: ./tools/build/build-many.sh 3.9 3.10 3.11 3.12 3.13 3.14
+        run: ./tools/build/build-many.sh 3.9 3.10 3.11 3.12 3.13
 
       - name: Save Artefacts
         uses: actions/upload-artifact@v4
