@@ -10,7 +10,6 @@ on:
       - "tools/build/setup-rust.sh"
       - "src/**"
       - "tests/**"
-      - "setup.py"
       - "pyproject.toml"
     branches:
       - master
@@ -139,3 +138,39 @@ jobs:
 
       - name: Coverage Report
         run: coverage report
+
+  # @todo: Move to package.yml
+  build-darwin-arm64:
+    runs-on: macos-13
+    needs: [py-lint]
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v6
+        with:
+          check-latest: true
+          #update-environment: false
+          python-version: |
+            3.9
+            3.10
+            3.11
+            3.12
+            3.13
+            3.14
+
+      - name: env
+        run: env
+
+      - name: Stop
+        run: /bin/false
+
+      - name: Setup Rust
+        run: ./tools/build/build-many.sh 3.9 3.10 3.11 3.12 3.13 3.14
+
+      - name: Save Artefacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: wheel-darwin-arm64
+          path: wheelhouse/*.whl
