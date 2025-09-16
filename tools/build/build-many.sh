@@ -118,11 +118,6 @@ do
         PV=$(ls $RUNNER_TOOL_CACHE/Python | grep "^$1" | sort -V | tail -n1)
         PATH=$CARGO_HOME/bin:$RUNNER_TOOL_CACHE/Python/$PV/arm64/bin:$BASE_PATH
         export PYO3_PYTHON=$RUNNER_TOOL_CACHE/Python/$PV/arm64/bin/python3
-        # Build flags
-        export MACOSX_DEPLOYMENT_TARGET=11.0
-        export ARCHFLAGS="-arch arm64"
-        export _PYTHON_HOST_PLATFORM=macosx-11_0_arm64
-        export CARGO_BUILD_TARGET=aarch64-apple-darwin
         pip install build delocate
     else
         # Linux
@@ -143,7 +138,7 @@ do
     elapsed
     section "Setup build dependencies..."
     checkpoint
-    pip install e .[build,test,test-extra]
+    pip install -e .[build,test,test-extra]
     elapsed
     if [ "$SUPPORTS_PGO" = true ]; then
         section "Collecting PGO..."
@@ -156,7 +151,7 @@ do
     checkpoint
     empty_dir "${DIST}"
     empty_dir "${BUILD}"
-    python3 -m build --wheel --no-isolation
+    python3 -m build --wheel
     elapsed
     if [ "$SUPPORTS_PGO" = true ]; then
         section "Clearing PGO..."
