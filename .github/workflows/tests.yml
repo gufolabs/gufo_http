@@ -54,6 +54,7 @@ jobs:
 
   rust-test:
     runs-on: ubuntu-24.04
+    needs: [build-darwin-arm64]
     env:
       RUST_ARCH: x86_64-unknown-linux-gnu
     steps:
@@ -161,10 +162,7 @@ jobs:
             3.12
             3.13
 
-      # - name: Stop
-      #   run: /bin/false
-
-      - name: Setup Rust
+      - name: Build
         run: ./tools/build/build-many.sh 3.9 3.10 3.11 3.12 3.13
 
       - name: Save Artefacts

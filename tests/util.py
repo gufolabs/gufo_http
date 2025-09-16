@@ -8,9 +8,21 @@
 # Python modules
 import contextlib
 import os
+import shutil
 from typing import Dict
 
-HTTPD_PATH = "/usr/sbin/nginx"
+
+def _get_nginx_path() -> str:
+    """Detect nginx' path."""
+    # Default place
+    path = "/usr/sbin/nginx"
+    # Darwin and others
+    if not os.path.exists(HTTPD_PATH):
+        path = shutil.which("nginx") or ""
+    return path
+
+
+HTTPD_PATH = _get_nginx_path()
 HTTPD_HOST = "local.gufolabs.com"
 HTTPD_ADDRESS = "127.0.0.1"
 UNROUTABLE_URL = "http://192.0.2.1/"
