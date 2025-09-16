@@ -111,7 +111,7 @@ do
     if [ $OSNAME == "Darwin" ]; then
         # MacOS
         PV=$(ls $RUNNER_TOOL_CACHE/Python | grep "^$1" | sort -V | tail -n1)
-        PATH=$CARGO_HOME/bin:$RUNNER_TOOL_CACHE/Python/$PV/arm64:$BASE_PATH
+        PATH=$CARGO_HOME/bin:$RUNNER_TOOL_CACHE/Python/$PV/arm64/bin:$BASE_PATH
         export PYO3_PYTHON=$RUNNER_TOOL_CACHE/Python/$PV/arm64/bin/python3
     else
         # Linux
