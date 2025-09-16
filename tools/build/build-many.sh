@@ -102,11 +102,11 @@ do
             ;;
     esac
     # Mimic manylinux
-    if [ $OSNAME == "Darwin"]; then
+    if [ $OSNAME == "Darwin" ]; then
         PV=$(ls $RUNNER_TOOL_CACHE/Python | grep "^$1" | sort -V | tail -n1)
         mkdir -p /opt/python/
+        # @todo: Detect x64/arm64
         ln -s $RUNNER_TOOL_CACHE/Python/$PV/arm64 /opt/python/$ABI
-
     fi
     # Adjust paths
     PATH=$CARGO_HOME/bin:/opt/python/$ABI/bin:$BASE_PATH
