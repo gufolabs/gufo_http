@@ -24,8 +24,7 @@ echo "CARGO_HOME  = ${CARGO_HOME}"
 # rustup-init tries to check /proc/self/exe
 # which is not accessible during Docker build
 # on aarch64, so we will patch it
-curl -s --tlsv1.3 https://sh.rustup.rs \
-    | sed 's#/proc/self/exe#/bin/sh#g' \
+curl -s https://sh.rustup.rs \
     | sh -s -- \
         -y --no-modify-path --profile minimal \
         --default-toolchain ${RUST_VERSION}
