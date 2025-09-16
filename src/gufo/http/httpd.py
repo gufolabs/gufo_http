@@ -10,6 +10,7 @@
 import logging
 import os
 import queue
+import shutil
 import socket
 import subprocess
 import threading
@@ -43,7 +44,7 @@ class Httpd(object):
         prefix: URL prefix.
 
     Args:
-        path: nginx binary path.
+        path: nginx binary path. Auto-detect if None.
         address: Listen address.
         port: Listen port.
         host: Server hostname.
@@ -54,7 +55,7 @@ class Httpd(object):
 
     def __init__(
         self: "Httpd",
-        path: str = "/usr/sbin/nginx",
+        path: Optional[str] = None,
         address: str = "127.0.0.1",
         port: int = 10080,
         host: str = "local.gufolabs.com",
@@ -62,7 +63,7 @@ class Httpd(object):
         check_config: bool = True,
         mode: HttpdMode = HttpdMode.HTTP,
     ) -> None:
-        self._path = path
+        self._path = path or self._get_nginx_path()
         self._address = address
         self._port = port
         self._host = host
@@ -466,3 +467,13 @@ http {{
         return tpl.replace("{port}", str(self._port)).replace(
             "{hostname}", self._hostname
         )
+
+    @staticmethod
+    def _get_nginx_path() -> str:
+        """Detect nginx' path."""
+        # Default place
+        path = "/usr/sbin/nginx"
+        # Darwin and others
+        if not os.path.exists(path):
+            path = shutil.which("nginx") or ""
+        return path

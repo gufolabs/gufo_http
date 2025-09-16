@@ -23,7 +23,6 @@ def get_free_port() -> int:
         return sock.getsockname()[1]  # Get assigned port
 
 
-HTTPD_PATH = "/usr/sbin/nginx"
 HTTPD_HOST = "local.gufolabs.com"
 HTTPD_ADDRESS = "127.0.0.1"
 REPEATS = 100
@@ -89,7 +88,6 @@ def main() -> None:
     """Run all tests."""
     # Create HTTP istance
     httpd = Httpd(
-        path=HTTPD_PATH,
         address=HTTPD_ADDRESS,
         port=get_free_port(),
         host=HTTPD_HOST,
@@ -97,7 +95,6 @@ def main() -> None:
     httpd._start()
     # Create HTTPS istance
     httpd_ssl = Httpd(
-        path=HTTPD_PATH,
         address=HTTPD_ADDRESS,
         port=get_free_port(),
         host=HTTPD_HOST,

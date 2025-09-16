@@ -21,7 +21,6 @@ from .proxy import ProxyServer
 from .util import (
     HTTPD_ADDRESS,
     HTTPD_HOST,
-    HTTPD_PATH,
 )
 
 
@@ -37,7 +36,6 @@ def httpd() -> Iterator[Httpd]:
     logger = logging.getLogger("gufo.http.httpd")
     logger.setLevel(logging.DEBUG)
     with Httpd(
-        path=HTTPD_PATH,
         address=HTTPD_ADDRESS,
         port=get_free_port(),
         host=HTTPD_HOST,
@@ -50,7 +48,6 @@ def httpd_tls() -> Iterator[Httpd]:
     logger = logging.getLogger("gufo.http.httpd")
     logger.setLevel(logging.DEBUG)
     with Httpd(
-        path=HTTPD_PATH,
         address=HTTPD_ADDRESS,
         port=get_free_port(),
         host=HTTPD_HOST,
