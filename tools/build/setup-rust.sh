@@ -33,3 +33,8 @@ cargo --version
 rustc --version
 # Install components
 rustup component add clippy rustfmt llvm-tools-preview
+
+OSNAME=$(uname -s)
+if [ "$OSNAME" == "Darwin" ]; then
+    brew install llvm
+fi
