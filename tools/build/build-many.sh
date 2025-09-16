@@ -73,6 +73,12 @@ TMP_WHEELHOUSE="/tmp/wheelhouse"
 WHEELHOUSE="wheelhouse"
 TARGET="target"
 
+if [ $(id -u) -eq 0 ]; then
+    SUDO=""
+else
+    SUDO="sudo"
+fi
+
 header "Installing rust"
 checkpoint
 empty_dir "${TARGET}"
@@ -101,16 +107,17 @@ do
             exit 2
             ;;
     esac
-    # Mimic manylinux
+    # Set up paths
     if [ $OSNAME == "Darwin" ]; then
+        # MacOS
         PV=$(ls $RUNNER_TOOL_CACHE/Python | grep "^$1" | sort -V | tail -n1)
-        mkdir -p /opt/python/
-        # @todo: Detect x64/arm64
-        ln -s $RUNNER_TOOL_CACHE/Python/$PV/arm64 /opt/python/$ABI
+        PATH=$CARGO_HOME/bin:$RUNNER_TOOL_CACHE/Python/$PV/arm64:$BASE_PATH
+        export PYO3_PYTHON=$RUNNER_TOOL_CACHE/Python/$PV/arm64/bin/python3
+    else
+        # Linux
+        PATH=$CARGO_HOME/bin:/opt/python/$ABI/bin:$BASE_PATH
+        export PYO3_PYTHON=/opt/python/$ABI/bin/python3
     fi
-    # Adjust paths
-    PATH=$CARGO_HOME/bin:/opt/python/$ABI/bin:$BASE_PATH
-    export PYO3_PYTHON=/opt/python/$ABI/bin/python3
     # Check python version is supported in file system
     if [ ! -f $PYO3_PYTHON ]; then
         echo "Python version $1 is not supported"
