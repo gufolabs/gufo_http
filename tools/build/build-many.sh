@@ -59,6 +59,11 @@ elapsed() {
 
 # Detect environment
 OSNAME=$(uname -s)
+if [ "$OSNAME" == "Linux" ]; then
+    SUPPORTS_PGO=true
+else
+    SUPPORTS_PGO=false
+fi
 # Save base path
 BASE_PATH=$PATH
 # Rust settings
@@ -134,19 +139,23 @@ do
     checkpoint
     pip install e .[build,test,test-extra]
     elapsed
-    section "Collecting PGO..."
-    checkpoint
-    PGO_DATA_DIR=`mktemp -d`
-    ./tools/build/build-pgo.sh $PGO_DATA_DIR
-    elapsed
+    if [ "$SUPPORTS_PGO" = true ]; then
+        section "Collecting PGO..."
+        checkpoint
+        PGO_DATA_DIR=`mktemp -d`
+        ./tools/build/build-pgo.sh $PGO_DATA_DIR
+        elapsed
+    fi
     section "Building wheel..."
     checkpoint
     empty_dir "${DIST}"
     empty_dir "${BUILD}"
     python3 -m build --wheel
     elapsed
-    section "Clearing PGO..."
-    rm -rf $PGO_DATA_DIR
+    if [ "$SUPPORTS_PGO" = true ]; then
+        section "Clearing PGO..."
+        rm -rf $PGO_DATA_DIR
+    fi
     section "Auditing wheel..."
     checkpoint
     empty_dir "${TMP_WHEELHOUSE}"
