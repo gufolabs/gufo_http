@@ -17,7 +17,7 @@ def _get_nginx_path() -> str:
     # Default place
     path = "/usr/sbin/nginx"
     # Darwin and others
-    if not os.path.exists(HTTPD_PATH):
+    if not os.path.exists(path):
         path = shutil.which("nginx") or ""
     return path
 
