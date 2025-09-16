@@ -2,10 +2,11 @@
 # ------------------------------------------------------------------------
 # Gufo Labs: Install nginx
 # ------------------------------------------------------------------------
-# Copyright (C) 2024, Gufo Labs
+# Copyright (C) 2024-25, Gufo Labs
 # ------------------------------------------------------------------------
 
 set -e
+OSNAME=$(uname -s)
 OS="unknown"
 
 if  [ -f /etc/redhat-release ]; then
@@ -14,6 +15,8 @@ elif [ -f /etc/debian_version ]; then
     OS="debian"
 elif [ -f /etc/alpine-release ]; then
     OS="alpine"
+elif [ "$OSNAME" == "Darwin" ]; then
+    OS="darwin"
 else
     echo "Cannot detect OS"
     exit 1
@@ -40,6 +43,9 @@ case $OS in
         ;;
     alpine)
         $SUDO apk add nginx
+        ;;
+    darwin)
+        $SUDO brew install nginx
         ;;
     *)
         echo "Unsupported OS: $OS"
