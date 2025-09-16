@@ -45,7 +45,7 @@ case $OS in
         $SUDO apk add nginx
         ;;
     darwin)
-        $SUDO brew install nginx
+        brew install nginx
         ;;
     *)
         echo "Unsupported OS: $OS"
