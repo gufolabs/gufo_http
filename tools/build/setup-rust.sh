@@ -32,5 +32,4 @@ curl -s https://sh.rustup.rs \
 cargo --version
 rustc --version
 # Install components
-rustup component add clippy
-rustup component add rustfmt
+rustup component add clippy rustfmt llvm-tools-preview
