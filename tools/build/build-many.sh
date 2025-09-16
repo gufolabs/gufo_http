@@ -119,11 +119,13 @@ do
         PATH=$CARGO_HOME/bin:$RUNNER_TOOL_CACHE/Python/$PV/arm64/bin:$BASE_PATH
         export PYO3_PYTHON=$RUNNER_TOOL_CACHE/Python/$PV/arm64/bin/python3
         export CARGO_BUILD_TARGET=aarch64-apple-darwin
+        WHEEL_ARGS="--plat-name macosx-11.0-arm64"
         pip install build delocate
     else
         # Linux
         PATH=$CARGO_HOME/bin:/opt/python/$ABI/bin:$BASE_PATH
         export PYO3_PYTHON=/opt/python/$ABI/bin/python3
+        WHEEL_ARGS=""
     fi
     # Check python version is supported in file system
     if [ ! -f $PYO3_PYTHON ]; then
@@ -152,7 +154,7 @@ do
     checkpoint
     empty_dir "${DIST}"
     empty_dir "${BUILD}"
-    python3 -m build --wheel
+    python3 -m build --wheel $WHEEL_ARGS
     elapsed
     if [ "$SUPPORTS_PGO" = true ]; then
         section "Clearing PGO..."
