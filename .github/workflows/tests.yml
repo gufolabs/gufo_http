@@ -142,7 +142,7 @@ jobs:
   # @todo: Move to package.yml
   build-darwin-arm64:
     runs-on: macos-14
-    variables:
+    env:
       RUSTUP_HOME: /tmp/rustup
       CARGO_HOME: /tmp/cargo
     steps:
