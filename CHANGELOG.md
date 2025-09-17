@@ -12,6 +12,10 @@ To see unreleased changes, please see the [CHANGELOG on the main branch guide](h
 
 ## [Unreleased]
 
+### Added
+
+* MacOS ARM64 binary wheels.
+
 ### Changed
 
 * Httpd auto-detects nginx's path when passed empty `path`.
