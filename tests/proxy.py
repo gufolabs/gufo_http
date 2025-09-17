@@ -1,7 +1,7 @@
 # ---------------------------------------------------------------------
 # Gufo HTTP: ProxyServer context manager
 # ---------------------------------------------------------------------
-# Copyright (C) 2024, Gufo Labs
+# Copyright (C) 2024-25, Gufo Labs
 # See LICENSE.md for details
 # ---------------------------------------------------------------------
 """ProxyServer context manager for tests."""
@@ -9,6 +9,7 @@
 # Python modules
 import logging
 import queue
+import shutil
 import subprocess
 import threading
 from types import TracebackType
@@ -31,11 +32,11 @@ class ProxyServer(object):
 
     def __init__(
         self: "ProxyServer",
-        path: str = "proxy",
+        path: Optional[str] = None,
         address: str = "127.0.0.1",
         port: int = 10088,
     ) -> None:
-        self._path = path
+        self._path = path or self._get_proxy_path()
         self._address = address
         self._port = port
         self.url: str = f"http://{address}:{port}"
@@ -148,3 +149,8 @@ class ProxyServer(object):
         if self._proc:
             logger.info("Stopping proxy.py")
             self._proc.kill()
+
+    @staticmethod
+    def _get_proxy_path() -> str:
+        """Detect nginx' path."""
+        return shutil.which("proxy") or ""
