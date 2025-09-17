@@ -144,7 +144,7 @@ jobs:
   build-darwin-arm64:
     runs-on: macos-latest
     env:
-      RUST_ARCH: x86_64-unknown-linux-gnu
+      RUST_ARCH: aarch64-apple-darwin
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v4
