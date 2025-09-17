@@ -144,11 +144,19 @@ jobs:
   build-darwin-arm64:
     runs-on: macos-latest
     env:
-      RUSTUP_HOME: /tmp/rustup
-      CARGO_HOME: /tmp/cargo
+      RUST_ARCH: x86_64-unknown-linux-gnu
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v4
+
+      - name: Setup Environment
+        run: |
+          echo "CARGO_HOME=${HOME}/.cargo" >> $GITHUB_ENV
+          echo "RUSTUP_HOME=${HOME}/.rustup" >> $GITHUB_ENV
+          echo "${HOME}/.cargo/bin" >> $GITHUB_PATH
+
+      - name: Install Rust
+        run: ./tools/build/setup-rust.sh
 
       - uses: pypa/cibuildwheel@v2
         env:
