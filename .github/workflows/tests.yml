@@ -142,7 +142,7 @@ jobs:
 
   # @todo: Move to package.yml
   build-darwin-arm64:
-    runs-on: macos-14
+    runs-on: macos-latest
     env:
       RUSTUP_HOME: /tmp/rustup
       CARGO_HOME: /tmp/cargo
@@ -150,20 +150,12 @@ jobs:
       - name: Checkout Repo
         uses: actions/checkout@v4
 
-      - name: Setup Python
-        uses: actions/setup-python@v5
-        with:
-          check-latest: true
-          update-environment: false
-          python-version: |
-            3.9
-            3.10
-            3.11
-            3.12
-            3.13
-
-      - name: Build
-        run: ./tools/build/build-many.sh 3.9 3.10 3.11 3.12 3.13
+      - uses: pypa/cibuildwheel@v2
+        env:
+          CIBW_BUILD: "cp39-macosx_arm64 cp310-macosx_arm64 cp311-macosx_arm64 cp312-macosx_arm64 cp313-macosx_arm64"
+          CIBW_ARCHS_MACOS: arm64
+          CIBW_TEST_REQUIRES: pytest
+          CIBW_TEST_COMMAND: "pytest {project}/tests"
 
       - name: Save Artefacts
         uses: actions/upload-artifact@v4

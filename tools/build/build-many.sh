@@ -57,13 +57,6 @@ elapsed() {
     echo "** Elapsed time: $diff seconds"
 }
 
-# Detect environment
-OSNAME=$(uname -s)
-if [ "$OSNAME" == "Linux" ]; then
-    SUPPORTS_PGO=true
-else
-    SUPPORTS_PGO=false
-fi
 # Save base path
 BASE_PATH=$PATH
 # Rust settings
@@ -113,17 +106,8 @@ do
             ;;
     esac
     # Set up paths
-    if [ $OSNAME == "Darwin" ]; then
-        # MacOS
-        PV=$(ls $RUNNER_TOOL_CACHE/Python | grep "^$1" | sort -V | tail -n1)
-        PATH=$CARGO_HOME/bin:$RUNNER_TOOL_CACHE/Python/$PV/arm64/bin:$BASE_PATH
-        export PYO3_PYTHON=$RUNNER_TOOL_CACHE/Python/$PV/arm64/bin/python3
-        pip install build delocate
-    else
-        # Linux
-        PATH=$CARGO_HOME/bin:/opt/python/$ABI/bin:$BASE_PATH
-        export PYO3_PYTHON=/opt/python/$ABI/bin/python3
-    fi
+    PATH=$CARGO_HOME/bin:/opt/python/$ABI/bin:$BASE_PATH
+    export PYO3_PYTHON=/opt/python/$ABI/bin/python3
     # Check python version is supported in file system
     if [ ! -f $PYO3_PYTHON ]; then
         echo "Python version $1 is not supported"
@@ -140,36 +124,24 @@ do
     checkpoint
     pip install -e .[build,test,test-extra]
     elapsed
-    if [ "$SUPPORTS_PGO" = true ]; then
-        section "Collecting PGO..."
-        checkpoint
-        PGO_DATA_DIR=`mktemp -d`
-        ./tools/build/build-pgo.sh $PGO_DATA_DIR
-        elapsed
-    fi
+    section "Collecting PGO..."
+    checkpoint
+    PGO_DATA_DIR=`mktemp -d`
+    ./tools/build/build-pgo.sh $PGO_DATA_DIR
+    elapsed
     section "Building wheel..."
     checkpoint
     empty_dir "${DIST}"
     empty_dir "${BUILD}"
     python3 -m build --wheel
     elapsed
-    if [ "$SUPPORTS_PGO" = true ]; then
-        section "Clearing PGO..."
-        rm -rf $PGO_DATA_DIR
-    fi
-    if [ "$OSNAME" == "Darwin" ]; then
-        section "Delocating wheel..."
-        checkpoint
-        empty_dir "${TMP_WHEELHOUSE}"
-        delocate-wheel -w "${TMP_WHEELHOUSE}" "${DIST}"/*.whl
-        elapsed
-    else
-        section "Auditing wheel..."
-        checkpoint
-        empty_dir "${TMP_WHEELHOUSE}"
-        auditwheel repair --wheel-dir="${TMP_WHEELHOUSE}" "${DIST}"/*.whl
-        elapsed
-    fi
+    section "Clearing PGO..."
+    rm -rf $PGO_DATA_DIR
+    section "Auditing wheel..."
+    checkpoint
+    empty_dir "${TMP_WHEELHOUSE}"
+    auditwheel repair --wheel-dir="${TMP_WHEELHOUSE}" "${DIST}"/*.whl
+    elapsed
     section "Installing wheel..."
     checkpoint
     pip install "${TMP_WHEELHOUSE}"/*.whl
