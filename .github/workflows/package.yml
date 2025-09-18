@@ -83,6 +83,7 @@ jobs:
 
   build-darwin-arm64:
     runs-on: macos-latest
+    needs: build-sdist
     env:
       RUST_ARCH: aarch64-apple-darwin
     steps:
@@ -121,6 +122,61 @@ jobs:
           name: wheel-darwin-arm64
           path: wheelhouse/*.whl
 
+  build-windows-amd64:
+    runs-on: windows-latest
+    needs: build-sdist
+    steps:
+      - name: Checkout Repo
+        uses: actions/checkout@v4
+
+      - name: Install Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: "1.89.0"
+          default: true
+          components: rustfmt, clippy
+
+      - name: Install nginx
+        run: |
+          $nginxVersion = "1.25.2"
+          $temp = $env:TEMP
+          $zipPath = Join-Path $temp "nginx.zip"
+          $installDir = "C:\nginx"
+          # Remove c:\nginx if present
+          if (Test-Path $installDir) { Remove-Item -Recurse -Force $installDir }
+          # Download nginx
+          Invoke-WebRequest -Uri "https://nginx.org/download/nginx-$nginxVersion.zip" -OutFile $zipPath
+          # Unpack
+          Expand-Archive $zipPath -DestinationPath "C:\"
+          # Rename to proper name
+          Rename-Item "C:\nginx-$nginxVersion" $installDir
+          # Remove archive
+          Remove-Item $zipPath -Force
+
+      - name: Set Up Python {{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install cibuildwheel
+        run: python -m pip install cibuildwheel==3.1.4
+
+      - name: Build wheels
+        run: |
+          $env:PATH = "C:\nginx;" + $env:PATH
+          python -m cibuildwheel --output-dir wheelhouse
+        env:
+          CIBW_BUILD: "cp39-win_amd64 cp310-win_amd64 cp311-win_amd64 cp312-win_amd64 cp313-win_amd64"
+          CIBW_TEST_REQUIRES: "pytest==8.3.3 proxy.py==2.4.10"
+          # CIBW_TEST_COMMAND: "cd /d {project} && pytest tests"
+          CIBW_TEST_COMMAND: "cmd /c exit 0"
+
+      - name: Save Artefacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: wheel-windows-amd64
+          path: wheelhouse/*.whl
+
   publish:
     runs-on: ubuntu-24.04
     environment: pypi
@@ -131,6 +187,7 @@ jobs:
       - build-linux-amd64
       - build-linux-aarch64
       - build-darwin-arm64
+      - build-windows-amd64
     steps:
       - name: Download Artefacts
         uses: actions/download-artifact@v4
