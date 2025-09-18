@@ -10,23 +10,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 To see unreleased changes, please see the [CHANGELOG on the main branch guide](https://github.com/gufolabs/gufo_http/blob/main/CHANGELOG.md).
 
-## [Unreleased]
+## 0.7.0 - 2025-09-18
 
 ### Added
 
 * MacOS ARM64 binary wheels.
+* Windows AMD64 binary wheels (experimental).
 
 ### Changed
 
 * Httpd auto-detects nginx's path when passed empty `path`.
 
-## 0.6.0
+## 0.6.0 - 2025-09-10
 
 ### Added
 
 * `gufo-http` command-line tool.
 
-## 0.5.1
+## 0.5.1 - 2025-09-08
 
 ### Security
 
