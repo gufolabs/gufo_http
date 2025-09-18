@@ -1,9 +1,18 @@
 # ---------------------------------------------------------------------
 # Gufo HTTP: _fast typing
 # ---------------------------------------------------------------------
-# Copyright (C) 2024, Gufo Labs
+# Copyright (C) 2024-25, Gufo Labs
 # See LICENSE.md for details
 # ---------------------------------------------------------------------
+"""
+Typing for binary module.
+
+Attributes:
+    DEFLATE: Deflate compression.
+    GZIP: GZip compression.
+    BROTLI: Brotli compression.
+    ZSTD: ZSTD compression.
+"""
 
 # Python modules
 from enum import Enum
@@ -34,10 +43,18 @@ class BasicAuth(AuthBase):
     def __init__(self: "BasicAuth", user: str, password: Optional[str]) -> None: ...
 
 class BearerAuth(AuthBase):
+    """
+    HTTP Bearer Authentication.
+
+    Args:
+        token: Bearer token.
+    """
     def __init__(self: "BearerAuth", token: str) -> None: ...
 
 # Request Method
 class RequestMethod(Enum):
+    """Request methods."""
+
     GET: int
     HEAD: int
     OPTIONS: int
@@ -57,6 +74,15 @@ BROTLI: int
 ZSTD: int
 
 class Headers(object):
+    """
+    Request headers.
+
+    Dict-like structure.
+
+    !!! note
+
+        Header values are processed as binary types.
+    """
     def __contains__(self: "Headers", k: str) -> bool: ...
     def __getitem__(self: "Headers", k: str) -> bytes: ...
     def get(self: "Headers", k: str, default: Optional[bytes]) -> Optional[bytes]: ...
@@ -65,14 +91,24 @@ class Headers(object):
     def items(self: "Headers") -> Iterable[Tuple[str, bytes]]: ...
 
 class Response(object):
+    """HTTP Response wrapper."""
     @property
-    def status(self: "Response") -> int: ...
+    def status(self: "Response") -> int:
+        """Response status."""
     @property
-    def headers(self: "Response") -> Headers: ...
+    def headers(self: "Response") -> Headers:
+        """Response headers."""
     @property
-    def content(self: "Response") -> bytes: ...
+    def content(self: "Response") -> bytes:
+        """Response binary content."""
 
 class Proxy(object):
+    """
+    Proxy settings.
+
+    Args:
+        url: Proxy url.
+    """
     def __init__(self: "Proxy", url: str) -> None: ...
 
 class AsyncClient(object):
