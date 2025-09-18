@@ -23,6 +23,7 @@ from types import TracebackType
 from typing import Optional, Type
 
 logger = logging.getLogger("gufo.httpd.httpd")
+IS_DARWIN = os.uname().sysname == "Darwin"
 
 
 class HttpdMode(Enum):
@@ -67,7 +68,7 @@ class Httpd(object):
         self._address = address
         self._port = port
         self._host = host
-        self._hostname = socket.gethostname()
+        self._hostname = self._get_hostname()
         self._start_timeout = start_timeout
         self._check_config = check_config
         self._mode = mode
@@ -477,3 +478,14 @@ http {{
         if not os.path.exists(path):
             path = shutil.which("nginx") or ""
         return path
+
+    @staticmethod
+    def _get_hostname() -> str:
+        """
+        Get hostname.
+
+        Return localhost on MacOS, as it
+        can resolve to multiple interfaces
+        and brokes the tests.
+        """
+        return "localhost" if IS_DARWIN else socket.gethostname()
