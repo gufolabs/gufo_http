@@ -55,7 +55,6 @@ jobs:
 
   rust-test:
     runs-on: ubuntu-24.04
-    needs: [build-windows-x86_64]
     env:
       RUST_ARCH: x86_64-unknown-linux-gnu
     steps:
