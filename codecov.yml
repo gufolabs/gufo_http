@@ -1,0 +1,6 @@
+ignore:
+  - benchmarks
+  - tests
+  - "**/*.pyi"
+  - "coverage.xml"
+  - "src/gufo/http/httpd.py"
