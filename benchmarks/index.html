@@ -1,0 +1,2114 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Gufo HTTP Documentation">
+      
+      
+        <meta name="author" content="Gufo Labs">
+      
+      
+        <link rel="canonical" href="https://docs.gufolabs.com/gufo_http/benchmarks/">
+      
+      
+        <link rel="prev" href="../reference/gufo/http/util/">
+      
+      
+        <link rel="next" href="../dev/">
+      
+      
+      <link rel="icon" href="../assets/logo.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.6.11">
+    
+    
+      
+        <title>Benchmarks - Gufo HTTP</title>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/stylesheets/main.4af4bdda.min.css">
+      
+        
+        <link rel="stylesheet" href="../assets/stylesheets/palette.06af60db.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../assets/_mkdocstrings.css">
+    
+    <script>__md_scope=new URL("..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+  
+
+
+  
+  
+
+<script id="__analytics">function __md_analytics(){function e(){dataLayer.push(arguments)}window.dataLayer=window.dataLayer||[],e("js",new Date),e("config","G-GW3X378HNJ"),document.addEventListener("DOMContentLoaded",(function(){document.forms.search&&document.forms.search.query.addEventListener("blur",(function(){this.value&&e("event","search",{search_term:this.value})}));document$.subscribe((function(){var t=document.forms.feedback;if(void 0!==t)for(var a of t.querySelectorAll("[type=submit]"))a.addEventListener("click",(function(a){a.preventDefault();var n=document.location.pathname,d=this.getAttribute("data-md-value");e("event","feedback",{page:n,data:d}),t.firstElementChild.disabled=!0;var r=t.querySelector(".md-feedback__note [data-md-value='"+d+"']");r&&(r.hidden=!1)})),t.hidden=!1})),location$.subscribe((function(t){e("config","G-GW3X378HNJ",{page_path:t.pathname})}))}));var t=document.createElement("script");t.async=!0,t.src="https://www.googletagmanager.com/gtag/js?id=G-GW3X378HNJ",document.getElementById("__analytics").insertAdjacentElement("afterEnd",t)}</script>
+  
+    <script>"undefined"!=typeof __md_analytics&&__md_analytics()</script>
+  
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="deep-purple" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#python-http-clients-benchmark" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow md-header--lifted" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href=".." title="Gufo HTTP" class="md-header__button md-logo" aria-label="Gufo HTTP" data-md-component="logo">
+      
+  <img src="../assets/logo.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Gufo HTTP
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Benchmarks
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="deep-purple" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="deep-purple" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/gufolabs/gufo_http/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    gufolabs/gufo_http
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+    
+      
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href=".." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../installation/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Installation
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../examples/" class="md-tabs__link">
+          
+  
+  
+  Examples
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../reference/gufo/http/" class="md-tabs__link">
+          
+  
+  
+  Reference
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+    
+  
+  
+    <li class="md-tabs__item md-tabs__item--active">
+      <a href="./" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Benchmarks
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../dev/" class="md-tabs__link">
+          
+  
+  
+  Developers' Guide
+
+        </a>
+      </li>
+    
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../faq/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  FAQ
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../CHANGELOG/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Changelog
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../LICENSE/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  License
+
+      </a>
+    </li>
+  
+
+      
+    </ul>
+  </div>
+</nav>
+    
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+                
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" hidden>
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href=".." title="Gufo HTTP" class="md-nav__button md-logo" aria-label="Gufo HTTP" data-md-component="logo">
+      
+  <img src="../assets/logo.png" alt="logo">
+
+    </a>
+    Gufo HTTP
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/gufolabs/gufo_http/" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 496 512"><!--! Font Awesome Free 6.7.2 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2024 Fonticons, Inc.--><path d="M165.9 397.4c0 2-2.3 3.6-5.2 3.6-3.3.3-5.6-1.3-5.6-3.6 0-2 2.3-3.6 5.2-3.6 3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9 2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9.3 2 2.9 3.3 5.9 2.6 2.9-.7 4.9-2.6 4.6-4.6-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2 12.8 2.3 17.3-5.6 17.3-12.1 0-6.2-.3-40.4-.3-61.4 0 0-70 15-84.7-29.8 0 0-11.4-29.1-27.8-36.6 0 0-22.9-15.7 1.6-15.4 0 0 24.9 2 38.6 25.8 21.9 38.6 58.6 27.5 72.9 20.9 2.3-16 8.8-27.1 16-33.7-55.9-6.2-112.3-14.3-112.3-110.5 0-27.5 7.6-41.3 23.6-58.9-2.6-6.5-11.1-33.3 2.6-67.9 20.9-6.5 69 27 69 27 20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27 13.7 34.7 5.2 61.4 2.6 67.9 16 17.7 25.8 31.5 25.8 58.9 0 96.5-58.9 104.2-114.8 110.5 9.2 7.9 17 22.9 17 46.4 0 33.7-.3 75.4-.3 83.6 0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252 496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2 1.6 1.6 3.9 2.3 5.2 1 1.3-1 1-3.3-.7-5.2-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9 1.6 1 3.6.7 4.3-.7.7-1.3-.3-2.9-2.3-3.9-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2 2.3 2.3 5.2 2.6 6.5 1 1.3-1.3.7-4.3-1.3-6.2-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9s4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2-1.4-2.3-4-3.3-5.6-2"/></svg>
+  </div>
+  <div class="md-source__repository">
+    gufolabs/gufo_http
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href=".." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Home
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../installation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Installation
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Examples
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            Examples
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Overview
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Sync Mode
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            Sync Mode
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/sync/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Overview
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/sync/get/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Get
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_3" id="__nav_3_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Async Mode
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_3">
+            <span class="md-nav__icon md-icon"></span>
+            Async Mode
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/async/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Overview
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../examples/async/get/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Get
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <label class="md-nav__link" for="__nav_4" id="__nav_4_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Reference
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            Reference
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4_1" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../reference/gufo/http/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    gufo.http
+    
+  </span>
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4_1" id="__nav_4_1_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_4_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4_1">
+            <span class="md-nav__icon md-icon"></span>
+            gufo.http
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/gufo/http/_fast/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    _fast
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/gufo/http/async_client/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    async_client
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/gufo/http/cli/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    cli
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/gufo/http/httpd/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    httpd
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/gufo/http/sync_client/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    sync_client
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../reference/gufo/http/util/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    util
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    Benchmarks
+    
+  </span>
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    Benchmarks
+    
+  </span>
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#abstract" class="md-nav__link">
+    <span class="md-ellipsis">
+      Abstract
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#preparing" class="md-nav__link">
+    <span class="md-ellipsis">
+      Preparing
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#http11-requests" class="md-nav__link">
+    <span class="md-ellipsis">
+      HTTP/1.1 Requests
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="HTTP/1.1 Requests">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#single-requests" class="md-nav__link">
+    <span class="md-ellipsis">
+      Single Requests
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#100-linear-requests" class="md-nav__link">
+    <span class="md-ellipsis">
+      100 Linear Requests
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#100-parallel-requests" class="md-nav__link">
+    <span class="md-ellipsis">
+      100 Parallel Requests
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#https-requests" class="md-nav__link">
+    <span class="md-ellipsis">
+      HTTPS Requests
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="HTTPS Requests">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#single-requests_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Single Requests
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#100-linear-requests_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      100 Linear Requests
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#100-parallel-requests_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      100 Parallel Requests
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#feedback" class="md-nav__link">
+    <span class="md-ellipsis">
+      Feedback
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_6" >
+        
+          
+          <label class="md-nav__link" for="__nav_6" id="__nav_6_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    Developers' Guide
+    
+  </span>
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_6_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_6">
+            <span class="md-nav__icon md-icon"></span>
+            Developers' Guide
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dev/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Overview
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dev/environment/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Developer's Environment
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dev/testing/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Building and Testing
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dev/common/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Common Tasks
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dev/codequality/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Code Quality
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dev/codebase/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Code Base
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dev/CONTRIBUTING/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Contributing Guide
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dev/CODE_OF_CONDUCT/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Code of Conduct
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../dev/standards/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Supported Standards
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../faq/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    FAQ
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../CHANGELOG/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    Changelog
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../LICENSE/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    License
+    
+  </span>
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+                
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#abstract" class="md-nav__link">
+    <span class="md-ellipsis">
+      Abstract
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#preparing" class="md-nav__link">
+    <span class="md-ellipsis">
+      Preparing
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#http11-requests" class="md-nav__link">
+    <span class="md-ellipsis">
+      HTTP/1.1 Requests
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="HTTP/1.1 Requests">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#single-requests" class="md-nav__link">
+    <span class="md-ellipsis">
+      Single Requests
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#100-linear-requests" class="md-nav__link">
+    <span class="md-ellipsis">
+      100 Linear Requests
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#100-parallel-requests" class="md-nav__link">
+    <span class="md-ellipsis">
+      100 Parallel Requests
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#https-requests" class="md-nav__link">
+    <span class="md-ellipsis">
+      HTTPS Requests
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="HTTPS Requests">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#single-requests_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      Single Requests
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#100-linear-requests_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      100 Linear Requests
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#100-parallel-requests_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      100 Parallel Requests
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#feedback" class="md-nav__link">
+    <span class="md-ellipsis">
+      Feedback
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+  
+
+
+
+  
+    <a href="https://github.com/gufolabs/gufo_http/edit/master/docs/benchmarks.md" title="Edit this page" class="md-content__button md-icon">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M10 20H6V4h7v5h5v3.1l2-2V8l-6-6H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h4zm10.2-7c.1 0 .3.1.4.2l1.3 1.3c.2.2.2.6 0 .8l-1 1-2.1-2.1 1-1c.1-.1.2-.2.4-.2m0 3.9L14.1 23H12v-2.1l6.1-6.1z"/></svg>
+    </a>
+  
+  
+
+
+<h1 id="python-http-clients-benchmark">Python HTTP Clients Benchmark<a class="headerlink" href="#python-http-clients-benchmark" title="Permanent link">&para;</a></h1>
+<div class="admonition warning">
+<p class="admonition-title">Disclaimer</p>
+<p>All following information is provided only for reference.
+These tests are performed by <a href="https://gufolabs.com/">Gufo Labs</a> to estimate the performance
+of <a href="https://docs.gufolabs.com/gufo_http/">Gufo HTTP</a> against major competitors, so they cannot be considered
+independent and unbiased.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Although performance is an absolute requirement for <a href="https://docs.gufolabs.com/">Gufo Stack</a>,
+other factors such as maturity, community, features, examples, and existing code base
+should also be considered.</p>
+</div>
+<h2 id="abstract">Abstract<a class="headerlink" href="#abstract" title="Permanent link">&para;</a></h2>
+<p>This benchmark evaluates several Python HTTP client libraries:</p>
+<ul>
+<li><a href="https://docs.gufolabs.com/gufo_http/">Gufo HTTP</a> (current version)</li>
+<li><a href="https://docs.aiohttp.org/en/stable/">aiohttp</a> (3.9.3)</li>
+<li><a href="https://aiosonic.readthedocs.io/en/latest/">aiosonic</a> (0.18.0)</li>
+<li><a href="https://www.python-httpx.org">httpx</a> (0.27)</li>
+<li><a href="https://requests.readthedocs.io/en/latest/">requests</a> (2.31.0)</li>
+<li><a href="https://niquests.readthedocs.io/en/stable/">niquests</a> (3.5.2)</li>
+<li><a href="http://pycurl.io/">PycURL</a> (7.45.3)</li>
+<li><a href="https://docs.python.org/3/library/urllib.request.html#module-urllib.request">urllib</a> from Python standard library</li>
+<li><a href="https://urllib3.readthedocs.io/en/stable/">urllib3</a> (2.2.1)</li>
+</ul>
+<p>The evaluation covers the following aspects:</p>
+<ul>
+<li>Performance in synchronous (blocking) mode, if supported.</li>
+<li>Performance in asynchronous (non-blocking) mode, if supported.</li>
+<li>Performance in plain-text (HTTP) and encrypted (HTTPS) modes.</li>
+<li>Ability to maintain pools of connections.</li>
+<li>The efficiency of the resolver.</li>
+<li>Ability to release GIL in multi-threaded applications.</li>
+</ul>
+<p>All benchmarks are performed against a local nginx installation
+using wrapper, provided by <code>gufo.http.httpd</code>.</p>
+<p>The benchmarking environment utilizes an AWS EC2 t2.xlarge (64-bit) instance running Debian 12. 
+Median values are used for benchmark ranking.</p>
+<h2 id="preparing">Preparing<a class="headerlink" href="#preparing" title="Permanent link">&para;</a></h2>
+<p>Start clear AWS EC2 t2.xlarge (64 bit) instance with Debian 12.</p>
+<p>Prepare node:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a>sudo apt-get update
+<a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a>sudo apt-get install --yes git python3.11-venv
+<a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a>python3 -m venv bench
+<a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a>cd bench
+<a id="__codelineno-0-5" name="__codelineno-0-5" href="#__codelineno-0-5"></a>. bin/activate
+</code></pre></div></p>
+<p>Clone repo:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>git clone https://github.com/gufolabs/gufo_http.git
+<a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>cd gufo_http
+</code></pre></div></p>
+<p>Install local nginx:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a>./tools/build/setup-nginx.sh
+</code></pre></div></p>
+<p>Install test dependencies:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a>pip3 install -e .[test] gufo-http
+</code></pre></div>
+<p>Install third-party packages to bench:</p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>./tools/build/setup-bench.sh
+</code></pre></div>
+<h2 id="http11-requests">HTTP/1.1 Requests<a class="headerlink" href="#http11-requests" title="Permanent link">&para;</a></h2>
+<h3 id="single-requests">Single Requests<a class="headerlink" href="#single-requests" title="Permanent link">&para;</a></h3>
+<p>Perform http requests to read 1kb text file. This test evaluates:</p>
+<ul>
+<li>The cost of client's initialization.</li>
+<li>The efficiency of the network code.</li>
+<li>The efficiency of the resolver.</li>
+<li>The efficiency HTTP/1.1 parser. </li>
+</ul>
+<p>Run tests:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>pytest benchmarks/test_single_x100_1k.py
+</code></pre></div></p>
+<p><strong>Results (lower is better)</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>================================================================= test session starts =================================================================
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>platform linux -- Python 3.11.2, pytest-7.4.3, pluggy-1.4.0
+<a id="__codelineno-6-3" name="__codelineno-6-3" href="#__codelineno-6-3"></a>benchmark: 4.0.0 (defaults: timer=time.perf_counter disable_gc=False min_rounds=5 min_time=0.000005 max_time=1.0 calibration_precision=10 warmup=False warmup_iterations=100000)
+<a id="__codelineno-6-4" name="__codelineno-6-4" href="#__codelineno-6-4"></a>rootdir: /home/admin/bench/gufo_http
+<a id="__codelineno-6-5" name="__codelineno-6-5" href="#__codelineno-6-5"></a>plugins: anyio-4.3.0, benchmark-4.0.0
+<a id="__codelineno-6-6" name="__codelineno-6-6" href="#__codelineno-6-6"></a>collected 11 items                                                                                                                                    
+<a id="__codelineno-6-7" name="__codelineno-6-7" href="#__codelineno-6-7"></a>
+<a id="__codelineno-6-8" name="__codelineno-6-8" href="#__codelineno-6-8"></a>benchmarks/test_single_x100_1k.py ...........                                                                                                   [100%]
+<a id="__codelineno-6-9" name="__codelineno-6-9" href="#__codelineno-6-9"></a>
+<a id="__codelineno-6-10" name="__codelineno-6-10" href="#__codelineno-6-10"></a>
+<a id="__codelineno-6-11" name="__codelineno-6-11" href="#__codelineno-6-11"></a>----------------------------------------------------------------------------------------------- benchmark: 11 tests -----------------------------------------------------------------------------------------------
+<a id="__codelineno-6-12" name="__codelineno-6-12" href="#__codelineno-6-12"></a>Name (time in us)                Min                    Max                   Mean                StdDev                 Median                   IQR            Outliers         OPS            Rounds  Iterations
+<a id="__codelineno-6-13" name="__codelineno-6-13" href="#__codelineno-6-13"></a>-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+<a id="__codelineno-6-14" name="__codelineno-6-14" href="#__codelineno-6-14"></a>test_urllib3_sync           315.5930 (1.0)       1,953.4650 (1.0)         610.2618 (1.0)        330.4382 (1.0)         439.0200 (1.0)        404.1450 (1.0)         70;11  1,638.6410 (1.0)         401           1
+<a id="__codelineno-6-15" name="__codelineno-6-15" href="#__codelineno-6-15"></a>test_pycurl_sync            352.5550 (1.12)      2,269.8040 (1.16)        806.7672 (1.32)       420.9771 (1.27)        643.1680 (1.47)       623.1905 (1.54)         20;1  1,239.5149 (0.76)         84           1
+<a id="__codelineno-6-16" name="__codelineno-6-16" href="#__codelineno-6-16"></a>test_urllib_sync            406.5380 (1.29)      2,557.0080 (1.31)        841.9888 (1.38)       372.7995 (1.13)        764.8350 (1.74)       507.5600 (1.26)       174;16  1,187.6643 (0.72)        679           1
+<a id="__codelineno-6-17" name="__codelineno-6-17" href="#__codelineno-6-17"></a>test_gufo_http_sync         645.2300 (2.04)      1,974.2670 (1.01)      1,024.7860 (1.68)       350.1131 (1.06)        887.5525 (2.02)       489.2600 (1.21)         11;1    975.8135 (0.60)         62           1
+<a id="__codelineno-6-18" name="__codelineno-6-18" href="#__codelineno-6-18"></a>test_gufo_http_async        788.4390 (2.50)      5,664.0910 (2.90)      1,506.6534 (2.47)       614.0673 (1.86)      1,349.7370 (3.07)       715.2520 (1.77)        94;16    663.7227 (0.41)        427           1
+<a id="__codelineno-6-19" name="__codelineno-6-19" href="#__codelineno-6-19"></a>test_niquests_sync        1,041.0590 (3.30)      3,306.7660 (1.69)      1,784.9572 (2.92)       524.2528 (1.59)      1,757.2750 (4.00)       792.8572 (1.96)        105;0    560.2375 (0.34)        295           1
+<a id="__codelineno-6-20" name="__codelineno-6-20" href="#__codelineno-6-20"></a>test_requests_sync        1,142.8490 (3.62)      4,356.9150 (2.23)      1,980.0989 (3.24)       540.1271 (1.63)      1,878.3090 (4.28)       688.4175 (1.70)         38;2    505.0253 (0.31)        128           1
+<a id="__codelineno-6-21" name="__codelineno-6-21" href="#__codelineno-6-21"></a>test_aiosonic_async       1,314.5540 (4.17)     26,605.4950 (13.62)     2,439.8901 (4.00)     1,353.5612 (4.10)      2,288.9965 (5.21)       870.0770 (2.15)         15;8    409.8545 (0.25)        414           1
+<a id="__codelineno-6-22" name="__codelineno-6-22" href="#__codelineno-6-22"></a>test_aiohttp_async        1,522.4400 (4.82)      4,332.3290 (2.22)      2,410.5835 (3.95)       546.5448 (1.65)      2,362.1815 (5.38)       644.2570 (1.59)        64;11    414.8373 (0.25)        226           1
+<a id="__codelineno-6-23" name="__codelineno-6-23" href="#__codelineno-6-23"></a>test_httpx_sync          29,020.7400 (91.96)    44,995.3310 (23.03)    31,439.1071 (51.52)    3,381.3880 (10.23)    30,473.2290 (69.41)    1,448.3905 (3.58)          2;2     31.8075 (0.02)         28           1
+<a id="__codelineno-6-24" name="__codelineno-6-24" href="#__codelineno-6-24"></a>test_httpx_async         31,839.8170 (100.89)   40,042.2010 (20.50)    34,166.0839 (55.99)    2,136.0948 (6.46)     33,778.5725 (76.94)    2,489.8810 (6.16)          4;1     29.2688 (0.02)         18           1
+<a id="__codelineno-6-25" name="__codelineno-6-25" href="#__codelineno-6-25"></a>-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+<a id="__codelineno-6-26" name="__codelineno-6-26" href="#__codelineno-6-26"></a>
+<a id="__codelineno-6-27" name="__codelineno-6-27" href="#__codelineno-6-27"></a>Legend:
+<a id="__codelineno-6-28" name="__codelineno-6-28" href="#__codelineno-6-28"></a>  Outliers: 1 Standard Deviation from Mean; 1.5 IQR (InterQuartile Range) from 1st Quartile and 3rd Quartile.
+<a id="__codelineno-6-29" name="__codelineno-6-29" href="#__codelineno-6-29"></a>  OPS: Operations Per Second, computed as 1 / Mean
+<a id="__codelineno-6-30" name="__codelineno-6-30" href="#__codelineno-6-30"></a>================================================================= 11 passed in 9.41s ==================================================================
+</code></pre></div></p>
+<p><img alt="Median chart" src="../single_x100_1k.png" />
+<em>Lower is better</em></p>
+<h3 id="100-linear-requests">100 Linear Requests<a class="headerlink" href="#100-linear-requests" title="Permanent link">&para;</a></h3>
+<p>Perform set of 100 linear http requests to read 1kb text file using single client session
+whenever possible. This test evaluates:</p>
+<ul>
+<li>The efficiency of the network code.</li>
+<li>The efficency of the HTTP/1.1 parser.</li>
+<li>An ability to maintain connection pools.</li>
+</ul>
+<p>Run tests:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>pytest benchmarks/test_linear_x100_1k.py
+</code></pre></div></p>
+<p><strong>Results (lower is better)</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>================================================================= test session starts =================================================================
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>platform linux -- Python 3.11.2, pytest-7.4.3, pluggy-1.4.0
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>benchmark: 4.0.0 (defaults: timer=time.perf_counter disable_gc=False min_rounds=5 min_time=0.000005 max_time=1.0 calibration_precision=10 warmup=False warmup_iterations=100000)
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a>rootdir: /home/admin/bench/gufo_http
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a>plugins: anyio-4.3.0, benchmark-4.0.0
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>collected 11 items                                                                                                                                    
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a>benchmarks/test_linear_x100_1k.py ...........                                                                                                   [100%]
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>----------------------------------------------------------------------------------- benchmark: 11 tests ------------------------------------------------------------------------------------
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a>Name (time in ms)             Min                 Max                Mean            StdDev              Median               IQR            Outliers      OPS            Rounds  Iterations
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a>--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a>test_pycurl_sync          12.2676 (1.0)       25.4155 (1.0)       17.3400 (1.0)      2.9618 (1.18)      16.7385 (1.0)      3.9695 (1.07)         16;1  57.6702 (1.0)          57           1
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>test_gufo_http_sync       16.3684 (1.33)      37.9210 (1.49)      20.7391 (1.20)     3.4916 (1.39)      20.3685 (1.22)     4.2991 (1.16)         12;1  48.2180 (0.84)         58           1
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a>test_aiohttp_async        33.9824 (2.77)      48.9004 (1.92)      40.0792 (2.31)     3.5440 (1.41)      40.1342 (2.40)     4.7475 (1.28)         10;0  24.9506 (0.43)         27           1
+<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a>test_gufo_http_async      34.3208 (2.80)      55.8114 (2.20)      39.9312 (2.30)     5.4085 (2.16)      38.5485 (2.30)     6.2433 (1.69)          3;2  25.0431 (0.43)         25           1
+<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a>test_aiosonic_async       37.0986 (3.02)      50.8252 (2.00)      42.6358 (2.46)     3.8782 (1.55)      42.0837 (2.51)     6.5579 (1.77)          7;0  23.4545 (0.41)         24           1
+<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a>test_urllib3_sync         46.4213 (3.78)      63.7727 (2.51)      53.7701 (3.10)     4.4014 (1.75)      53.1810 (3.18)     4.7094 (1.27)          6;1  18.5977 (0.32)         18           1
+<a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a>test_urllib_sync          76.5546 (6.24)      88.3289 (3.48)      82.3095 (4.75)     3.0507 (1.22)      82.4179 (4.92)     4.1461 (1.12)          3;0  12.1493 (0.21)         13           1
+<a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a>test_niquests_sync        83.6885 (6.82)     118.0402 (4.64)      93.3783 (5.39)     9.3339 (3.72)      91.6432 (5.47)     6.9887 (1.89)          2;1  10.7091 (0.19)         11           1
+<a id="__codelineno-8-22" name="__codelineno-8-22" href="#__codelineno-8-22"></a>test_httpx_sync           91.5660 (7.46)     103.7892 (4.08)      99.5922 (5.74)     3.6278 (1.45)      99.7707 (5.96)     4.5265 (1.22)          2;1  10.0409 (0.17)         10           1
+<a id="__codelineno-8-23" name="__codelineno-8-23" href="#__codelineno-8-23"></a>test_httpx_async         135.8147 (11.07)    142.9130 (5.62)     139.1866 (8.03)     2.5082 (1.0)      138.5708 (8.28)     3.7021 (1.0)           2;0   7.1846 (0.12)          7           1
+<a id="__codelineno-8-24" name="__codelineno-8-24" href="#__codelineno-8-24"></a>test_requests_sync       180.6693 (14.73)    193.1162 (7.60)     188.7409 (10.88)    4.9108 (1.96)     190.3143 (11.37)    7.2885 (1.97)          1;0   5.2983 (0.09)          6           1
+<a id="__codelineno-8-25" name="__codelineno-8-25" href="#__codelineno-8-25"></a>--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+<a id="__codelineno-8-26" name="__codelineno-8-26" href="#__codelineno-8-26"></a>
+<a id="__codelineno-8-27" name="__codelineno-8-27" href="#__codelineno-8-27"></a>Legend:
+<a id="__codelineno-8-28" name="__codelineno-8-28" href="#__codelineno-8-28"></a>  Outliers: 1 Standard Deviation from Mean; 1.5 IQR (InterQuartile Range) from 1st Quartile and 3rd Quartile.
+<a id="__codelineno-8-29" name="__codelineno-8-29" href="#__codelineno-8-29"></a>  OPS: Operations Per Second, computed as 1 / Mean
+<a id="__codelineno-8-30" name="__codelineno-8-30" href="#__codelineno-8-30"></a>================================================================= 11 passed in 15.62s =================================================================
+</code></pre></div></p>
+<p><img alt="Median chart" src="../linear_x100_1k.png" />
+<em>Lower is better</em></p>
+<h3 id="100-parallel-requests">100 Parallel Requests<a class="headerlink" href="#100-parallel-requests" title="Permanent link">&para;</a></h3>
+<p>Perform 100 HTTP/1.1 requests to read 1kb text file with concurrency of 4 maintaininng
+single client session per thread/coroutine.</p>
+<ul>
+<li>The efficiency of the network code.</li>
+<li>The efficency of the HTTP/1.1 parser.</li>
+<li>An ability to maintain connection pools.</li>
+<li>Granularity of the internal locks.</li>
+<li>Ability to release GIL when runnning native code.</li>
+</ul>
+<p>Run tests:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a>pytest benchmarks/test_p4_x100_1k.py
+</code></pre></div></p>
+<p><strong>Results (lower is better)</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>================================================================= test session starts =================================================================
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>platform linux -- Python 3.11.2, pytest-7.4.3, pluggy-1.4.0
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>benchmark: 4.0.0 (defaults: timer=time.perf_counter disable_gc=False min_rounds=5 min_time=0.000005 max_time=1.0 calibration_precision=10 warmup=False warmup_iterations=100000)
+<a id="__codelineno-10-4" name="__codelineno-10-4" href="#__codelineno-10-4"></a>rootdir: /home/admin/bench/gufo_http
+<a id="__codelineno-10-5" name="__codelineno-10-5" href="#__codelineno-10-5"></a>plugins: anyio-4.3.0, benchmark-4.0.0
+<a id="__codelineno-10-6" name="__codelineno-10-6" href="#__codelineno-10-6"></a>collected 11 items                                                                                                                                    
+<a id="__codelineno-10-7" name="__codelineno-10-7" href="#__codelineno-10-7"></a>
+<a id="__codelineno-10-8" name="__codelineno-10-8" href="#__codelineno-10-8"></a>benchmarks/test_p4_x100_1k.py ...........                                                                                                       [100%]
+<a id="__codelineno-10-9" name="__codelineno-10-9" href="#__codelineno-10-9"></a>
+<a id="__codelineno-10-10" name="__codelineno-10-10" href="#__codelineno-10-10"></a>
+<a id="__codelineno-10-11" name="__codelineno-10-11" href="#__codelineno-10-11"></a>------------------------------------------------------------------------------------- benchmark: 11 tests -------------------------------------------------------------------------------------
+<a id="__codelineno-10-12" name="__codelineno-10-12" href="#__codelineno-10-12"></a>Name (time in ms)             Min                 Max                Mean             StdDev              Median                IQR            Outliers       OPS            Rounds  Iterations
+<a id="__codelineno-10-13" name="__codelineno-10-13" href="#__codelineno-10-13"></a>-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+<a id="__codelineno-10-14" name="__codelineno-10-14" href="#__codelineno-10-14"></a>test_gufo_http_sync        7.0383 (1.0)       13.9629 (1.0)        9.4300 (1.0)       1.4689 (1.08)       9.1168 (1.0)       1.6141 (1.0)          24;5  106.0445 (1.0)          95           1
+<a id="__codelineno-10-15" name="__codelineno-10-15" href="#__codelineno-10-15"></a>test_pycurl_sync           7.4035 (1.05)      14.6372 (1.05)      10.9820 (1.16)      1.3631 (1.0)       10.8603 (1.19)      1.7449 (1.08)         24;2   91.0579 (0.86)         97           1
+<a id="__codelineno-10-16" name="__codelineno-10-16" href="#__codelineno-10-16"></a>test_gufo_http_async      21.8823 (3.11)      42.1156 (3.02)      28.1519 (2.99)      4.4911 (3.29)      27.5413 (3.02)      3.2355 (2.00)          8;4   35.5216 (0.33)         37           1
+<a id="__codelineno-10-17" name="__codelineno-10-17" href="#__codelineno-10-17"></a>test_aiosonic_async       25.7488 (3.66)      32.4308 (2.32)      28.4868 (3.02)      1.5410 (1.13)      28.2754 (3.10)      2.2880 (1.42)          8;0   35.1039 (0.33)         34           1
+<a id="__codelineno-10-18" name="__codelineno-10-18" href="#__codelineno-10-18"></a>test_aiohttp_async        27.2243 (3.87)      34.4230 (2.47)      30.4883 (3.23)      1.5876 (1.16)      30.3699 (3.33)      2.1031 (1.30)         10;0   32.7995 (0.31)         32           1
+<a id="__codelineno-10-19" name="__codelineno-10-19" href="#__codelineno-10-19"></a>test_urllib_sync          44.1667 (6.28)      57.7049 (4.13)      49.5278 (5.25)      3.9345 (2.89)      48.6588 (5.34)      6.7631 (4.19)          6;0   20.1907 (0.19)         19           1
+<a id="__codelineno-10-20" name="__codelineno-10-20" href="#__codelineno-10-20"></a>test_urllib3_sync         59.2323 (8.42)      72.4158 (5.19)      64.3498 (6.82)      3.8982 (2.86)      63.7425 (6.99)      4.1363 (2.56)          5;2   15.5401 (0.15)         16           1
+<a id="__codelineno-10-21" name="__codelineno-10-21" href="#__codelineno-10-21"></a>test_niquests_sync       100.4601 (14.27)    139.2160 (9.97)     110.5149 (11.72)    10.8800 (7.98)     106.8657 (11.72)     5.8011 (3.59)          1;1    9.0486 (0.09)         10           1
+<a id="__codelineno-10-22" name="__codelineno-10-22" href="#__codelineno-10-22"></a>test_requests_sync       161.4683 (22.94)    174.5389 (12.50)    169.3991 (17.96)     4.6770 (3.43)     170.5587 (18.71)     5.6301 (3.49)          2;0    5.9032 (0.06)          6           1
+<a id="__codelineno-10-23" name="__codelineno-10-23" href="#__codelineno-10-23"></a>test_httpx_sync          161.8872 (23.00)    192.4557 (13.78)    175.4736 (18.61)    11.1773 (8.20)     172.9252 (18.97)    16.5080 (10.23)         2;0    5.6989 (0.05)          6           1
+<a id="__codelineno-10-24" name="__codelineno-10-24" href="#__codelineno-10-24"></a>test_httpx_async         211.6434 (30.07)    226.0049 (16.19)    217.8645 (23.10)     6.5345 (4.79)     216.3168 (23.73)    12.0336 (7.46)          1;0    4.5900 (0.04)          5           1
+<a id="__codelineno-10-25" name="__codelineno-10-25" href="#__codelineno-10-25"></a>-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+<a id="__codelineno-10-26" name="__codelineno-10-26" href="#__codelineno-10-26"></a>
+<a id="__codelineno-10-27" name="__codelineno-10-27" href="#__codelineno-10-27"></a>Legend:
+<a id="__codelineno-10-28" name="__codelineno-10-28" href="#__codelineno-10-28"></a>  Outliers: 1 Standard Deviation from Mean; 1.5 IQR (InterQuartile Range) from 1st Quartile and 3rd Quartile.
+<a id="__codelineno-10-29" name="__codelineno-10-29" href="#__codelineno-10-29"></a>  OPS: Operations Per Second, computed as 1 / Mean
+<a id="__codelineno-10-30" name="__codelineno-10-30" href="#__codelineno-10-30"></a>================================================================= 11 passed in 15.82s =================================================================
+</code></pre></div></p>
+<p><img alt="Median chart" src="../p4_x100_1k.png" />
+<em>Lower is better</em></p>
+<h2 id="https-requests">HTTPS Requests<a class="headerlink" href="#https-requests" title="Permanent link">&para;</a></h2>
+<h3 id="single-requests_1">Single Requests<a class="headerlink" href="#single-requests_1" title="Permanent link">&para;</a></h3>
+<p>Perform HTTP/2 requests to read 1kb text file. This test evaluates:</p>
+<ul>
+<li>The cost of client's initialization.</li>
+<li>The efficiency of the network code.</li>
+<li>The efficiency HTTP/1.1 or HTTP/2 parser. </li>
+<li>The efficency of the crypto.</li>
+<li>The efficiency of the resolver.</li>
+</ul>
+<p>Run tests:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-11-1" name="__codelineno-11-1" href="#__codelineno-11-1"></a>pytest benchmarks/test_https_single_x100_1k.py
+</code></pre></div></p>
+<p><strong>Results (lower is better)</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-12-1" name="__codelineno-12-1" href="#__codelineno-12-1"></a>================================================================= test session starts =================================================================
+<a id="__codelineno-12-2" name="__codelineno-12-2" href="#__codelineno-12-2"></a>platform linux -- Python 3.11.2, pytest-7.4.3, pluggy-1.4.0
+<a id="__codelineno-12-3" name="__codelineno-12-3" href="#__codelineno-12-3"></a>benchmark: 4.0.0 (defaults: timer=time.perf_counter disable_gc=False min_rounds=5 min_time=0.000005 max_time=1.0 calibration_precision=10 warmup=False warmup_iterations=100000)
+<a id="__codelineno-12-4" name="__codelineno-12-4" href="#__codelineno-12-4"></a>rootdir: /home/admin/bench/gufo_http
+<a id="__codelineno-12-5" name="__codelineno-12-5" href="#__codelineno-12-5"></a>plugins: anyio-4.3.0, benchmark-4.0.0
+<a id="__codelineno-12-6" name="__codelineno-12-6" href="#__codelineno-12-6"></a>collected 11 items                                                                                                                                    
+<a id="__codelineno-12-7" name="__codelineno-12-7" href="#__codelineno-12-7"></a>
+<a id="__codelineno-12-8" name="__codelineno-12-8" href="#__codelineno-12-8"></a>benchmarks/test_https_single_x100_1k.py ...........                                                                                             [100%]
+<a id="__codelineno-12-9" name="__codelineno-12-9" href="#__codelineno-12-9"></a>
+<a id="__codelineno-12-10" name="__codelineno-12-10" href="#__codelineno-12-10"></a>
+<a id="__codelineno-12-11" name="__codelineno-12-11" href="#__codelineno-12-11"></a>--------------------------------------------------------------------------------- benchmark: 11 tests ----------------------------------------------------------------------------------
+<a id="__codelineno-12-12" name="__codelineno-12-12" href="#__codelineno-12-12"></a>Name (time in ms)            Min                Max               Mean            StdDev             Median               IQR            Outliers      OPS            Rounds  Iterations
+<a id="__codelineno-12-13" name="__codelineno-12-13" href="#__codelineno-12-13"></a>----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+<a id="__codelineno-12-14" name="__codelineno-12-14" href="#__codelineno-12-14"></a>test_gufo_http_async      8.7915 (1.0)      12.2763 (1.0)      10.6205 (1.01)     0.7521 (1.17)     10.4619 (1.00)     1.0622 (1.30)         26;0  94.1573 (0.99)         87           1
+<a id="__codelineno-12-15" name="__codelineno-12-15" href="#__codelineno-12-15"></a>test_gufo_http_sync       8.8296 (1.00)     15.8669 (1.29)     10.6821 (1.02)     1.2183 (1.89)     10.4338 (1.0)      1.1554 (1.41)         13;3  93.6144 (0.98)         71           1
+<a id="__codelineno-12-16" name="__codelineno-12-16" href="#__codelineno-12-16"></a>test_pycurl_sync          9.2207 (1.05)     12.4415 (1.01)     10.4905 (1.0)      0.6444 (1.0)      10.4416 (1.00)     0.8200 (1.0)          16;2  95.3244 (1.0)          62           1
+<a id="__codelineno-12-17" name="__codelineno-12-17" href="#__codelineno-12-17"></a>test_urllib_sync          9.6548 (1.10)     20.3480 (1.66)     11.7571 (1.12)     1.2565 (1.95)     11.4713 (1.10)     0.8705 (1.06)          5;4  85.0547 (0.89)         86           1
+<a id="__codelineno-12-18" name="__codelineno-12-18" href="#__codelineno-12-18"></a>test_httpx_sync          10.5788 (1.20)     14.6097 (1.19)     12.2516 (1.17)     0.8117 (1.26)     12.2890 (1.18)     0.9669 (1.18)         25;1  81.6223 (0.86)         71           1
+<a id="__codelineno-12-19" name="__codelineno-12-19" href="#__codelineno-12-19"></a>test_aiohttp_async       12.3006 (1.40)     17.2634 (1.41)     13.5143 (1.29)     1.0618 (1.65)     13.4668 (1.29)     0.8817 (1.08)          2;1  73.9956 (0.78)         18           1
+<a id="__codelineno-12-20" name="__codelineno-12-20" href="#__codelineno-12-20"></a>test_httpx_async         13.1090 (1.49)     16.3325 (1.33)     14.7676 (1.41)     0.7922 (1.23)     14.7109 (1.41)     1.1775 (1.44)         16;0  67.7158 (0.71)         43           1
+<a id="__codelineno-12-21" name="__codelineno-12-21" href="#__codelineno-12-21"></a>test_requests_sync       38.4122 (4.37)     44.0851 (3.59)     41.0690 (3.91)     1.0758 (1.67)     40.9266 (3.92)     0.9473 (1.16)          3;2  24.3493 (0.26)         20           1
+<a id="__codelineno-12-22" name="__codelineno-12-22" href="#__codelineno-12-22"></a>test_niquests_sync       38.5521 (4.39)     42.7355 (3.48)     40.8687 (3.90)     1.0084 (1.56)     40.7714 (3.91)     1.1362 (1.39)          9;1  24.4686 (0.26)         25           1
+<a id="__codelineno-12-23" name="__codelineno-12-23" href="#__codelineno-12-23"></a>test_urllib3_sync        38.7738 (4.41)     44.2748 (3.61)     40.9581 (3.90)     1.4479 (2.25)     40.8991 (3.92)     2.1439 (2.61)          8;0  24.4152 (0.26)         26           1
+<a id="__codelineno-12-24" name="__codelineno-12-24" href="#__codelineno-12-24"></a>test_aiosonic_async      38.9962 (4.44)     45.1008 (3.67)     41.0321 (3.91)     1.5977 (2.48)     40.8883 (3.92)     1.9366 (2.36)          9;1  24.3712 (0.26)         24           1
+<a id="__codelineno-12-25" name="__codelineno-12-25" href="#__codelineno-12-25"></a>----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+<a id="__codelineno-12-26" name="__codelineno-12-26" href="#__codelineno-12-26"></a>
+<a id="__codelineno-12-27" name="__codelineno-12-27" href="#__codelineno-12-27"></a>Legend:
+<a id="__codelineno-12-28" name="__codelineno-12-28" href="#__codelineno-12-28"></a>  Outliers: 1 Standard Deviation from Mean; 1.5 IQR (InterQuartile Range) from 1st Quartile and 3rd Quartile.
+<a id="__codelineno-12-29" name="__codelineno-12-29" href="#__codelineno-12-29"></a>  OPS: Operations Per Second, computed as 1 / Mean
+<a id="__codelineno-12-30" name="__codelineno-12-30" href="#__codelineno-12-30"></a>========================================================== 11 passed, 45 warnings in 15.69s ===========================================================
+</code></pre></div></p>
+<p><img alt="Median chart" src="../https_single_x100_1k.png" />
+<em>Lower is better</em></p>
+<h3 id="100-linear-requests_1">100 Linear Requests<a class="headerlink" href="#100-linear-requests_1" title="Permanent link">&para;</a></h3>
+<p>Perform set of 100 linear HTTPS requests to read 1kb text file using single client session
+whenever possible. This test evaluates:</p>
+<ul>
+<li>The efficiency of the network code.</li>
+<li>The efficency of the HTTP/1.1 parser.</li>
+<li>An ability to maintain connection pools.</li>
+<li>The efficency of the crypto.</li>
+</ul>
+<p>Run tests:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-13-1" name="__codelineno-13-1" href="#__codelineno-13-1"></a>pytest benchmarks/test_https_linear_x100_1k.py
+</code></pre></div></p>
+<p><strong>Results (lower is better)</strong></p>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-14-1" name="__codelineno-14-1" href="#__codelineno-14-1"></a>================================================================= test session starts =================================================================
+<a id="__codelineno-14-2" name="__codelineno-14-2" href="#__codelineno-14-2"></a>platform linux -- Python 3.11.2, pytest-7.4.3, pluggy-1.4.0
+<a id="__codelineno-14-3" name="__codelineno-14-3" href="#__codelineno-14-3"></a>benchmark: 4.0.0 (defaults: timer=time.perf_counter disable_gc=False min_rounds=5 min_time=0.000005 max_time=1.0 calibration_precision=10 warmup=False warmup_iterations=100000)
+<a id="__codelineno-14-4" name="__codelineno-14-4" href="#__codelineno-14-4"></a>rootdir: /home/admin/bench/gufo_http
+<a id="__codelineno-14-5" name="__codelineno-14-5" href="#__codelineno-14-5"></a>plugins: anyio-4.3.0, benchmark-4.0.0
+<a id="__codelineno-14-6" name="__codelineno-14-6" href="#__codelineno-14-6"></a>collected 11 items                                                                                                                                    
+<a id="__codelineno-14-7" name="__codelineno-14-7" href="#__codelineno-14-7"></a>
+<a id="__codelineno-14-8" name="__codelineno-14-8" href="#__codelineno-14-8"></a>benchmarks/test_https_linear_x100_1k.py ...........                                                                                             [100%]
+<a id="__codelineno-14-9" name="__codelineno-14-9" href="#__codelineno-14-9"></a>
+<a id="__codelineno-14-10" name="__codelineno-14-10" href="#__codelineno-14-10"></a>
+<a id="__codelineno-14-11" name="__codelineno-14-11" href="#__codelineno-14-11"></a>---------------------------------------------------------------------------------------- benchmark: 11 tests -----------------------------------------------------------------------------------------
+<a id="__codelineno-14-12" name="__codelineno-14-12" href="#__codelineno-14-12"></a>Name (time in ms)               Min                   Max                  Mean             StdDev                Median                IQR            Outliers      OPS            Rounds  Iterations
+<a id="__codelineno-14-13" name="__codelineno-14-13" href="#__codelineno-14-13"></a>------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+<a id="__codelineno-14-14" name="__codelineno-14-14" href="#__codelineno-14-14"></a>test_pycurl_sync            23.7046 (1.0)         34.5084 (1.0)         28.0373 (1.0)       2.7286 (1.05)        27.5175 (1.0)       3.1725 (1.51)         13;1  35.6668 (1.0)          36           1
+<a id="__codelineno-14-15" name="__codelineno-14-15" href="#__codelineno-14-15"></a>test_gufo_http_sync         29.9783 (1.26)        43.9089 (1.27)        34.6652 (1.24)      3.4124 (1.31)        34.1431 (1.24)      3.3721 (1.60)          6;2  28.8473 (0.81)         27           1
+<a id="__codelineno-14-16" name="__codelineno-14-16" href="#__codelineno-14-16"></a>test_gufo_http_async        46.8830 (1.98)        60.8049 (1.76)        52.9559 (1.89)      3.4813 (1.34)        53.4698 (1.94)      3.3365 (1.59)          6;1  18.8836 (0.53)         20           1
+<a id="__codelineno-14-17" name="__codelineno-14-17" href="#__codelineno-14-17"></a>test_aiohttp_async          54.6583 (2.31)        67.3119 (1.95)        59.1695 (2.11)      3.4653 (1.33)        58.1128 (2.11)      3.0986 (1.47)          3;1  16.9006 (0.47)         12           1
+<a id="__codelineno-14-18" name="__codelineno-14-18" href="#__codelineno-14-18"></a>test_httpx_sync             81.5782 (3.44)        92.6393 (2.68)        86.0377 (3.07)      2.6015 (1.0)         85.8659 (3.12)      2.1049 (1.0)           2;2  11.6228 (0.33)         12           1
+<a id="__codelineno-14-19" name="__codelineno-14-19" href="#__codelineno-14-19"></a>test_aiosonic_async         83.6425 (3.53)        92.7221 (2.69)        88.8669 (3.17)      3.0862 (1.19)        88.5831 (3.22)      4.7266 (2.25)          4;0  11.2528 (0.32)         11           1
+<a id="__codelineno-14-20" name="__codelineno-14-20" href="#__codelineno-14-20"></a>test_urllib3_sync           93.8056 (3.96)       108.2151 (3.14)       103.6100 (3.70)      4.4636 (1.72)       104.2995 (3.79)      5.2626 (2.50)          3;1   9.6516 (0.27)         10           1
+<a id="__codelineno-14-21" name="__codelineno-14-21" href="#__codelineno-14-21"></a>test_httpx_async           121.2678 (5.12)       129.0288 (3.74)       125.5163 (4.48)      2.7471 (1.06)       125.2434 (4.55)      4.4465 (2.11)          3;0   7.9671 (0.22)          8           1
+<a id="__codelineno-14-22" name="__codelineno-14-22" href="#__codelineno-14-22"></a>test_niquests_sync         139.6578 (5.89)       149.3103 (4.33)       145.1738 (5.18)      3.3405 (1.28)       145.8421 (5.30)      3.7032 (1.76)          2;0   6.8883 (0.19)          6           1
+<a id="__codelineno-14-23" name="__codelineno-14-23" href="#__codelineno-14-23"></a>test_urllib_sync         1,128.9319 (47.63)    1,143.7361 (33.14)    1,138.7279 (40.61)     5.9014 (2.27)     1,140.5120 (41.45)     7.1488 (3.40)          1;0   0.8782 (0.02)          5           1
+<a id="__codelineno-14-24" name="__codelineno-14-24" href="#__codelineno-14-24"></a>test_requests_sync       4,121.8836 (173.89)   4,151.7480 (120.31)   4,131.9819 (147.37)   11.9202 (4.58)     4,129.1534 (150.06)   14.5257 (6.90)          1;0   0.2420 (0.01)          5           1
+<a id="__codelineno-14-25" name="__codelineno-14-25" href="#__codelineno-14-25"></a>------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+<a id="__codelineno-14-26" name="__codelineno-14-26" href="#__codelineno-14-26"></a>
+<a id="__codelineno-14-27" name="__codelineno-14-27" href="#__codelineno-14-27"></a>Legend:
+<a id="__codelineno-14-28" name="__codelineno-14-28" href="#__codelineno-14-28"></a>  Outliers: 1 Standard Deviation from Mean; 1.5 IQR (InterQuartile Range) from 1st Quartile and 3rd Quartile.
+<a id="__codelineno-14-29" name="__codelineno-14-29" href="#__codelineno-14-29"></a>  OPS: Operations Per Second, computed as 1 / Mean
+<a id="__codelineno-14-30" name="__codelineno-14-30" href="#__codelineno-14-30"></a>==================================================== 11 passed, 1215 warnings in 62.84s (0:01:02) =====================================================
+</code></pre></div>
+<p><img alt="Median chart" src="../https_linear_x100_1k.png" />
+<em>Lower is better</em></p>
+<h3 id="100-parallel-requests_1">100 Parallel Requests<a class="headerlink" href="#100-parallel-requests_1" title="Permanent link">&para;</a></h3>
+<p>Perform 100 HTTPS requests to read 1kb text file with concurrency of 4 maintaininng
+single client session per thread/coroutine.</p>
+<ul>
+<li>The efficiency of the network code.</li>
+<li>The efficency of the HTTP/1.1 parser.</li>
+<li>An ability to maintain connection pools.</li>
+<li>Granularity of the internal locks.</li>
+<li>Ability to release GIL when runnning native code.</li>
+</ul>
+<p>Run tests:
+<div class="highlight"><pre><span></span><code><a id="__codelineno-15-1" name="__codelineno-15-1" href="#__codelineno-15-1"></a>pytest benchmarks/test_https_p4_x100_1k.py
+</code></pre></div></p>
+<p><strong>Results (lower is better)</strong>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-16-1" name="__codelineno-16-1" href="#__codelineno-16-1"></a>================================================================= test session starts =================================================================
+<a id="__codelineno-16-2" name="__codelineno-16-2" href="#__codelineno-16-2"></a>platform linux -- Python 3.11.2, pytest-7.4.3, pluggy-1.4.0
+<a id="__codelineno-16-3" name="__codelineno-16-3" href="#__codelineno-16-3"></a>benchmark: 4.0.0 (defaults: timer=time.perf_counter disable_gc=False min_rounds=5 min_time=0.000005 max_time=1.0 calibration_precision=10 warmup=False warmup_iterations=100000)
+<a id="__codelineno-16-4" name="__codelineno-16-4" href="#__codelineno-16-4"></a>rootdir: /home/admin/bench/gufo_http
+<a id="__codelineno-16-5" name="__codelineno-16-5" href="#__codelineno-16-5"></a>plugins: anyio-4.3.0, benchmark-4.0.0
+<a id="__codelineno-16-6" name="__codelineno-16-6" href="#__codelineno-16-6"></a>collected 11 items                                                                                                                                    
+<a id="__codelineno-16-7" name="__codelineno-16-7" href="#__codelineno-16-7"></a>
+<a id="__codelineno-16-8" name="__codelineno-16-8" href="#__codelineno-16-8"></a>benchmarks/test_https_p4_x100_1k.py ...........                                                                                                 [100%]
+<a id="__codelineno-16-9" name="__codelineno-16-9" href="#__codelineno-16-9"></a>
+<a id="__codelineno-16-10" name="__codelineno-16-10" href="#__codelineno-16-10"></a>
+<a id="__codelineno-16-11" name="__codelineno-16-11" href="#__codelineno-16-11"></a>----------------------------------------------------------------------------------------- benchmark: 11 tests ------------------------------------------------------------------------------------------
+<a id="__codelineno-16-12" name="__codelineno-16-12" href="#__codelineno-16-12"></a>Name (time in ms)               Min                   Max                  Mean              StdDev                Median                 IQR            Outliers      OPS            Rounds  Iterations
+<a id="__codelineno-16-13" name="__codelineno-16-13" href="#__codelineno-16-13"></a>--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+<a id="__codelineno-16-14" name="__codelineno-16-14" href="#__codelineno-16-14"></a>test_gufo_http_sync         18.8254 (1.0)         30.3264 (1.0)         25.7748 (1.0)        3.1315 (1.20)        26.6940 (1.0)        2.8348 (1.0)          10;4  38.7975 (1.0)          34           1
+<a id="__codelineno-16-15" name="__codelineno-16-15" href="#__codelineno-16-15"></a>test_pycurl_sync            21.6306 (1.15)        32.7644 (1.08)        27.3538 (1.06)       2.6036 (1.0)         27.3959 (1.03)       3.4922 (1.23)         13;0  36.5580 (0.94)         37           1
+<a id="__codelineno-16-16" name="__codelineno-16-16" href="#__codelineno-16-16"></a>test_gufo_http_async        37.4205 (1.99)        65.0476 (2.14)        49.4927 (1.92)       7.8136 (3.00)        47.2254 (1.77)       7.0210 (2.48)          8;2  20.2050 (0.52)         21           1
+<a id="__codelineno-16-17" name="__codelineno-16-17" href="#__codelineno-16-17"></a>test_aiohttp_async          52.3300 (2.78)        69.1030 (2.28)        58.7268 (2.28)       5.1573 (1.98)        56.9829 (2.13)       5.0403 (1.78)          3;2  17.0280 (0.44)         13           1
+<a id="__codelineno-16-18" name="__codelineno-16-18" href="#__codelineno-16-18"></a>test_httpx_sync             98.6042 (5.24)       117.8161 (3.88)       105.8565 (4.11)       6.3216 (2.43)       104.5910 (3.92)       8.9421 (3.15)          3;0   9.4468 (0.24)          9           1
+<a id="__codelineno-16-19" name="__codelineno-16-19" href="#__codelineno-16-19"></a>test_httpx_async           122.4068 (6.50)       140.9107 (4.65)       132.2846 (5.13)       8.4108 (3.23)       133.1786 (4.99)      15.8468 (5.59)          3;0   7.5595 (0.19)          8           1
+<a id="__codelineno-16-20" name="__codelineno-16-20" href="#__codelineno-16-20"></a>test_aiosonic_async        162.1061 (8.61)       213.1706 (7.03)       178.6271 (6.93)      16.3708 (6.29)       174.2818 (6.53)       9.2994 (3.28)          2;1   5.5983 (0.14)          7           1
+<a id="__codelineno-16-21" name="__codelineno-16-21" href="#__codelineno-16-21"></a>test_urllib3_sync          171.9625 (9.13)       195.0597 (6.43)       184.1284 (7.14)       8.2140 (3.15)       184.4066 (6.91)      11.6343 (4.10)          2;0   5.4310 (0.14)          6           1
+<a id="__codelineno-16-22" name="__codelineno-16-22" href="#__codelineno-16-22"></a>test_niquests_sync         228.0948 (12.12)      245.1454 (8.08)       236.8987 (9.19)       7.9569 (3.06)       235.6501 (8.83)      15.1074 (5.33)          3;0   4.2212 (0.11)          5           1
+<a id="__codelineno-16-23" name="__codelineno-16-23" href="#__codelineno-16-23"></a>test_urllib_sync           340.0895 (18.07)      407.2020 (13.43)      378.0052 (14.67)     25.1730 (9.67)       377.3775 (14.14)     31.8001 (11.22)         2;0   2.6455 (0.07)          5           1
+<a id="__codelineno-16-24" name="__codelineno-16-24" href="#__codelineno-16-24"></a>test_requests_sync       2,322.0456 (123.35)   2,610.2015 (86.07)    2,448.8615 (95.01)    116.5830 (44.78)    2,444.3720 (91.57)    187.1698 (66.03)         2;0   0.4084 (0.01)          5           1
+<a id="__codelineno-16-25" name="__codelineno-16-25" href="#__codelineno-16-25"></a>--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+<a id="__codelineno-16-26" name="__codelineno-16-26" href="#__codelineno-16-26"></a>
+<a id="__codelineno-16-27" name="__codelineno-16-27" href="#__codelineno-16-27"></a>Legend:
+<a id="__codelineno-16-28" name="__codelineno-16-28" href="#__codelineno-16-28"></a>  Outliers: 1 Standard Deviation from Mean; 1.5 IQR (InterQuartile Range) from 1st Quartile and 3rd Quartile.
+<a id="__codelineno-16-29" name="__codelineno-16-29" href="#__codelineno-16-29"></a>  OPS: Operations Per Second, computed as 1 / Mean
+<a id="__codelineno-16-30" name="__codelineno-16-30" href="#__codelineno-16-30"></a>========================================================= 11 passed, 1131 warnings in 39.64s ==========================================================
+</code></pre></div></p>
+<p><img alt="Median chart" src="../https_p4_x100_1k.png" />
+<em>Lower is better</em></p>
+<h2 id="feedback">Feedback<a class="headerlink" href="#feedback" title="Permanent link">&para;</a></h2>
+<p>If you have any ideas, comment, or thoughts on benchmark suite,
+feel free to <a href="https://github.com/gufolabs/gufo_http/discussions/2">discuss it on GitHub</a>.</p>
+
+
+
+
+
+
+
+  
+  
+
+
+
+  
+
+
+  
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+      
+        
+      
+      <nav class="md-footer__inner md-grid" aria-label="Footer" >
+        
+          
+          <a href="../reference/gufo/http/util/" class="md-footer__link md-footer__link--prev" aria-label="Previous: util">
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+            </div>
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              <div class="md-ellipsis">
+                util
+              </div>
+            </div>
+          </a>
+        
+        
+          
+          <a href="../dev/" class="md-footer__link md-footer__link--next" aria-label="Next: Overview">
+            <div class="md-footer__title">
+              <span class="md-footer__direction">
+                Next
+              </span>
+              <div class="md-ellipsis">
+                Overview
+              </div>
+            </div>
+            <div class="md-footer__button md-icon">
+              
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M4 11v2h12l-5.5 5.5 1.42 1.42L19.84 12l-7.92-7.92L10.5 5.5 16 11z"/></svg>
+            </div>
+          </a>
+        
+      </nav>
+    
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+    <div class="md-copyright__highlight">
+      &copy; 2024-25, Gufo Labs
+    </div>
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      <script id="__config" type="application/json">{"base": "..", "features": ["content.action.edit", "navigation.tabs", "navigation.tabs.sticky", "navigation.footer"], "search": "../assets/javascripts/workers/search.f8cc74c7.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../assets/javascripts/bundle.c8b220af.min.js"></script>
+      
+    
+  </body>
+</html>
